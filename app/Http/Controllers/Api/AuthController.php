@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Laravel\Socialite\Facades\Socialite;
 
 use App\Models\User;
 
@@ -286,5 +287,74 @@ class AuthController extends Controller
             'message' => 'Password berhasil direset'
 
         ], 200);
+    }
+
+    /**
+    * Redirect User To Google
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+
+    /**
+    * Handle Google Callback
+    */
+    public function handleGoogleCallback()
+    {
+        try {
+
+            $googleUser = Socialite::driver('google')->stateless()->user();
+
+            // Cari user berdasarkan email
+            $user = User::where('email', $googleUser->email)->first();
+
+            // Jika user belum ada
+            if (!$user) {
+
+                $user = User::create([
+
+                    'name' => $googleUser->name,
+
+                    'email' => $googleUser->email,
+
+                    'password' => bcrypt('google-login'),
+
+                    'role_id' => 3
+
+                ]);
+            }
+
+            // Generate JWT token
+            $token = Auth::guard('api')->login($user);
+
+            return response()->json([
+
+                'success' => true,
+
+                'message' => 'Google login success',
+
+                'data' => [
+
+                    'token' => $token,
+
+                    'user' => $user
+
+                ]
+
+            ], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+
+                'success' => false,
+
+                'message' => 'Google login failed',
+
+                'error' => $e->getMessage()
+
+            ], 500);
+        }
     }
 }

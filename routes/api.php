@@ -20,6 +20,11 @@ Route::prefix('auth')->group(function () {
 
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
+    // Google Login
+    Route::get('/google', [AuthController::class, 'redirectToGoogle']);
+
+    Route::get('/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
     // Protected Routes
     Route::middleware('auth:api')->group(function () {
 
@@ -29,7 +34,7 @@ Route::prefix('auth')->group(function () {
 
         Route::get('/me', [AuthController::class, 'me']);
 
-    });
+    });   
 
 });
 
