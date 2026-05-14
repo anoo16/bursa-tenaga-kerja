@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -20,23 +18,37 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
+
             'name' => 'required|string|max:255',
+
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role_id' => 'required'
+
+            'password' => 'required|min:6|confirmed',
+
+            'role_id' => 'required|integer|in:1,2,3'
+
         ]);
 
         $user = User::create([
+
             'name' => $validated['name'],
+
             'email' => $validated['email'],
+
             'password' => bcrypt($validated['password']),
+
             'role_id' => $validated['role_id'],
+
         ]);
 
         return response()->json([
+
             'success' => true,
+
             'message' => 'Register success',
+
             'data' => $user
+
         ], 201);
     }
 
@@ -68,6 +80,8 @@ class AuthController extends Controller
 
                 'token' => $token,
 
+                'expires_in' => auth('api')->factory()->getTTL() * 60,
+
                 'user' => Auth::guard('api')->user()
 
             ]
@@ -81,23 +95,57 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json([
+
             'success' => true,
+
             'message' => 'User profile',
+
             'data' => Auth::guard('api')->user()
+
         ], 200);
     }
+
     /**
      * Logout User
      */
     public function logout()
     {
         Auth::guard('api')->logout();
+
         return response()->json([
+
             'success' => true,
+
             'message' => 'Logout success'
+
         ], 200);
     }
 
+    /**
+     * Refresh JWT Token
+     */
+    public function refresh()
+    {
+        return response()->json([
+
+            'success' => true,
+
+            'message' => 'Token refreshed',
+
+            'data' => [
+
+                'token' => Auth::guard('api')->refresh(),
+
+                'expires_in' => auth('api')->factory()->getTTL() * 60
+
+            ]
+
+        ], 200);
+    }
+
+    /**
+     * Forgot Password - Generate OTP
+     */
     public function forgotPassword(Request $request)
     {
         $request->validate([
@@ -119,6 +167,14 @@ class AuthController extends Controller
             ], 404);
         }
 
+        // Hapus OTP lama
+        DB::table('otp_tokens')
+
+            ->where('user_id', $user->id)
+
+            ->delete();
+
+        // Generate OTP baru
         $otp = rand(100000, 999999);
 
         DB::table('otp_tokens')->insert([
@@ -143,13 +199,18 @@ class AuthController extends Controller
 
             'data' => [
 
-                'otp_code' => $otp
+                'otp_code' => $otp,
+
+                'expired_at' => Carbon::now()->addMinutes(5)
 
             ]
 
         ], 200);
     }
 
+    /**
+     * Reset Password Using OTP
+     */
     public function resetPassword(Request $request)
     {
         $request->validate([
@@ -158,7 +219,7 @@ class AuthController extends Controller
 
             'otp_code' => 'required',
 
-            'password' => 'required|min:6'
+            'password' => 'required|min:6|confirmed'
 
         ]);
 
@@ -211,6 +272,7 @@ class AuthController extends Controller
 
         ]);
 
+        // Hapus OTP setelah berhasil dipakai
         DB::table('otp_tokens')
 
             ->where('user_id', $user->id)
