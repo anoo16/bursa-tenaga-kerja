@@ -17,7 +17,7 @@ body {
 }
 
 .logo-wrapper img {
-    height: 240px;
+    height: 175px;
     width: auto;
     object-fit: contain;
 }
@@ -200,14 +200,17 @@ body {
 }
 
 .benefit-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #1A4885;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px rgba(15, 40, 84, 0.06);
 }
 
 .benefit-item h5 {
@@ -399,6 +402,37 @@ body {
     .modal-auth-subtitle {
         font-size: 13px;
     }
+}
+
+/* ===============================
+   ROLE INPUT RECRUITER
+================================ */
+
+.role-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F8F3EC;
+    border: 1px solid #BDE8F5;
+    border-radius: 8px;
+    padding: 0 12px;
+}
+
+.role-input-wrapper .form-control {
+    border: none;
+    background: transparent;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.role-input-wrapper .form-control:focus {
+    box-shadow: none;
+    background: transparent;
+}
+
+.role-input-wrapper i {
+    color: #1A4885;
+    font-size: 13px;
 }
 
 /* ===============================

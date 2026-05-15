@@ -22,7 +22,7 @@
         <div class="benefit-item">
 
             <div class="benefit-icon">
-                🌎
+                <i class="bi bi-people-fill"></i>
             </div>
 
             <div>
@@ -39,7 +39,7 @@
         <div class="benefit-item">
 
             <div class="benefit-icon">
-                🔒
+                <i class="bi bi-headset"></i>
             </div>
 
             <div>
@@ -56,7 +56,7 @@
         <div class="benefit-item">
 
             <div class="benefit-icon">
-                📊
+                <i class="bi bi-bar-chart-line-fill"></i>
             </div>
 
             <div>
@@ -109,12 +109,20 @@
                     PERAN AKUN
                 </label>
 
-                <input
-                    type="text"
-                    class="form-control"
-                    value="Perusahaan / Recruiter"
-                    readonly
-                >
+                <div class="role-input-wrapper">
+
+                    <i class="bi bi-building"></i>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="Perusahaan / Recruiter"
+                        readonly
+                    >
+
+                    <i class="bi bi-lock-fill"></i>
+
+                </div>
 
                 <small
                     style="
@@ -304,7 +312,5 @@
 @endsection
 
 @push('scripts')
-
     <script src="{{ asset('assets/js/auth.js') }}"></script>
-
 @endpush

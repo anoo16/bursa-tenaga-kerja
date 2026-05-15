@@ -31,22 +31,16 @@ let selectedRole = 'jobseeker';
 
 if (jobseekerBtn && recruiterBtn) {
 
-    // DEFAULT ACTIVE
     jobseekerBtn.classList.add('active-role');
 
     if (registerLink) {
-
         registerLink.href = '/register';
-
     }
 
     if (registerTabLink) {
-
         registerTabLink.href = '/register';
-
     }
 
-    // JOBSEEKER
     jobseekerBtn.addEventListener('click', () => {
 
         selectedRole = 'jobseeker';
@@ -56,20 +50,15 @@ if (jobseekerBtn && recruiterBtn) {
         recruiterBtn.classList.remove('active-role');
 
         if (registerLink) {
-
             registerLink.href = '/register';
-
         }
 
         if (registerTabLink) {
-
             registerTabLink.href = '/register';
-
         }
 
     });
 
-    // RECRUITER
     recruiterBtn.addEventListener('click', () => {
 
         selectedRole = 'recruiter';
@@ -79,15 +68,11 @@ if (jobseekerBtn && recruiterBtn) {
         jobseekerBtn.classList.remove('active-role');
 
         if (registerLink) {
-
             registerLink.href = '/register/recruiter';
-
         }
 
         if (registerTabLink) {
-
             registerTabLink.href = '/register/recruiter';
-
         }
 
     });
@@ -96,7 +81,7 @@ if (jobseekerBtn && recruiterBtn) {
 
 
 /* ===============================
-   SHOW ALERT
+   ALERT HELPER
 ================================ */
 
 function showAlert(type, message) {
@@ -112,6 +97,27 @@ function showAlert(type, message) {
     alertBox.classList.add(`alert-${type}`);
 
     alertBox.innerHTML = message;
+
+}
+
+
+function getErrorMessage(result, defaultMessage) {
+
+    if (result.message) {
+        return result.message;
+    }
+
+    if (result.errors) {
+
+        const firstErrorKey = Object.keys(result.errors)[0];
+
+        if (firstErrorKey && result.errors[firstErrorKey][0]) {
+            return result.errors[firstErrorKey][0];
+        }
+
+    }
+
+    return defaultMessage;
 
 }
 
@@ -154,27 +160,54 @@ if (loginForm) {
 
                 showAlert(
                     'danger',
-                    result.message || 'Login gagal'
+                    getErrorMessage(result, 'Login gagal. Periksa email dan kata sandi Anda.')
                 );
 
                 return;
 
             }
 
-            // SAVE TOKEN
+            const roleId = result.data.user.role_id;
+
+            /* ===============================
+               VALIDASI ROLE LOGIN
+            ================================ */
+
+            if (roleId != 1) {
+
+                if (selectedRole === 'jobseeker' && roleId != 3) {
+
+                    showAlert(
+                        'danger',
+                        'Akun ini bukan akun Pencari Kerja.'
+                    );
+
+                    return;
+
+                }
+
+                if (selectedRole === 'recruiter' && roleId != 2) {
+
+                    showAlert(
+                        'danger',
+                        'Akun ini bukan akun Perekrut.'
+                    );
+
+                    return;
+
+                }
+
+            }
+
             localStorage.setItem(
                 'token',
                 result.data.token
             );
 
-            // SAVE USER
             localStorage.setItem(
                 'user',
                 JSON.stringify(result.data.user)
             );
-
-            // REDIRECT ROLE
-            const roleId = result.data.user.role_id;
 
             if (roleId == 1) {
 
@@ -194,7 +227,7 @@ if (loginForm) {
 
             showAlert(
                 'danger',
-                'Terjadi kesalahan server'
+                'Terjadi kesalahan server.'
             );
 
             console.log(error);
@@ -224,7 +257,6 @@ if (registerForm) {
 
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        // OPTIONAL FIELD
         const education = document.getElementById('education')?.value;
 
         const birthDate = document.getElementById('birth_date')?.value;
@@ -235,7 +267,7 @@ if (registerForm) {
 
             showAlert(
                 'danger',
-                'Konfirmasi password tidak cocok'
+                'Konfirmasi kata sandi tidak cocok.'
             );
 
             return;
@@ -276,7 +308,7 @@ if (registerForm) {
 
                 showAlert(
                     'danger',
-                    result.message || 'Register gagal'
+                    getErrorMessage(result, 'Pendaftaran gagal.')
                 );
 
                 return;
@@ -285,7 +317,7 @@ if (registerForm) {
 
             showAlert(
                 'success',
-                'Register berhasil! Mengarahkan ke login...'
+                'Pendaftaran berhasil. Mengarahkan ke halaman login...'
             );
 
             setTimeout(() => {
@@ -298,7 +330,7 @@ if (registerForm) {
 
             showAlert(
                 'danger',
-                'Terjadi kesalahan server'
+                'Terjadi kesalahan server.'
             );
 
             console.log(error);
@@ -334,7 +366,7 @@ if (recruiterRegisterForm) {
 
             showAlert(
                 'danger',
-                'Konfirmasi password tidak cocok'
+                'Konfirmasi kata sandi tidak cocok.'
             );
 
             return;
@@ -375,7 +407,7 @@ if (recruiterRegisterForm) {
 
                 showAlert(
                     'danger',
-                    result.message || 'Register recruiter gagal'
+                    getErrorMessage(result, 'Pendaftaran recruiter gagal.')
                 );
 
                 return;
@@ -384,7 +416,7 @@ if (recruiterRegisterForm) {
 
             showAlert(
                 'success',
-                'Register recruiter berhasil Mengarahkan ke login...'
+                'Pendaftaran recruiter berhasil. Mengarahkan ke halaman login...'
             );
 
             setTimeout(() => {
@@ -397,7 +429,7 @@ if (recruiterRegisterForm) {
 
             showAlert(
                 'danger',
-                'Terjadi kesalahan server'
+                'Terjadi kesalahan server.'
             );
 
             console.log(error);
@@ -440,6 +472,7 @@ function checkLogin() {
 
 }
 
+
 /* ===============================
    FORGOT PASSWORD
 ================================ */
@@ -475,21 +508,20 @@ if (forgotPasswordForm) {
 
                 showAlert(
                     'danger',
-                    result.message || 'Email tidak ditemukan'
+                    getErrorMessage(result, 'Email tidak ditemukan.')
                 );
 
                 return;
 
             }
 
-            // Simpan sementara untuk kebutuhan reset password
             localStorage.setItem('reset_email', email);
 
             localStorage.setItem('reset_otp', result.data.otp_code);
 
             showAlert(
                 'success',
-                'Instruksi pemulihan berhasil dibuat. Mengarahkan ke halaman reset password...'
+                'Instruksi pemulihan berhasil dibuat. Mengarahkan ke halaman reset kata sandi...'
             );
 
             setTimeout(() => {
@@ -502,7 +534,7 @@ if (forgotPasswordForm) {
 
             showAlert(
                 'danger',
-                'Terjadi kesalahan server'
+                'Terjadi kesalahan server.'
             );
 
             console.log(error);
@@ -512,6 +544,7 @@ if (forgotPasswordForm) {
     });
 
 }
+
 
 /* ===============================
    RESET PASSWORD
@@ -539,7 +572,7 @@ if (resetPasswordForm) {
 
             showAlert(
                 'danger',
-                'Data reset password tidak ditemukan. Silakan ulangi proses lupa kata sandi.'
+                'Data reset kata sandi tidak ditemukan. Silakan ulangi proses lupa kata sandi.'
             );
 
             return;
@@ -550,18 +583,18 @@ if (resetPasswordForm) {
 
             showAlert(
                 'danger',
-                'Konfirmasi password tidak cocok'
+                'Konfirmasi kata sandi tidak cocok.'
             );
 
             return;
 
         }
 
-        if (password.length < 8) {
+        if (password.length < 6) {
 
             showAlert(
                 'danger',
-                'Password minimal 8 karakter'
+                'Kata sandi minimal 6 karakter.'
             );
 
             return;
@@ -599,7 +632,7 @@ if (resetPasswordForm) {
 
                 showAlert(
                     'danger',
-                    result.message || 'Reset password gagal'
+                    getErrorMessage(result, 'Reset kata sandi gagal.')
                 );
 
                 return;
@@ -612,7 +645,7 @@ if (resetPasswordForm) {
 
             showAlert(
                 'success',
-                'Password berhasil diperbarui. Mengarahkan ke login...'
+                'Kata sandi berhasil diperbarui. Mengarahkan ke halaman login...'
             );
 
             setTimeout(() => {
@@ -625,7 +658,7 @@ if (resetPasswordForm) {
 
             showAlert(
                 'danger',
-                'Terjadi kesalahan server'
+                'Terjadi kesalahan server.'
             );
 
             console.log(error);
@@ -635,6 +668,7 @@ if (resetPasswordForm) {
     });
 
 }
+
 
 /* ===============================
    TOGGLE PASSWORD VISIBILITY
@@ -646,8 +680,6 @@ window.togglePassword = function (targetOrButton, maybeButton = null) {
 
     let button = null;
 
-    // Format baru:
-    // onclick="togglePassword(this)"
     if (targetOrButton instanceof HTMLElement) {
 
         button = targetOrButton;
@@ -660,11 +692,7 @@ window.togglePassword = function (targetOrButton, maybeButton = null) {
 
         }
 
-    }
-
-    // Format lama:
-    // onclick="togglePassword('password', this)"
-    else {
+    } else {
 
         const targetId = targetOrButton;
 
@@ -676,7 +704,7 @@ window.togglePassword = function (targetOrButton, maybeButton = null) {
 
     if (!input) {
 
-        console.log('Input password tidak ditemukan');
+        console.log('Input kata sandi tidak ditemukan.');
 
         return;
 
@@ -684,7 +712,7 @@ window.togglePassword = function (targetOrButton, maybeButton = null) {
 
     if (!button) {
 
-        console.log('Button toggle tidak ditemukan');
+        console.log('Tombol toggle tidak ditemukan.');
 
         return;
 
@@ -694,7 +722,7 @@ window.togglePassword = function (targetOrButton, maybeButton = null) {
 
         input.type = 'text';
 
-        button.textContent = '🙈';
+        button.textContent = '👁';
 
     } else {
 

@@ -20,6 +20,12 @@
         rel="stylesheet"
     >
 
+    <!-- Bootstrap Icons -->
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    >
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -75,7 +81,7 @@
             <!-- AUTH CARD -->
             <div class="col-md-6 d-flex justify-content-end pe-md-4">
 
-                <div class="auth-card">
+                <div class="auth-card @yield('auth-card-class')">
 
                     @yield('auth-form')
 

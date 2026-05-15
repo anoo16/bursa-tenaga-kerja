@@ -101,7 +101,7 @@
             <div class="password-rule-box">
                 <div>
                     <span class="password-rule-icon">ⓘ</span>
-                    <span>Minimal 8 karakter</span>
+                    <span>Minimal 6 karakter</span>
                 </div>
                 <div>
                     <span class="password-rule-icon">ⓘ</span>

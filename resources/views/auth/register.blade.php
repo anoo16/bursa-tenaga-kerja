@@ -22,7 +22,7 @@
         <div class="benefit-item">
 
             <div class="benefit-icon">
-                👥
+                <i class="bi bi-people-fill"></i>
             </div>
 
             <div>
@@ -39,7 +39,7 @@
         <div class="benefit-item">
 
             <div class="benefit-icon">
-                🎯
+                <i class="bi bi-speedometer2"></i>
             </div>
 
             <div>
@@ -56,7 +56,7 @@
         <div class="benefit-item">
 
             <div class="benefit-icon">
-                🔒
+                 <i class="bi bi-window-stack"></i>
             </div>
 
             <div>
