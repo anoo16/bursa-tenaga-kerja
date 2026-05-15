@@ -1,0 +1,448 @@
+body {
+    background-color: #FEF9F2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ===============================
+   LOGO
+================================ */
+
+.logo-wrapper {
+    padding: 8px 40px 0;
+    display: flex;
+    align-items: center;
+}
+
+.logo-wrapper img {
+    height: 240px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* ===============================
+   MAIN CONTENT
+================================ */
+
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 40px 20px;
+}
+
+/* ===============================
+   HERO SECTION
+================================ */
+
+.hero-section .label-login {
+    font-family: 'Sora', sans-serif;
+    color: #1A4885;
+    letter-spacing: 0.14em;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.hero-section h1 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 56px;
+    color: #1D1C18;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+
+.hero-section p {
+    font-size: 16px;
+    color: #64748B;
+    line-height: 1.6;
+    max-width: 85%;
+}
+
+/* ===============================
+   AUTH CARD
+================================ */
+
+.auth-card {
+    background-color: #FFFFFF;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0px 8px 40px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 520px;
+}
+
+/* ===============================
+   FORM
+================================ */
+
+.form-control {
+    background-color: #F8F9FA;
+    border: 1px solid transparent;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+.form-control:focus {
+    background-color: #FFFFFF;
+    border-color: #BDE8F5;
+    box-shadow: 0 0 0 0.25rem rgba(189, 232, 245, 0.5);
+}
+
+/* ===============================
+   ROLE BUTTON
+================================ */
+
+.role-btn {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    color: #64748B;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.active-role {
+    background-color: #F8F3EC !important;
+    border: 1px solid #BDE8F5 !important;
+    color: #1E1E1E !important;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+
+.footer-wrapper {
+    background-color: #FFFBDE;
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6B7280;
+}
+
+.footer-wrapper .brand-text {
+    color: #1A4885;
+    font-weight: 600;
+}
+
+/* =========================
+   REGISTER PAGE
+========================= */
+
+.register-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1A4885;
+}
+
+.register-subtitle {
+    color: #64748B;
+    font-size: 14px;
+}
+
+.custom-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #64748B;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.register-btn {
+    width: 100%;
+    background-color: #123D7A;
+    color: white;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    transition: 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #0F2F5E;
+    color: white;
+}
+
+.hero-custom {
+    background-color: #F5F1D8;
+    border-radius: 24px;
+    padding: 28px;
+}
+
+.hero-custom h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #1A4885;
+    margin-bottom: 18px;
+}
+
+.hero-custom p {
+    color: #64748B;
+    margin-bottom: 40px;
+    line-height: 1.8;
+}
+
+.benefit-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.benefit-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.benefit-item h5 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1A4885;
+    margin-bottom: 4px;
+}
+
+.benefit-item span {
+    font-size: 13px;
+    color: #64748B;
+}
+
+
+/* ===================================
+   FORGOT / RESET PASSWORD OVERLAY
+=================================== */
+
+.auth-card-transparent {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+}
+
+.modal-auth-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 9999;
+}
+
+.modal-auth-card {
+    width: 100%;
+    max-width: 540px;
+    background: #FFFFFF;
+    border-radius: 18px;
+    padding: 34px 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.16);
+}
+
+.modal-auth-card.reset-card {
+    max-width: 620px;
+}
+
+.modal-badge {
+    display: inline-block;
+    background: #EAF6FF;
+    color: #1A4885;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.modal-auth-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1D1C18;
+    margin-bottom: 10px;
+}
+
+.modal-auth-subtitle {
+    font-size: 14px;
+    color: #64748B;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    max-width: 95%;
+}
+
+.auth-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1A4885;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+}
+
+.auth-input {
+    height: 48px;
+    border-radius: 10px;
+    background: #F8F3EC;
+    border: 1px solid transparent;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.auth-input:focus {
+    background: #FFFFFF;
+    border-color: #BDE8F5;
+    box-shadow: 0 0 0 0.20rem rgba(189, 232, 245, 0.35);
+}
+
+.auth-primary-btn {
+    height: 48px;
+    border-radius: 10px;
+    background: #0F2854;
+    color: #FFFFFF;
+    font-weight: 600;
+    border: none;
+    width: 100%;
+    transition: 0.2s ease;
+}
+
+.auth-primary-btn:hover {
+    background: #13346C;
+    color: #FFFFFF;
+}
+
+.back-login-link {
+    text-decoration: none;
+    color: #1A4885;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input-wrapper .form-control,
+.password-input-wrapper .auth-input {
+    padding-right: 46px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #6B7280;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    z-index: 10;
+}
+
+.password-rule-box {
+    background: #F8F3EC;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #64748B;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.password-rule-box div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.password-rule-icon {
+    color: #1A4885;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .modal-auth-card,
+    .modal-auth-card.reset-card {
+        max-width: 100%;
+        padding: 28px 22px;
+    }
+
+    .modal-auth-title {
+        font-size: 20px;
+    }
+
+    .modal-auth-subtitle {
+        font-size: 13px;
+    }
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+
+    .logo-wrapper {
+        padding: 20px;
+        justify-content: center;
+    }
+
+    .logo-wrapper img {
+        height: 120px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .hero-section {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .hero-section h1 {
+        font-size: 38px;
+    }
+
+    .hero-section p {
+        max-width: 100%;
+    }
+
+    .auth-card {
+        padding: 32px 24px;
+    }
+
+    .footer-wrapper {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        padding: 20px;
+    }
+
+}
+

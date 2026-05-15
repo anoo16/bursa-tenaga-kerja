@@ -26,7 +26,15 @@ class AuthController extends Controller
 
             'password' => 'required|min:6|confirmed',
 
-            'role_id' => 'required|integer|in:1,2,3'
+            'role_id' => 'required|integer|in:1,2,3',
+
+            'phone' => 'nullable|string|max:20',
+
+            'birth_date' => 'nullable|date',
+
+            'education' => 'nullable|string|max:255',
+
+            'company_name' => 'nullable|string|max:255',
 
         ]);
 
@@ -39,6 +47,14 @@ class AuthController extends Controller
             'password' => bcrypt($validated['password']),
 
             'role_id' => $validated['role_id'],
+
+            'phone' => $validated['phone'] ?? null,
+
+            'birth_date' => $validated['birth_date'] ?? null,
+
+            'education' => $validated['education'] ?? null,
+
+            'company_name' => $validated['company_name'] ?? null,
 
         ]);
 
@@ -168,15 +184,16 @@ class AuthController extends Controller
             ], 404);
         }
 
-        // Hapus OTP lama
+        // Hapus OTP lama agar hanya ada 1 OTP aktif
         DB::table('otp_tokens')
 
             ->where('user_id', $user->id)
 
             ->delete();
 
-        // Generate OTP baru
         $otp = rand(100000, 999999);
+
+        $expiredAt = Carbon::now()->addMinutes(5);
 
         DB::table('otp_tokens')->insert([
 
@@ -184,7 +201,7 @@ class AuthController extends Controller
 
             'otp_code' => $otp,
 
-            'expired_at' => Carbon::now()->addMinutes(5),
+            'expired_at' => $expiredAt,
 
             'created_at' => now(),
 
@@ -202,7 +219,7 @@ class AuthController extends Controller
 
                 'otp_code' => $otp,
 
-                'expired_at' => Carbon::now()->addMinutes(5)
+                'expired_at' => $expiredAt
 
             ]
 
@@ -220,7 +237,7 @@ class AuthController extends Controller
 
             'otp_code' => 'required',
 
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:8|confirmed'
 
         ]);
 
@@ -251,7 +268,7 @@ class AuthController extends Controller
 
                 'success' => false,
 
-                'message' => 'OTP salah'
+                'message' => 'OTP salah atau tidak valid'
 
             ], 400);
         }
@@ -273,7 +290,6 @@ class AuthController extends Controller
 
         ]);
 
-        // Hapus OTP setelah berhasil dipakai
         DB::table('otp_tokens')
 
             ->where('user_id', $user->id)
