@@ -8,6 +8,14 @@ const registerForm = document.getElementById('registerForm');
 
 const recruiterRegisterForm = document.getElementById('recruiterRegisterForm');
 
+const verifyOtpForm = document.getElementById('verifyOtpForm');
+
+const resendOtpBtn = document.getElementById('resendOtpBtn');
+
+const verifyResetOtpForm = document.getElementById('verifyResetOtpForm');
+
+const resendResetOtpBtn = document.getElementById('resendResetOtpBtn');
+
 const forgotPasswordForm = document.getElementById('forgotPasswordForm');
 
 const resetPasswordForm = document.getElementById('resetPasswordForm');
@@ -23,6 +31,8 @@ const registerLink = document.getElementById('registerLink');
 const registerTabLink = document.getElementById('registerTabLink');
 
 let selectedRole = 'jobseeker';
+
+let otpCountdownInterval = null;
 
 
 /* ===============================
@@ -123,6 +133,59 @@ function getErrorMessage(result, defaultMessage) {
 
 
 /* ===============================
+   OTP COUNTDOWN TIMER
+================================ */
+
+function startOtpCountdown(expiredAt) {
+
+    const timerText = document.getElementById('otpTimerText');
+
+    if (!timerText || !expiredAt) return;
+
+    if (otpCountdownInterval) {
+        clearInterval(otpCountdownInterval);
+    }
+
+    function updateTimer() {
+
+        const expiredTime = new Date(expiredAt).getTime();
+
+        const currentTime = new Date().getTime();
+
+        const distance = expiredTime - currentTime;
+
+        if (distance <= 0) {
+
+            clearInterval(otpCountdownInterval);
+
+            timerText.innerHTML = '00:00';
+
+            showAlert(
+                'danger',
+                'Kode OTP sudah kedaluwarsa. Silakan kirim ulang kode OTP.'
+            );
+
+            return;
+
+        }
+
+        const minutes = Math.floor(distance / 1000 / 60);
+
+        const seconds = Math.floor((distance / 1000) % 60);
+
+        timerText.innerHTML =
+            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+    }
+
+    updateTimer();
+
+    otpCountdownInterval = setInterval(updateTimer, 1000);
+
+}
+
+
+/* ===============================
    LOGIN
 ================================ */
 
@@ -168,10 +231,6 @@ if (loginForm) {
             }
 
             const roleId = result.data.user.role_id;
-
-            /* ===============================
-               VALIDASI ROLE LOGIN
-            ================================ */
 
             if (roleId != 1) {
 
@@ -315,14 +374,20 @@ if (registerForm) {
 
             }
 
+            localStorage.setItem('verify_email', result.data.email);
+
+            localStorage.setItem('verify_otp', result.data.otp_code);
+
+            localStorage.setItem('verify_otp_expired_at', result.data.expired_at);
+
             showAlert(
                 'success',
-                'Pendaftaran berhasil. Mengarahkan ke halaman login...'
+                'Pendaftaran berhasil. Mengarahkan ke halaman verifikasi OTP...'
             );
 
             setTimeout(() => {
 
-                window.location.href = '/login';
+                window.location.href = '/verify-otp';
 
             }, 1500);
 
@@ -414,16 +479,240 @@ if (recruiterRegisterForm) {
 
             }
 
+            localStorage.setItem('verify_email', result.data.email);
+
+            localStorage.setItem('verify_otp', result.data.otp_code);
+
+            localStorage.setItem('verify_otp_expired_at', result.data.expired_at);
+
             showAlert(
                 'success',
-                'Pendaftaran recruiter berhasil. Mengarahkan ke halaman login...'
+                'Pendaftaran recruiter berhasil. Mengarahkan ke halaman verifikasi OTP...'
+            );
+
+            setTimeout(() => {
+
+                window.location.href = '/verify-otp';
+
+            }, 1500);
+
+        } catch (error) {
+
+            showAlert(
+                'danger',
+                'Terjadi kesalahan server.'
+            );
+
+            console.log(error);
+
+        }
+
+    });
+
+}
+
+
+/* ===============================
+   VERIFY OTP REGISTER
+================================ */
+
+if (verifyOtpForm) {
+
+    const verifyEmailInput = document.getElementById('verifyEmail');
+
+    const otpTestingInfo = document.getElementById('otpTestingInfo');
+
+    const registerEmail = localStorage.getItem('verify_email');
+
+    const testingOtp = localStorage.getItem('verify_otp');
+
+    const expiredAt = localStorage.getItem('verify_otp_expired_at');
+
+    if (!registerEmail) {
+
+        showAlert(
+            'danger',
+            'Data verifikasi tidak ditemukan. Silakan daftar ulang.'
+        );
+
+    } else {
+
+        verifyEmailInput.value = registerEmail;
+
+        if (testingOtp && otpTestingInfo) {
+
+            otpTestingInfo.innerHTML = `Kode OTP testing: <strong>${testingOtp}</strong>`;
+
+        }
+
+        if (expiredAt) {
+
+            startOtpCountdown(expiredAt);
+
+        }
+
+    }
+
+    verifyOtpForm.addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        if (typeof updateOtpHiddenInput === 'function') {
+
+            updateOtpHiddenInput();
+
+        }
+
+        const email = verifyEmailInput.value;
+
+        const otpCode = document.getElementById('otpCode').value.trim();
+
+        if (otpCode.length !== 6) {
+
+            showAlert(
+                'danger',
+                'Kode OTP harus terdiri dari 6 digit.'
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const response = await fetch('/api/auth/verify-otp', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    email,
+                    otp_code: otpCode
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                showAlert(
+                    'danger',
+                    getErrorMessage(result, 'Verifikasi OTP gagal.')
+                );
+
+                return;
+
+            }
+
+            localStorage.removeItem('verify_email');
+
+            localStorage.removeItem('verify_otp');
+
+            localStorage.removeItem('verify_otp_expired_at');
+
+            showAlert(
+                'success',
+                result.message || 'Verifikasi akun berhasil.'
             );
 
             setTimeout(() => {
 
                 window.location.href = '/login';
 
-            }, 1500);
+            }, 1800);
+
+        } catch (error) {
+
+            showAlert(
+                'danger',
+                'Terjadi kesalahan server.'
+            );
+
+            console.log(error);
+
+        }
+
+    });
+
+}
+
+
+/* ===============================
+   RESEND OTP REGISTER
+================================ */
+
+if (resendOtpBtn) {
+
+    resendOtpBtn.addEventListener('click', async function () {
+
+        const email = localStorage.getItem('verify_email');
+
+        if (!email) {
+
+            showAlert(
+                'danger',
+                'Data email tidak ditemukan. Silakan daftar ulang.'
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const response = await fetch('/api/auth/resend-otp', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    email
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                showAlert(
+                    'danger',
+                    getErrorMessage(result, 'Gagal mengirim ulang OTP.')
+                );
+
+                return;
+
+            }
+
+            localStorage.setItem('verify_otp', result.data.otp_code);
+
+            localStorage.setItem('verify_otp_expired_at', result.data.expired_at);
+
+            startOtpCountdown(result.data.expired_at);
+
+            const otpTestingInfo = document.getElementById('otpTestingInfo');
+
+            if (otpTestingInfo) {
+
+                otpTestingInfo.innerHTML = `Kode OTP testing: <strong>${result.data.otp_code}</strong>`;
+
+            }
+
+            clearOtpInputs();
+
+            showAlert(
+                'success',
+                'Kode OTP baru berhasil dibuat.'
+            );
 
         } catch (error) {
 
@@ -517,11 +806,145 @@ if (forgotPasswordForm) {
 
             localStorage.setItem('reset_email', email);
 
-            localStorage.setItem('reset_otp', result.data.otp_code);
+            localStorage.setItem('reset_otp_testing', result.data.otp_code);
+
+            localStorage.setItem('reset_otp_expired_at', result.data.expired_at);
+
+            localStorage.removeItem('reset_otp_verified');
+
+            localStorage.removeItem('reset_otp_code');
 
             showAlert(
                 'success',
-                'Instruksi pemulihan berhasil dibuat. Mengarahkan ke halaman reset kata sandi...'
+                'Kode OTP berhasil dibuat. Mengarahkan ke halaman verifikasi OTP...'
+            );
+
+            setTimeout(() => {
+
+                window.location.href = '/verify-reset-otp';
+
+            }, 1500);
+
+        } catch (error) {
+
+            showAlert(
+                'danger',
+                'Terjadi kesalahan server.'
+            );
+
+            console.log(error);
+
+        }
+
+    });
+
+}
+
+
+/* ===============================
+   VERIFY RESET OTP
+================================ */
+
+if (verifyResetOtpForm) {
+
+    const resetVerifyEmailInput = document.getElementById('resetVerifyEmail');
+
+    const resetOtpTestingInfo = document.getElementById('resetOtpTestingInfo');
+
+    const resetEmail = localStorage.getItem('reset_email');
+
+    const testingOtp = localStorage.getItem('reset_otp_testing');
+
+    const expiredAt = localStorage.getItem('reset_otp_expired_at');
+
+    if (!resetEmail) {
+
+        showAlert(
+            'danger',
+            'Data reset kata sandi tidak ditemukan. Silakan ulangi proses lupa kata sandi.'
+        );
+
+    } else {
+
+        resetVerifyEmailInput.value = resetEmail;
+
+        if (testingOtp && resetOtpTestingInfo) {
+
+            resetOtpTestingInfo.innerHTML = `Kode OTP testing: <strong>${testingOtp}</strong>`;
+
+        }
+
+        if (expiredAt) {
+
+            startOtpCountdown(expiredAt);
+
+        }
+
+    }
+
+    verifyResetOtpForm.addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        if (typeof updateOtpHiddenInput === 'function') {
+
+            updateOtpHiddenInput();
+
+        }
+
+        const email = resetVerifyEmailInput.value;
+
+        const otpCode = document.getElementById('resetVerifyOtpCode').value.trim();
+
+        if (otpCode.length !== 6) {
+
+            showAlert(
+                'danger',
+                'Kode OTP harus terdiri dari 6 digit.'
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const response = await fetch('/api/auth/verify-reset-otp', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    email,
+                    otp_code: otpCode
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                showAlert(
+                    'danger',
+                    getErrorMessage(result, 'Verifikasi OTP gagal.')
+                );
+
+                return;
+
+            }
+
+            localStorage.setItem('reset_otp_verified', 'true');
+
+            localStorage.setItem('reset_otp_code', otpCode);
+
+            showAlert(
+                'success',
+                'Kode OTP berhasil diverifikasi. Mengarahkan ke halaman buat kata sandi baru...'
             );
 
             setTimeout(() => {
@@ -529,6 +952,98 @@ if (forgotPasswordForm) {
                 window.location.href = '/reset-password';
 
             }, 1500);
+
+        } catch (error) {
+
+            showAlert(
+                'danger',
+                'Terjadi kesalahan server.'
+            );
+
+            console.log(error);
+
+        }
+
+    });
+
+}
+
+
+/* ===============================
+   RESEND RESET OTP
+================================ */
+
+if (resendResetOtpBtn) {
+
+    resendResetOtpBtn.addEventListener('click', async function () {
+
+        const email = localStorage.getItem('reset_email');
+
+        if (!email) {
+
+            showAlert(
+                'danger',
+                'Data email tidak ditemukan. Silakan ulangi proses lupa kata sandi.'
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const response = await fetch('/api/auth/forgot-password', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    email
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                showAlert(
+                    'danger',
+                    getErrorMessage(result, 'Gagal mengirim ulang OTP.')
+                );
+
+                return;
+
+            }
+
+            localStorage.setItem('reset_otp_testing', result.data.otp_code);
+
+            localStorage.setItem('reset_otp_expired_at', result.data.expired_at);
+
+            startOtpCountdown(result.data.expired_at);
+
+            localStorage.removeItem('reset_otp_verified');
+
+            localStorage.removeItem('reset_otp_code');
+
+            const resetOtpTestingInfo = document.getElementById('resetOtpTestingInfo');
+
+            if (resetOtpTestingInfo) {
+
+                resetOtpTestingInfo.innerHTML = `Kode OTP testing: <strong>${result.data.otp_code}</strong>`;
+
+            }
+
+            clearOtpInputs();
+
+            showAlert(
+                'success',
+                'Kode OTP baru berhasil dibuat.'
+            );
 
         } catch (error) {
 
@@ -558,7 +1073,9 @@ if (resetPasswordForm) {
 
         const email = localStorage.getItem('reset_email');
 
-        const otpCode = localStorage.getItem('reset_otp');
+        const otpVerified = localStorage.getItem('reset_otp_verified');
+
+        const otpCode = localStorage.getItem('reset_otp_code');
 
         const passwordInput = document.getElementById('password');
 
@@ -568,12 +1085,18 @@ if (resetPasswordForm) {
 
         const confirmPassword = confirmPasswordInput.value;
 
-        if (!email || !otpCode) {
+        if (!email || otpVerified !== 'true' || !otpCode) {
 
             showAlert(
                 'danger',
-                'Data reset kata sandi tidak ditemukan. Silakan ulangi proses lupa kata sandi.'
+                'Verifikasi OTP belum selesai. Silakan verifikasi OTP terlebih dahulu.'
             );
+
+            setTimeout(() => {
+
+                window.location.href = '/verify-reset-otp';
+
+            }, 1500);
 
             return;
 
@@ -641,7 +1164,13 @@ if (resetPasswordForm) {
 
             localStorage.removeItem('reset_email');
 
-            localStorage.removeItem('reset_otp');
+            localStorage.removeItem('reset_otp_testing');
+
+            localStorage.removeItem('reset_otp_expired_at');
+
+            localStorage.removeItem('reset_otp_verified');
+
+            localStorage.removeItem('reset_otp_code');
 
             showAlert(
                 'success',
@@ -666,6 +1195,108 @@ if (resetPasswordForm) {
         }
 
     });
+
+}
+
+
+/* ===============================
+   OTP INPUT HANDLER
+================================ */
+
+const otpInputs = document.querySelectorAll('.otp-input');
+
+if (otpInputs.length > 0) {
+
+    otpInputs.forEach((input, index) => {
+
+        input.addEventListener('input', function () {
+
+            this.value = this.value.replace(/[^0-9]/g, '');
+
+            if (this.value && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+
+            updateOtpHiddenInput();
+
+        });
+
+        input.addEventListener('keydown', function (e) {
+
+            if (e.key === 'Backspace' && !this.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+
+        });
+
+        input.addEventListener('paste', function (e) {
+
+            e.preventDefault();
+
+            const pastedData = e.clipboardData
+                .getData('text')
+                .replace(/[^0-9]/g, '')
+                .slice(0, 6);
+
+            pastedData.split('').forEach((char, pasteIndex) => {
+
+                if (otpInputs[pasteIndex]) {
+                    otpInputs[pasteIndex].value = char;
+                }
+
+            });
+
+            updateOtpHiddenInput();
+
+            const nextEmptyInput = Array.from(otpInputs).find(input => !input.value);
+
+            if (nextEmptyInput) {
+                nextEmptyInput.focus();
+            } else {
+                otpInputs[otpInputs.length - 1].focus();
+            }
+
+        });
+
+    });
+
+}
+
+
+function updateOtpHiddenInput() {
+
+    const otpCode = Array.from(otpInputs)
+        .map(input => input.value)
+        .join('');
+
+    const resetVerifyOtpCode = document.getElementById('resetVerifyOtpCode');
+
+    const otpCodeInput = document.getElementById('otpCode');
+
+    if (resetVerifyOtpCode) {
+        resetVerifyOtpCode.value = otpCode;
+    }
+
+    if (otpCodeInput) {
+        otpCodeInput.value = otpCode;
+    }
+
+}
+
+
+function clearOtpInputs() {
+
+    if (otpInputs.length > 0) {
+
+        otpInputs.forEach(input => {
+            input.value = '';
+        });
+
+        updateOtpHiddenInput();
+
+        otpInputs[0].focus();
+
+    }
 
 }
 

@@ -1,10 +1,12 @@
 @extends('layouts.auth')
 
-@section('title', 'Masuk Job Seeker - Bursa Tenaga Kerja')
+@section('title', 'Masuk - Bursa Tenaga Kerja')
+
+@section('hero-label', 'MASUK')
 
 @section('hero-text')
 
-    <h1>Temukan pekerjaanmu sekarang!</h1>
+    <h1>Find your job now!</h1>
 
     <p>
         Menghubungkan ribuan pencari kerja dengan perusahaan terbaik.
@@ -15,43 +17,10 @@
 
 @section('auth-form')
 
-    <!-- TAB LOGIN REGISTER -->
-    <div class="d-flex mb-4">
-
-        <a
-            href="/login"
-            class="text-dark text-decoration-none pb-2 pe-4"
-            style="
-                font-family: 'Inter', sans-serif;
-                font-size: 18px;
-                font-weight: 600;
-                border-bottom: 3px solid #1A4885;
-            "
-        >
-            Masuk
-        </a>
-
-        <a
-            href="/register"
-            id="registerTabLink"
-            class="text-muted text-decoration-none pb-2 ps-4"
-            style="
-                font-family: 'Inter', sans-serif;
-                font-size: 18px;
-                font-weight: 600;
-                border-bottom: 3px solid transparent;
-            "
-        >
-            Daftar
-        </a>
-
-    </div>
-
     <!-- TIPE AKUN -->
     <div class="mb-4">
 
-        <label
-            class="form-label text-muted text-uppercase mb-2"
+        <label class="form-label text-muted text-uppercase mb-2"
             style="
                 font-size: 12px;
                 font-weight: 700;
@@ -63,13 +32,12 @@
 
         <div class="d-flex gap-3">
 
-            <!-- JOBSEEKER ACTIVE -->
+            <!-- JOBSEEKER -->
             <button
                 id="jobseekerBtn"
                 type="button"
-                class="btn flex-fill d-flex align-items-center justify-content-center gap-2 py-2"
+                class="btn role-btn flex-fill d-flex align-items-center justify-content-center gap-2 py-2"
             >
-
                 <img
                     src="{{ asset('assets/icon_jobseeker.svg') }}"
                     width="20"
@@ -77,16 +45,14 @@
                 >
 
                 Pencari Kerja
-
             </button>
 
             <!-- RECRUITER -->
             <button
                 id="recruiterBtn"
                 type="button"
-                class="btn flex-fill d-flex align-items-center justify-content-center gap-2 py-2 text-decoration-none"
+                class="btn role-btn flex-fill d-flex align-items-center justify-content-center gap-2 py-2"
             >
-
                 <img
                     src="{{ asset('assets/icon_rekruiter.svg') }}"
                     width="20"
@@ -94,7 +60,6 @@
                 >
 
                 Perekrut
-
             </button>
 
         </div>
@@ -116,8 +81,7 @@
         <!-- EMAIL -->
         <div class="mb-3">
 
-            <label
-                class="form-label text-muted text-uppercase mb-1"
+            <label class="form-label text-muted text-uppercase mb-1"
                 style="
                     font-size: 12px;
                     font-weight: 700;
@@ -142,8 +106,7 @@
 
             <div class="d-flex justify-content-between align-items-center mb-1">
 
-                <label
-                    class="form-label text-muted text-uppercase mb-0"
+                <label class="form-label text-muted text-uppercase mb-0"
                     style="
                         font-size: 12px;
                         font-weight: 700;
@@ -169,21 +132,21 @@
 
             <div class="password-input-wrapper">
 
-            <input
-                type="password"
-                id="password"
-                class="form-control"
-                placeholder="••••••••"
-                required
-            >
+                <input
+                    type="password"
+                    id="password"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                >
 
-             <button
-                type="button"
-                class="toggle-password"
-                onclick="togglePassword(this)"
-            >
-                👁
-            </button>
+                <button
+                    type="button"
+                    class="toggle-password"
+                    onclick="togglePassword(this)"
+                >
+                    👁
+                </button>
 
             </div>
 
@@ -266,7 +229,6 @@
             border-radius: 8px;
         "
     >
-
         <img
             src="{{ asset('assets/google.svg') }}"
             width="20"
@@ -274,7 +236,6 @@
         >
 
         Masuk Dengan Google
-
     </a>
 
     <!-- REGISTER -->
@@ -285,7 +246,6 @@
             color: #64748B;
         "
     >
-
         Belum Terdaftar?
 
         <a
@@ -304,7 +264,8 @@
 
 @endsection
 
-
 @push('scripts')
-<script src="{{ asset('assets/js/auth.js') }}"></script>
+
+    <script src="{{ asset('assets/js/auth.js') }}"></script>
+
 @endpush

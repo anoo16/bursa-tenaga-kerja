@@ -10,7 +10,11 @@ Route::view('/register', 'auth.register');
 
 Route::view('/register/recruiter', 'auth.register-recruiter');
 
+Route::view('/verify-otp', 'auth.verify-otp');
+
 Route::view('/forgot-password', 'auth.forgot-password');
+
+Route::view('/verify-reset-otp', 'auth.verify-reset-otp');
 
 Route::view('/reset-password', 'auth.reset-password');
 
