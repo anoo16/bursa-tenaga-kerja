@@ -9,13 +9,15 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Facades\Socialite;
+use App\Mail\OtpMail;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
     /**
      * Generate OTP untuk user.
      */
-    private function generateOtpForUser(User $user)
+    private function generateOtpForUser(User $user, $purpose = 'verifikasi')
     {
         DB::table('otp_tokens')
             ->where('user_id', $user->id)
@@ -32,6 +34,8 @@ class AuthController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+         Mail::to($user->email)->send(new OtpMail($otp, $purpose));
 
         return [
             'otp_code' => $otp,
@@ -88,7 +92,7 @@ class AuthController extends Controller
             'company_name' => $validated['company_name'] ?? null,
         ]);
 
-        $otpData = $this->generateOtpForUser($user);
+        $otpData = $this->generateOtpForUser($user, 'verifikasi pendaftaran');
 
         return response()->json([
             'success' => true,
@@ -208,7 +212,7 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $otpData = $this->generateOtpForUser($user);
+        $otpData = $this->generateOtpForUser($user, 'verifikasi pendaftaran');
 
         return response()->json([
             'success' => true,
@@ -356,7 +360,7 @@ class AuthController extends Controller
             ], 404);
         }
 
-        $otpData = $this->generateOtpForUser($user);
+        $otpData = $this->generateOtpForUser($user, 'reset kata sandi');
 
         return response()->json([
             'success' => true,
