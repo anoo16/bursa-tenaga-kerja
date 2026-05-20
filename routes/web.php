@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::view('/login', 'auth.login');
+Route::view('/login', 'auth.login')->name('login');
 
 Route::view('/register', 'auth.register');
 
@@ -22,20 +22,8 @@ Route::view('/auth/google/success', 'auth.google-success')->name('google.success
 
 Route::view('/auth/google/failed', 'auth.google-failed')->name('google.failed');
 
-Route::middleware(['auth:api', 'role:1'])->group(function () {
+Route::view('/dashboard/admin', 'dashboard.admin');
 
-    Route::view('/dashboard/admin', 'dashboard.admin');
+Route::view('/dashboard/recruiter', 'dashboard.recruiter');
 
-});
-
-Route::middleware(['auth:api', 'role:2'])->group(function () {
-
-    Route::view('/dashboard/recruiter', 'dashboard.recruiter');
-
-});
-
-Route::middleware(['auth:api', 'role:3'])->group(function () {
-
-    Route::view('/dashboard/jobseeker', 'dashboard.jobseeker');
-
-});
+Route::view('/dashboard/jobseeker', 'dashboard.jobseeker');

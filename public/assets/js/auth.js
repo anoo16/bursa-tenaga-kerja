@@ -258,12 +258,16 @@ if (loginForm) {
 
             }
 
-            localStorage.setItem(
+            const rememberMe = document.getElementById('rememberMe')?.checked;
+
+            const storage = rememberMe ? localStorage : sessionStorage;
+
+            storage.setItem(
                 'token',
                 result.data.token
             );
 
-            localStorage.setItem(
+            storage.setItem(
                 'user',
                 JSON.stringify(result.data.user)
             );
@@ -740,6 +744,10 @@ function logout() {
 
     localStorage.removeItem('user');
 
+    sessionStorage.removeItem('token');
+
+    sessionStorage.removeItem('user');
+
     window.location.href = '/login';
 
 }
@@ -751,7 +759,7 @@ function logout() {
 
 function checkLogin() {
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
     if (!token) {
 
