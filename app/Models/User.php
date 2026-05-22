@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -24,6 +23,10 @@ class User extends Authenticatable implements JWTSubject
         'birth_date',
         'education',
         'company_name',
+        'npwp',
+        'npwp_file',
+        'business_license_file',
+        'pic_authorization_file',
     ];
 
     protected $hidden = [
@@ -36,6 +39,8 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_verified' => 'boolean',
+            'birth_date' => 'date',
         ];
     }
 

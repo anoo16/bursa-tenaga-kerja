@@ -31,7 +31,7 @@
         </h2>
 
         <p class="otp-subtitle">
-            Masukkan 6 digit kode yang telah dibuat untuk mengaktifkan akun Anda.
+            Masukkan 6 digit kode yang telah dikirimkan ke email Anda untuk mengaktifkan akun.
         </p>
 
         <div
@@ -51,12 +51,12 @@
 
             <div class="otp-input-group">
 
-                <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
-                <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
-                <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
-                <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
-                <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
-                <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
 
             </div>
 
@@ -64,11 +64,6 @@
                 type="hidden"
                 id="otpCode"
             >
-
-            <small
-                id="otpTestingInfo"
-                class="otp-testing-info"
-            ></small>
 
             <button
                 type="submit"
@@ -93,7 +88,10 @@
 
         <div class="otp-timer">
             <i class="bi bi-stopwatch"></i>
-            <span>Kode OTP berlaku selama <strong id="otpTimerText">--:--</strong></span>
+            <span>
+                Kode OTP berlaku selama
+                <strong id="otpTimerText">--:--</strong>
+            </span>
         </div>
 
         <div class="otp-divider">
@@ -115,6 +113,6 @@
 
 @push('scripts')
 
-<script src="{{ asset('assets/js/auth.js') }}"></script>
+    <script src="{{ asset('assets/js/auth.js') }}"></script>
 
 @endpush

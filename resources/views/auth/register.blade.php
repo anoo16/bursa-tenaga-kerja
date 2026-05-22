@@ -265,13 +265,15 @@
                 <input
                     class="form-check-input"
                     type="checkbox"
-                    id="agree"
+                    id="jobseekerTerms"
+                    name="terms"
+                    value="1"
                     required
                 >
 
                 <label
                     class="form-check-label"
-                    for="agree"
+                    for="jobseekerTerms"
                     style="
                         font-size: 13px;
                         color: #64748B;

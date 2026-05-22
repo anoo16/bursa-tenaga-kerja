@@ -24,6 +24,8 @@ Route::view('/auth/google/failed', 'auth.google-failed')->name('google.failed');
 
 Route::view('/dashboard/admin', 'dashboard.admin');
 
+Route::view('/dashboard/admin/recruiters/{id}', 'dashboard.admin-detail');
+
 Route::view('/dashboard/recruiter', 'dashboard.recruiter');
 
 Route::view('/dashboard/jobseeker', 'dashboard.jobseeker');

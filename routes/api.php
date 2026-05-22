@@ -65,11 +65,30 @@ Route::middleware(['auth:api', 'role:1'])->group(function () {
         ]);
     });
 
-    Route::get('/admin/recruiters/pending', [AuthController::class, 'pendingRecruiters']);
+    Route::get(
+        '/admin/recruiters/pending',
+        [AuthController::class, 'pendingRecruiters']
+    );
 
-    Route::post('/admin/recruiters/{id}/approve', [AuthController::class, 'approveRecruiter']);
+    Route::get(
+        '/admin/recruiters/{id}',
+        [AuthController::class, 'showRecruiter']
+    );
 
-    Route::post('/admin/recruiters/{id}/reject', [AuthController::class, 'rejectRecruiter']);
+    Route::get(
+        '/admin/recruiters/{id}/documents/{type}',
+        [AuthController::class, 'viewRecruiterDocument']
+    );
+
+    Route::post(
+        '/admin/recruiters/{id}/approve',
+        [AuthController::class, 'approveRecruiter']
+    );
+
+    Route::post(
+        '/admin/recruiters/{id}/reject',
+        [AuthController::class, 'rejectRecruiter']
+    );
 
 });
 

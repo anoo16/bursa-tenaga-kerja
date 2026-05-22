@@ -3,27 +3,29 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OtpMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Laravel\Socialite\Facades\Socialite;
-use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Socialite\Facades\Socialite;
+use Throwable;
 
 class AuthController extends Controller
 {
     /**
-     * Generate OTP untuk user.
+     * Membuat dan mengirim OTP kepada user.
      */
-    private function generateOtpForUser(User $user, $purpose = 'verifikasi')
+    private function generateOtpForUser(User $user, string $purpose = 'verifikasi'): array
     {
         DB::table('otp_tokens')
             ->where('user_id', $user->id)
             ->delete();
 
-        $otp = rand(100000, 999999);
+        $otp = random_int(100000, 999999);
 
         $expiredAt = Carbon::now()->addMinutes(5);
 
@@ -35,93 +37,199 @@ class AuthController extends Controller
             'updated_at' => now(),
         ]);
 
-         Mail::to($user->email)->send(new OtpMail($otp, $purpose));
+        Mail::to($user->email)->send(new OtpMail($otp, $purpose));
 
         return [
-            'otp_code' => $otp,
             'expired_at' => $expiredAt,
         ];
     }
 
     /**
-     * Register User
+     * Register User.
+     *
+     * Role publik:
+     * 2 = Recruiter / Company
+     * 3 = Jobseeker
      */
     public function register(Request $request)
     {
+        $isRecruiter = (int) $request->input('role_id') === 2;
+
         $validated = $request->validate(
             [
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|min:6|confirmed',
-                'role_id' => 'required|integer|in:1,2,3',
+                'role_id' => 'required|integer|in:2,3',
 
                 'phone' => 'nullable|string|max:20',
                 'birth_date' => 'nullable|date',
                 'education' => 'nullable|string|max:255',
-                'company_name' => 'nullable|string|max:255',
+
+                'company_name' => $isRecruiter
+                    ? 'required|string|max:255'
+                    : 'nullable|string|max:255',
+
+                'npwp' => $isRecruiter
+                    ? 'required|string|max:30'
+                    : 'nullable|string|max:30',
+
+                'npwp_file' => $isRecruiter
+                    ? 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
+                    : 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+
+                'business_license_file' => $isRecruiter
+                    ? 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
+                    : 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+
+                'pic_authorization_file' => $isRecruiter
+                    ? 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
+                    : 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+
+                'terms' => 'accepted',
+
             ],
             [
                 'name.required' => 'Nama wajib diisi.',
+                'name.string' => 'Nama tidak valid.',
+                'name.max' => 'Nama maksimal 255 karakter.',
+
                 'email.required' => 'Email wajib diisi.',
                 'email.email' => 'Format email tidak valid.',
                 'email.unique' => 'Email sudah terdaftar.',
+
                 'password.required' => 'Kata sandi wajib diisi.',
                 'password.min' => 'Kata sandi minimal 6 karakter.',
                 'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+
                 'role_id.required' => 'Tipe akun wajib dipilih.',
+                'role_id.integer' => 'Tipe akun tidak valid.',
                 'role_id.in' => 'Tipe akun tidak valid.',
+
+                'phone.string' => 'Nomor telepon tidak valid.',
+                'phone.max' => 'Nomor telepon maksimal 20 karakter.',
+
                 'birth_date.date' => 'Format tanggal lahir tidak valid.',
+
+                'education.string' => 'Pendidikan tidak valid.',
+                'education.max' => 'Pendidikan maksimal 255 karakter.',
+
+                'company_name.required' => 'Nama perusahaan wajib diisi.',
+                'company_name.string' => 'Nama perusahaan tidak valid.',
+                'company_name.max' => 'Nama perusahaan maksimal 255 karakter.',
+
+                'npwp.required' => 'Nomor NPWP wajib diisi.',
+                'npwp.string' => 'Nomor NPWP tidak valid.',
+                'npwp.max' => 'Nomor NPWP maksimal 30 karakter.',
+
+                'npwp_file.required' => 'Dokumen NPWP wajib diunggah.',
+                'npwp_file.file' => 'Dokumen NPWP tidak valid.',
+                'npwp_file.mimes' => 'Dokumen NPWP harus berupa PDF, JPG, JPEG, atau PNG.',
+                'npwp_file.max' => 'Ukuran dokumen NPWP maksimal 2 MB.',
+
+                'business_license_file.required' => 'Dokumen izin usaha wajib diunggah.',
+                'business_license_file.file' => 'Dokumen izin usaha tidak valid.',
+                'business_license_file.mimes' => 'Dokumen izin usaha harus berupa PDF, JPG, JPEG, atau PNG.',
+                'business_license_file.max' => 'Ukuran dokumen izin usaha maksimal 2 MB.',
+
+                'pic_authorization_file.required' => 'Surat kuasa PIC wajib diunggah.',
+                'pic_authorization_file.file' => 'Surat kuasa PIC tidak valid.',
+                'pic_authorization_file.mimes' => 'Surat kuasa PIC harus berupa PDF, JPG, JPEG, atau PNG.',
+                'pic_authorization_file.max' => 'Ukuran surat kuasa PIC maksimal 2 MB.',
+
+                'terms.accepted' => 'Anda wajib menyetujui Syarat & Ketentuan serta Kebijakan Privasi.',
             ]
         );
 
-        $approvalStatus = $validated['role_id'] == 2 ? 'pending' : 'approved';
+        $storedFiles = [];
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
-            'role_id' => $validated['role_id'],
+        try {
+            DB::beginTransaction();
 
-            'is_verified' => 0,
-            'approval_status' => $approvalStatus,
-            'rejected_reason' => null,
+            if ($isRecruiter) {
+                $storedFiles['npwp_file'] = $request
+                    ->file('npwp_file')
+                    ->store('recruiter-documents/npwp', 'local');
 
-            'phone' => $validated['phone'] ?? null,
-            'birth_date' => $validated['birth_date'] ?? null,
-            'education' => $validated['education'] ?? null,
-            'company_name' => $validated['company_name'] ?? null,
-        ]);
+                $storedFiles['business_license_file'] = $request
+                    ->file('business_license_file')
+                    ->store('recruiter-documents/business-license', 'local');
 
-        $otpData = $this->generateOtpForUser($user, 'verifikasi pendaftaran');
+                $storedFiles['pic_authorization_file'] = $request
+                    ->file('pic_authorization_file')
+                    ->store('recruiter-documents/pic-authorization', 'local');
+            }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pendaftaran berhasil. Silakan verifikasi akun menggunakan kode OTP.',
-            'data' => [
-                'user' => $user,
-                'email' => $user->email,
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'role_id' => $validated['role_id'],
 
-                // Untuk testing lokal. Jika email sudah aktif, bagian ini bisa dihapus dari response.
-                'otp_code' => $otpData['otp_code'],
-                'expired_at' => $otpData['expired_at'],
-            ]
-        ], 201);
+                'is_verified' => false,
+                'approval_status' => $isRecruiter ? 'pending' : 'approved',
+                'rejected_reason' => null,
+
+                'phone' => $validated['phone'] ?? null,
+                'birth_date' => $validated['birth_date'] ?? null,
+                'education' => $validated['education'] ?? null,
+
+                'company_name' => $validated['company_name'] ?? null,
+                'npwp' => $validated['npwp'] ?? null,
+                'npwp_file' => $storedFiles['npwp_file'] ?? null,
+                'business_license_file' => $storedFiles['business_license_file'] ?? null,
+                'pic_authorization_file' => $storedFiles['pic_authorization_file'] ?? null,
+            ]);
+
+            $otpData = $this->generateOtpForUser(
+                $user,
+                $isRecruiter ? 'verifikasi pendaftaran recruiter' : 'verifikasi pendaftaran'
+            );
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pendaftaran berhasil. Kode OTP telah dikirim ke email Anda.',
+                'data' => [
+                    'email' => $user->email,
+                    'expired_at' => $otpData['expired_at'],
+                ]
+            ], 201);
+
+        } catch (Throwable $exception) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+
+            foreach ($storedFiles as $filePath) {
+                Storage::disk('local')->delete($filePath);
+            }
+
+            report($exception);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Pendaftaran gagal diproses. Pastikan email dapat menerima kode OTP, lalu coba kembali.'
+            ], 500);
+        }
     }
 
     /**
-     * Verify OTP Register
+     * Verify OTP Register.
      */
     public function verifyOtp(Request $request)
     {
         $request->validate(
             [
                 'email' => 'required|email',
-                'otp_code' => 'required',
+                'otp_code' => 'required|digits:6',
             ],
             [
                 'email.required' => 'Email wajib diisi.',
                 'email.email' => 'Format email tidak valid.',
                 'otp_code.required' => 'Kode OTP wajib diisi.',
+                'otp_code.digits' => 'Kode OTP harus terdiri dari 6 digit.',
             ]
         );
 
@@ -153,15 +261,15 @@ class AuthController extends Controller
             ], 400);
         }
 
-        if (Carbon::now()->gt($otp->expired_at)) {
+        if (Carbon::parse($otp->expired_at)->isPast()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kode OTP sudah kedaluwarsa.'
+                'message' => 'Kode OTP sudah kedaluwarsa. Silakan kirim ulang kode OTP.'
             ], 400);
         }
 
         $user->update([
-            'is_verified' => 1,
+            'is_verified' => true,
         ]);
 
         DB::table('otp_tokens')
@@ -182,7 +290,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Resend OTP Register
+     * Resend OTP Register.
      */
     public function resendOtp(Request $request)
     {
@@ -212,20 +320,29 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $otpData = $this->generateOtpForUser($user, 'verifikasi pendaftaran');
+        try {
+            $otpData = $this->generateOtpForUser($user, 'verifikasi pendaftaran');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Kode OTP baru berhasil dibuat.',
-            'data' => [
-                'otp_code' => $otpData['otp_code'],
-                'expired_at' => $otpData['expired_at'],
-            ]
-        ], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'Kode OTP baru telah dikirim ke email Anda.',
+                'data' => [
+                    'expired_at' => $otpData['expired_at'],
+                ]
+            ], 200);
+
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP gagal dikirim. Silakan coba kembali.'
+            ], 500);
+        }
     }
 
     /**
-     * Login User
+     * Login User.
      */
     public function login(Request $request)
     {
@@ -297,7 +414,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Get Authenticated User
+     * Get Authenticated User.
      */
     public function me()
     {
@@ -309,7 +426,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout User
+     * Logout User.
      */
     public function logout()
     {
@@ -322,7 +439,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Refresh JWT Token
+     * Refresh JWT Token.
      */
     public function refresh()
     {
@@ -337,7 +454,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Forgot Password - Generate OTP
+     * Forgot Password - Generate and Send OTP.
      */
     public function forgotPassword(Request $request)
     {
@@ -360,32 +477,42 @@ class AuthController extends Controller
             ], 404);
         }
 
-        $otpData = $this->generateOtpForUser($user, 'reset kata sandi');
+        try {
+            $otpData = $this->generateOtpForUser($user, 'reset kata sandi');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Kode OTP berhasil dibuat.',
-            'data' => [
-                'otp_code' => $otpData['otp_code'],
-                'expired_at' => $otpData['expired_at']
-            ]
-        ], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'Kode OTP telah dikirim ke email Anda.',
+                'data' => [
+                    'expired_at' => $otpData['expired_at']
+                ]
+            ], 200);
+
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP gagal dikirim. Silakan coba kembali.'
+            ], 500);
+        }
     }
 
     /**
-     * Verify OTP For Reset Password
+     * Verify OTP For Reset Password.
      */
     public function verifyResetOtp(Request $request)
     {
         $request->validate(
             [
                 'email' => 'required|email',
-                'otp_code' => 'required',
+                'otp_code' => 'required|digits:6',
             ],
             [
                 'email.required' => 'Email wajib diisi.',
                 'email.email' => 'Format email tidak valid.',
                 'otp_code.required' => 'Kode OTP wajib diisi.',
+                'otp_code.digits' => 'Kode OTP harus terdiri dari 6 digit.',
             ]
         );
 
@@ -410,10 +537,10 @@ class AuthController extends Controller
             ], 400);
         }
 
-        if (Carbon::now()->gt($otp->expired_at)) {
+        if (Carbon::parse($otp->expired_at)->isPast()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kode OTP sudah kedaluwarsa.'
+                'message' => 'Kode OTP sudah kedaluwarsa. Silakan kirim ulang kode OTP.'
             ], 400);
         }
 
@@ -424,20 +551,21 @@ class AuthController extends Controller
     }
 
     /**
-     * Reset Password Using OTP
+     * Reset Password Using OTP.
      */
     public function resetPassword(Request $request)
     {
         $request->validate(
             [
                 'email' => 'required|email',
-                'otp_code' => 'required',
+                'otp_code' => 'required|digits:6',
                 'password' => 'required|min:6|confirmed'
             ],
             [
                 'email.required' => 'Email wajib diisi.',
                 'email.email' => 'Format email tidak valid.',
                 'otp_code.required' => 'Kode OTP wajib diisi.',
+                'otp_code.digits' => 'Kode OTP harus terdiri dari 6 digit.',
                 'password.required' => 'Kata sandi baru wajib diisi.',
                 'password.min' => 'Kata sandi minimal 6 karakter.',
                 'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
@@ -465,15 +593,15 @@ class AuthController extends Controller
             ], 400);
         }
 
-        if (Carbon::now()->gt($otp->expired_at)) {
+        if (Carbon::parse($otp->expired_at)->isPast()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kode OTP sudah kedaluwarsa.'
+                'message' => 'Kode OTP sudah kedaluwarsa. Silakan kirim ulang kode OTP.'
             ], 400);
         }
 
         $user->update([
-            'password' => bcrypt($request->password)
+            'password' => $request->password
         ]);
 
         DB::table('otp_tokens')
@@ -482,12 +610,12 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Kata sandi berhasil direset.'
+            'message' => 'Kata sandi berhasil direset. Silakan login menggunakan kata sandi baru.'
         ], 200);
     }
 
     /**
-     * Pending Recruiters
+     * Pending Recruiters.
      */
     public function pendingRecruiters()
     {
@@ -504,7 +632,103 @@ class AuthController extends Controller
     }
 
     /**
-     * Approve Recruiter
+     * Detail Recruiter / Company untuk admin.
+     */
+    public function showRecruiter($id)
+    {
+        $user = User::where('role_id', 2)->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Recruiter tidak ditemukan.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail recruiter berhasil diambil.',
+            'data' => [
+                'id' => $user->id,
+                'user_code' => '#CPY-' . str_pad((string) $user->id, 4, '0', STR_PAD_LEFT),
+                'name' => $user->name,
+                'company_name' => $user->company_name,
+                'email' => $user->email,
+                'npwp' => $user->npwp,
+                'role_id' => $user->role_id,
+                'role_name' => 'Recruiter / Company',
+                'is_verified' => (bool) $user->is_verified,
+                'approval_status' => $user->approval_status,
+                'rejected_reason' => $user->rejected_reason,
+                'created_at' => $user->created_at,
+                'documents' => [
+                    'npwp' => !empty($user->npwp_file),
+                    'business_license' => !empty($user->business_license_file),
+                    'pic_authorization' => !empty($user->pic_authorization_file),
+                ],
+            ]
+        ], 200);
+    }
+
+    /**
+     * Membuka dokumen recruiter secara aman untuk admin.
+     */
+    public function viewRecruiterDocument($id, $type)
+    {
+        $documentTypes = [
+            'npwp' => [
+                'column' => 'npwp_file',
+                'label' => 'Dokumen NPWP',
+            ],
+            'business-license' => [
+                'column' => 'business_license_file',
+                'label' => 'Dokumen Izin Usaha',
+            ],
+            'pic-authorization' => [
+                'column' => 'pic_authorization_file',
+                'label' => 'Surat Kuasa PIC',
+            ],
+        ];
+
+        if (!array_key_exists($type, $documentTypes)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Jenis dokumen tidak valid.'
+            ], 404);
+        }
+
+        $user = User::where('role_id', 2)->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Recruiter tidak ditemukan.'
+            ], 404);
+        }
+
+        $column = $documentTypes[$type]['column'];
+        $documentLabel = $documentTypes[$type]['label'];
+        $filePath = $user->{$column};
+
+        if (!$filePath || !Storage::disk('local')->exists($filePath)) {
+            return response()->json([
+                'success' => false,
+                'message' => $documentLabel . ' tidak ditemukan.'
+            ], 404);
+        }
+
+        $absolutePath = Storage::disk('local')->path($filePath);
+        $mimeType = Storage::disk('local')->mimeType($filePath)
+            ?? 'application/octet-stream';
+
+        return response()->file($absolutePath, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+        ]);
+    }
+
+    /**
+     * Approve Recruiter.
      */
     public function approveRecruiter($id)
     {
@@ -530,7 +754,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Reject Recruiter
+     * Reject Recruiter.
      */
     public function rejectRecruiter(Request $request, $id)
     {
@@ -554,7 +778,8 @@ class AuthController extends Controller
 
         $user->update([
             'approval_status' => 'rejected',
-            'rejected_reason' => $request->rejected_reason ?? 'Pendaftaran recruiter ditolak oleh admin.',
+            'rejected_reason' => $request->rejected_reason
+                ?? 'Pendaftaran recruiter ditolak oleh admin.',
         ]);
 
         return response()->json([
@@ -565,7 +790,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Redirect User To Google
+     * Redirect User To Google.
      */
     public function redirectToGoogle()
     {
@@ -578,7 +803,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle Google Callback
+     * Handle Google Callback.
      */
     public function handleGoogleCallback()
     {
@@ -593,9 +818,9 @@ class AuthController extends Controller
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
-                    'password' => bcrypt('google-login'),
+                    'password' => 'google-login',
                     'role_id' => 3,
-                    'is_verified' => 1,
+                    'is_verified' => true,
                     'approval_status' => 'approved',
                     'rejected_reason' => null,
                 ]);
@@ -603,7 +828,7 @@ class AuthController extends Controller
 
             if (!$user->is_verified) {
                 $user->update([
-                    'is_verified' => 1,
+                    'is_verified' => true,
                 ]);
             }
 
@@ -619,7 +844,9 @@ class AuthController extends Controller
                 'token' => $token
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Throwable $exception) {
+            report($exception);
+
             return redirect()->route('google.failed', [
                 'message' => 'Login dengan Google gagal.'
             ]);

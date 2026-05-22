@@ -3,40 +3,33 @@
 ================================ */
 
 const loginForm = document.getElementById('loginForm');
-
 const registerForm = document.getElementById('registerForm');
-
 const recruiterRegisterForm = document.getElementById('recruiterRegisterForm');
 
 const verifyOtpForm = document.getElementById('verifyOtpForm');
-
 const resendOtpBtn = document.getElementById('resendOtpBtn');
 
-const verifyResetOtpForm = document.getElementById('verifyResetOtpForm');
-
-const resendResetOtpBtn = document.getElementById('resendResetOtpBtn');
-
 const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-
+const verifyResetOtpForm = document.getElementById('verifyResetOtpForm');
+const resendResetOtpBtn = document.getElementById('resendResetOtpBtn');
 const resetPasswordForm = document.getElementById('resetPasswordForm');
 
 const alertBox = document.getElementById('alertBox');
 
 const jobseekerBtn = document.getElementById('jobseekerBtn');
-
 const recruiterBtn = document.getElementById('recruiterBtn');
 
 const registerLink = document.getElementById('registerLink');
-
 const registerTabLink = document.getElementById('registerTabLink');
 
-let selectedRole = 'jobseeker';
+const otpInputs = document.querySelectorAll('.otp-input');
 
+let selectedRole = 'jobseeker';
 let otpCountdownInterval = null;
 
 
 /* ===============================
-   ROLE SELECTOR
+   ROLE SELECTOR LOGIN
 ================================ */
 
 if (jobseekerBtn && recruiterBtn) {
@@ -51,12 +44,11 @@ if (jobseekerBtn && recruiterBtn) {
         registerTabLink.href = '/register';
     }
 
-    jobseekerBtn.addEventListener('click', () => {
+    jobseekerBtn.addEventListener('click', function () {
 
         selectedRole = 'jobseeker';
 
         jobseekerBtn.classList.add('active-role');
-
         recruiterBtn.classList.remove('active-role');
 
         if (registerLink) {
@@ -69,12 +61,11 @@ if (jobseekerBtn && recruiterBtn) {
 
     });
 
-    recruiterBtn.addEventListener('click', () => {
+    recruiterBtn.addEventListener('click', function () {
 
         selectedRole = 'recruiter';
 
         recruiterBtn.classList.add('active-role');
-
         jobseekerBtn.classList.remove('active-role');
 
         if (registerLink) {
@@ -105,7 +96,6 @@ function showAlert(type, message) {
     );
 
     alertBox.classList.add(`alert-${type}`);
-
     alertBox.innerHTML = message;
 
 }
@@ -113,15 +103,19 @@ function showAlert(type, message) {
 
 function getErrorMessage(result, defaultMessage) {
 
-    if (result.message) {
+    if (result && result.message) {
         return result.message;
     }
 
-    if (result.errors) {
+    if (result && result.errors) {
 
         const firstErrorKey = Object.keys(result.errors)[0];
 
-        if (firstErrorKey && result.errors[firstErrorKey][0]) {
+        if (
+            firstErrorKey &&
+            result.errors[firstErrorKey] &&
+            result.errors[firstErrorKey][0]
+        ) {
             return result.errors[firstErrorKey][0];
         }
 
@@ -149,16 +143,24 @@ function startOtpCountdown(expiredAt) {
     function updateTimer() {
 
         const expiredTime = new Date(expiredAt).getTime();
-
         const currentTime = new Date().getTime();
-
         const distance = expiredTime - currentTime;
+
+        if (Number.isNaN(expiredTime)) {
+
+            timerText.textContent = '--:--';
+
+            console.log('Format waktu kedaluwarsa OTP tidak valid.');
+
+            return;
+
+        }
 
         if (distance <= 0) {
 
             clearInterval(otpCountdownInterval);
 
-            timerText.innerHTML = '00:00';
+            timerText.textContent = '00:00';
 
             showAlert(
                 'danger',
@@ -170,10 +172,9 @@ function startOtpCountdown(expiredAt) {
         }
 
         const minutes = Math.floor(distance / 1000 / 60);
-
         const seconds = Math.floor((distance / 1000) % 60);
 
-        timerText.innerHTML =
+        timerText.textContent =
             `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
     }
@@ -195,9 +196,9 @@ if (loginForm) {
 
         e.preventDefault();
 
-        const email = document.getElementById('email').value;
-
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('rememberMe')?.checked;
 
         try {
 
@@ -230,11 +231,11 @@ if (loginForm) {
 
             }
 
-            const roleId = result.data.user.role_id;
+            const roleId = Number(result.data.user.role_id);
 
-            if (roleId != 1) {
+            if (roleId !== 1) {
 
-                if (selectedRole === 'jobseeker' && roleId != 3) {
+                if (selectedRole === 'jobseeker' && roleId !== 3) {
 
                     showAlert(
                         'danger',
@@ -245,7 +246,7 @@ if (loginForm) {
 
                 }
 
-                if (selectedRole === 'recruiter' && roleId != 2) {
+                if (selectedRole === 'recruiter' && roleId !== 2) {
 
                     showAlert(
                         'danger',
@@ -258,25 +259,22 @@ if (loginForm) {
 
             }
 
-            const rememberMe = document.getElementById('rememberMe')?.checked;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
 
             const storage = rememberMe ? localStorage : sessionStorage;
 
-            storage.setItem(
-                'token',
-                result.data.token
-            );
+            storage.setItem('token', result.data.token);
+            storage.setItem('user', JSON.stringify(result.data.user));
 
-            storage.setItem(
-                'user',
-                JSON.stringify(result.data.user)
-            );
-
-            if (roleId == 1) {
+            if (roleId === 1) {
 
                 window.location.href = '/dashboard/admin';
 
-            } else if (roleId == 2) {
+            } else if (roleId === 2) {
 
                 window.location.href = '/dashboard/recruiter';
 
@@ -312,25 +310,33 @@ if (registerForm) {
 
         e.preventDefault();
 
-        const name = document.getElementById('name').value;
-
-        const email = document.getElementById('email').value;
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
 
         const password = document.getElementById('password').value;
-
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        const education = document.getElementById('education')?.value;
-
+        const education = document.getElementById('education')?.value.trim();
         const birthDate = document.getElementById('birth_date')?.value;
-
-        const phone = document.getElementById('phone')?.value;
+        const phone = document.getElementById('phone')?.value.trim();
+        const terms = document.getElementById('jobseekerTerms')?.checked;
 
         if (password !== confirmPassword) {
 
             showAlert(
                 'danger',
                 'Konfirmasi kata sandi tidak cocok.'
+            );
+
+            return;
+
+        }
+
+        if (!terms) {
+
+            showAlert(
+                'danger',
+                'Anda wajib menyetujui Syarat & Ketentuan serta Kebijakan Privasi.'
             );
 
             return;
@@ -349,18 +355,15 @@ if (registerForm) {
                 },
 
                 body: JSON.stringify({
-
                     name,
                     email,
                     password,
                     password_confirmation: confirmPassword,
-
                     role_id: 3,
-
                     education,
                     birth_date: birthDate,
-                    phone
-
+                    phone,
+                    terms: terms ? '1' : '0'
                 })
 
             });
@@ -379,17 +382,16 @@ if (registerForm) {
             }
 
             localStorage.setItem('verify_email', result.data.email);
-
-            localStorage.setItem('verify_otp', result.data.otp_code);
-
             localStorage.setItem('verify_otp_expired_at', result.data.expired_at);
+
+            localStorage.removeItem('verify_otp');
 
             showAlert(
                 'success',
-                'Pendaftaran berhasil. Mengarahkan ke halaman verifikasi OTP...'
+                'Pendaftaran berhasil. Kode OTP telah dikirim ke email Anda.'
             );
 
-            setTimeout(() => {
+            setTimeout(function () {
 
                 window.location.href = '/verify-otp';
 
@@ -412,24 +414,123 @@ if (registerForm) {
 
 
 /* ===============================
+   RECRUITER FILE VALIDATION
+================================ */
+
+function isAllowedRecruiterFile(file) {
+
+    const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+
+    const fileExtension = file.name
+        .split('.')
+        .pop()
+        .toLowerCase();
+
+    return allowedExtensions.includes(fileExtension);
+
+}
+
+
+function validateRecruiterFile(file, documentName) {
+
+    const maxFileSize = 2 * 1024 * 1024;
+
+    if (!file) {
+
+        showAlert(
+            'danger',
+            `${documentName} wajib diunggah.`
+        );
+
+        return false;
+
+    }
+
+    if (!isAllowedRecruiterFile(file)) {
+
+        showAlert(
+            'danger',
+            `${documentName} harus berupa PDF, JPG, JPEG, atau PNG.`
+        );
+
+        return false;
+
+    }
+
+    if (file.size > maxFileSize) {
+
+        showAlert(
+            'danger',
+            `${documentName} maksimal berukuran 2 MB.`
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* ===============================
    REGISTER RECRUITER
 ================================ */
 
 if (recruiterRegisterForm) {
 
+    const recruiterFileFields = [
+        {
+            inputId: 'npwp_file',
+            labelId: 'npwpFileName'
+        },
+        {
+            inputId: 'business_license_file',
+            labelId: 'businessLicenseFileName'
+        },
+        {
+            inputId: 'pic_authorization_file',
+            labelId: 'picAuthorizationFileName'
+        }
+    ];
+
+    recruiterFileFields.forEach(function (field) {
+
+        const input = document.getElementById(field.inputId);
+        const label = document.getElementById(field.labelId);
+
+        if (input && label) {
+
+            input.addEventListener('change', function () {
+
+                label.textContent = this.files.length > 0
+                    ? this.files[0].name
+                    : 'No file chosen';
+
+            });
+
+        }
+
+    });
+
     recruiterRegisterForm.addEventListener('submit', async function (e) {
 
         e.preventDefault();
 
-        const picName = document.getElementById('pic_name').value;
-
-        const companyName = document.getElementById('company_name').value;
-
-        const email = document.getElementById('email').value;
+        const picName = document.getElementById('pic_name').value.trim();
+        const companyName = document.getElementById('company_name').value.trim();
+        const email = document.getElementById('email').value.trim();
 
         const password = document.getElementById('password').value;
-
         const confirmPassword = document.getElementById('confirmPassword').value;
+
+        const npwp = document.getElementById('npwp').value.trim();
+
+        const npwpFile = document.getElementById('npwp_file').files[0];
+        const businessLicenseFile = document.getElementById('business_license_file').files[0];
+        const picAuthorizationFile = document.getElementById('pic_authorization_file').files[0];
+
+        const terms = document.getElementById('terms').checked;
 
         if (password !== confirmPassword) {
 
@@ -442,6 +543,58 @@ if (recruiterRegisterForm) {
 
         }
 
+        if (!npwp) {
+
+            showAlert(
+                'danger',
+                'Nomor NPWP wajib diisi.'
+            );
+
+            return;
+
+        }
+
+        if (!validateRecruiterFile(npwpFile, 'Dokumen NPWP')) {
+            return;
+        }
+
+        if (!validateRecruiterFile(businessLicenseFile, 'Dokumen izin usaha')) {
+            return;
+        }
+
+        if (!validateRecruiterFile(picAuthorizationFile, 'Surat kuasa PIC')) {
+            return;
+        }
+
+        if (!terms) {
+
+            showAlert(
+                'danger',
+                'Anda wajib menyetujui Syarat & Ketentuan serta Kebijakan Privasi.'
+            );
+
+            return;
+
+        }
+
+        const formData = new FormData();
+
+        formData.append('name', picName);
+        formData.append('company_name', companyName);
+        formData.append('email', email);
+
+        formData.append('password', password);
+        formData.append('password_confirmation', confirmPassword);
+
+        formData.append('role_id', '2');
+
+        formData.append('npwp', npwp);
+        formData.append('npwp_file', npwpFile);
+        formData.append('business_license_file', businessLicenseFile);
+        formData.append('pic_authorization_file', picAuthorizationFile);
+
+        formData.append('terms', '1');
+
         try {
 
             const response = await fetch('/api/auth/register', {
@@ -449,24 +602,10 @@ if (recruiterRegisterForm) {
                 method: 'POST',
 
                 headers: {
-                    'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
 
-                body: JSON.stringify({
-
-                    name: picName,
-
-                    email,
-
-                    password,
-                    password_confirmation: confirmPassword,
-
-                    role_id: 2,
-
-                    company_name: companyName
-
-                })
+                body: formData
 
             });
 
@@ -484,17 +623,16 @@ if (recruiterRegisterForm) {
             }
 
             localStorage.setItem('verify_email', result.data.email);
-
-            localStorage.setItem('verify_otp', result.data.otp_code);
-
             localStorage.setItem('verify_otp_expired_at', result.data.expired_at);
+
+            localStorage.removeItem('verify_otp');
 
             showAlert(
                 'success',
-                'Pendaftaran recruiter berhasil. Mengarahkan ke halaman verifikasi OTP...'
+                'Pendaftaran recruiter berhasil. Kode OTP telah dikirim ke email Anda.'
             );
 
-            setTimeout(() => {
+            setTimeout(function () {
 
                 window.location.href = '/verify-otp';
 
@@ -524,12 +662,7 @@ if (verifyOtpForm) {
 
     const verifyEmailInput = document.getElementById('verifyEmail');
 
-    const otpTestingInfo = document.getElementById('otpTestingInfo');
-
     const registerEmail = localStorage.getItem('verify_email');
-
-    const testingOtp = localStorage.getItem('verify_otp');
-
     const expiredAt = localStorage.getItem('verify_otp_expired_at');
 
     if (!registerEmail) {
@@ -543,16 +676,8 @@ if (verifyOtpForm) {
 
         verifyEmailInput.value = registerEmail;
 
-        if (testingOtp && otpTestingInfo) {
-
-            otpTestingInfo.innerHTML = `Kode OTP testing: <strong>${testingOtp}</strong>`;
-
-        }
-
         if (expiredAt) {
-
             startOtpCountdown(expiredAt);
-
         }
 
     }
@@ -561,14 +686,9 @@ if (verifyOtpForm) {
 
         e.preventDefault();
 
-        if (typeof updateOtpHiddenInput === 'function') {
-
-            updateOtpHiddenInput();
-
-        }
+        updateOtpHiddenInput();
 
         const email = verifyEmailInput.value;
-
         const otpCode = document.getElementById('otpCode').value.trim();
 
         if (otpCode.length !== 6) {
@@ -614,9 +734,7 @@ if (verifyOtpForm) {
             }
 
             localStorage.removeItem('verify_email');
-
             localStorage.removeItem('verify_otp');
-
             localStorage.removeItem('verify_otp_expired_at');
 
             showAlert(
@@ -624,7 +742,7 @@ if (verifyOtpForm) {
                 result.message || 'Verifikasi akun berhasil.'
             );
 
-            setTimeout(() => {
+            setTimeout(function () {
 
                 window.location.href = '/login';
 
@@ -697,25 +815,15 @@ if (resendOtpBtn) {
 
             }
 
-            localStorage.setItem('verify_otp', result.data.otp_code);
-
             localStorage.setItem('verify_otp_expired_at', result.data.expired_at);
 
             startOtpCountdown(result.data.expired_at);
-
-            const otpTestingInfo = document.getElementById('otpTestingInfo');
-
-            if (otpTestingInfo) {
-
-                otpTestingInfo.innerHTML = `Kode OTP testing: <strong>${result.data.otp_code}</strong>`;
-
-            }
 
             clearOtpInputs();
 
             showAlert(
                 'success',
-                'Kode OTP baru berhasil dibuat.'
+                'Kode OTP baru telah dikirim ke email Anda.'
             );
 
         } catch (error) {
@@ -741,11 +849,9 @@ if (resendOtpBtn) {
 function logout() {
 
     localStorage.removeItem('token');
-
     localStorage.removeItem('user');
 
     sessionStorage.removeItem('token');
-
     sessionStorage.removeItem('user');
 
     window.location.href = '/login';
@@ -759,12 +865,12 @@ function logout() {
 
 function checkLogin() {
 
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const token =
+        localStorage.getItem('token') ||
+        sessionStorage.getItem('token');
 
     if (!token) {
-
         window.location.href = '/login';
-
     }
 
 }
@@ -780,7 +886,7 @@ if (forgotPasswordForm) {
 
         e.preventDefault();
 
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
 
         try {
 
@@ -813,21 +919,18 @@ if (forgotPasswordForm) {
             }
 
             localStorage.setItem('reset_email', email);
-
-            localStorage.setItem('reset_otp_testing', result.data.otp_code);
-
             localStorage.setItem('reset_otp_expired_at', result.data.expired_at);
 
+            localStorage.removeItem('reset_otp_testing');
             localStorage.removeItem('reset_otp_verified');
-
             localStorage.removeItem('reset_otp_code');
 
             showAlert(
                 'success',
-                'Kode OTP berhasil dibuat. Mengarahkan ke halaman verifikasi OTP...'
+                'Kode OTP telah dikirim ke email Anda.'
             );
 
-            setTimeout(() => {
+            setTimeout(function () {
 
                 window.location.href = '/verify-reset-otp';
 
@@ -857,12 +960,7 @@ if (verifyResetOtpForm) {
 
     const resetVerifyEmailInput = document.getElementById('resetVerifyEmail');
 
-    const resetOtpTestingInfo = document.getElementById('resetOtpTestingInfo');
-
     const resetEmail = localStorage.getItem('reset_email');
-
-    const testingOtp = localStorage.getItem('reset_otp_testing');
-
     const expiredAt = localStorage.getItem('reset_otp_expired_at');
 
     if (!resetEmail) {
@@ -876,16 +974,8 @@ if (verifyResetOtpForm) {
 
         resetVerifyEmailInput.value = resetEmail;
 
-        if (testingOtp && resetOtpTestingInfo) {
-
-            resetOtpTestingInfo.innerHTML = `Kode OTP testing: <strong>${testingOtp}</strong>`;
-
-        }
-
         if (expiredAt) {
-
             startOtpCountdown(expiredAt);
-
         }
 
     }
@@ -894,14 +984,9 @@ if (verifyResetOtpForm) {
 
         e.preventDefault();
 
-        if (typeof updateOtpHiddenInput === 'function') {
-
-            updateOtpHiddenInput();
-
-        }
+        updateOtpHiddenInput();
 
         const email = resetVerifyEmailInput.value;
-
         const otpCode = document.getElementById('resetVerifyOtpCode').value.trim();
 
         if (otpCode.length !== 6) {
@@ -947,7 +1032,6 @@ if (verifyResetOtpForm) {
             }
 
             localStorage.setItem('reset_otp_verified', 'true');
-
             localStorage.setItem('reset_otp_code', otpCode);
 
             showAlert(
@@ -955,7 +1039,7 @@ if (verifyResetOtpForm) {
                 'Kode OTP berhasil diverifikasi. Mengarahkan ke halaman buat kata sandi baru...'
             );
 
-            setTimeout(() => {
+            setTimeout(function () {
 
                 window.location.href = '/reset-password';
 
@@ -1028,29 +1112,19 @@ if (resendResetOtpBtn) {
 
             }
 
-            localStorage.setItem('reset_otp_testing', result.data.otp_code);
-
             localStorage.setItem('reset_otp_expired_at', result.data.expired_at);
 
-            startOtpCountdown(result.data.expired_at);
-
+            localStorage.removeItem('reset_otp_testing');
             localStorage.removeItem('reset_otp_verified');
-
             localStorage.removeItem('reset_otp_code');
 
-            const resetOtpTestingInfo = document.getElementById('resetOtpTestingInfo');
-
-            if (resetOtpTestingInfo) {
-
-                resetOtpTestingInfo.innerHTML = `Kode OTP testing: <strong>${result.data.otp_code}</strong>`;
-
-            }
+            startOtpCountdown(result.data.expired_at);
 
             clearOtpInputs();
 
             showAlert(
                 'success',
-                'Kode OTP baru berhasil dibuat.'
+                'Kode OTP baru telah dikirim ke email Anda.'
             );
 
         } catch (error) {
@@ -1080,18 +1154,11 @@ if (resetPasswordForm) {
         e.preventDefault();
 
         const email = localStorage.getItem('reset_email');
-
         const otpVerified = localStorage.getItem('reset_otp_verified');
-
         const otpCode = localStorage.getItem('reset_otp_code');
 
-        const passwordInput = document.getElementById('password');
-
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-
-        const password = passwordInput.value;
-
-        const confirmPassword = confirmPasswordInput.value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
         if (!email || otpVerified !== 'true' || !otpCode) {
 
@@ -1100,7 +1167,7 @@ if (resetPasswordForm) {
                 'Verifikasi OTP belum selesai. Silakan verifikasi OTP terlebih dahulu.'
             );
 
-            setTimeout(() => {
+            setTimeout(function () {
 
                 window.location.href = '/verify-reset-otp';
 
@@ -1144,15 +1211,10 @@ if (resetPasswordForm) {
                 },
 
                 body: JSON.stringify({
-
                     email,
-
                     otp_code: otpCode,
-
                     password,
-
                     password_confirmation: confirmPassword
-
                 })
 
             });
@@ -1171,13 +1233,9 @@ if (resetPasswordForm) {
             }
 
             localStorage.removeItem('reset_email');
-
             localStorage.removeItem('reset_otp_testing');
-
             localStorage.removeItem('reset_otp_expired_at');
-
             localStorage.removeItem('reset_otp_verified');
-
             localStorage.removeItem('reset_otp_code');
 
             showAlert(
@@ -1185,7 +1243,7 @@ if (resetPasswordForm) {
                 'Kata sandi berhasil diperbarui. Mengarahkan ke halaman login...'
             );
 
-            setTimeout(() => {
+            setTimeout(function () {
 
                 window.location.href = '/login';
 
@@ -1211,15 +1269,13 @@ if (resetPasswordForm) {
    OTP INPUT HANDLER
 ================================ */
 
-const otpInputs = document.querySelectorAll('.otp-input');
-
 if (otpInputs.length > 0) {
 
-    otpInputs.forEach((input, index) => {
+    otpInputs.forEach(function (input, index) {
 
         input.addEventListener('input', function () {
 
-            this.value = this.value.replace(/[^0-9]/g, '');
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
 
             if (this.value && index < otpInputs.length - 1) {
                 otpInputs[index + 1].focus();
@@ -1244,19 +1300,27 @@ if (otpInputs.length > 0) {
             const pastedData = e.clipboardData
                 .getData('text')
                 .replace(/[^0-9]/g, '')
-                .slice(0, 6);
+                .slice(0, otpInputs.length);
 
-            pastedData.split('').forEach((char, pasteIndex) => {
+            otpInputs.forEach(function (otpInput) {
+                otpInput.value = '';
+            });
+
+            pastedData.split('').forEach(function (character, pasteIndex) {
 
                 if (otpInputs[pasteIndex]) {
-                    otpInputs[pasteIndex].value = char;
+                    otpInputs[pasteIndex].value = character;
                 }
 
             });
 
             updateOtpHiddenInput();
 
-            const nextEmptyInput = Array.from(otpInputs).find(input => !input.value);
+            const nextEmptyInput = Array
+                .from(otpInputs)
+                .find(function (otpInput) {
+                    return !otpInput.value;
+                });
 
             if (nextEmptyInput) {
                 nextEmptyInput.focus();
@@ -1273,20 +1337,22 @@ if (otpInputs.length > 0) {
 
 function updateOtpHiddenInput() {
 
-    const otpCode = Array.from(otpInputs)
-        .map(input => input.value)
+    const otpCode = Array
+        .from(otpInputs)
+        .map(function (input) {
+            return input.value;
+        })
         .join('');
 
-    const resetVerifyOtpCode = document.getElementById('resetVerifyOtpCode');
-
     const otpCodeInput = document.getElementById('otpCode');
-
-    if (resetVerifyOtpCode) {
-        resetVerifyOtpCode.value = otpCode;
-    }
+    const resetVerifyOtpCodeInput = document.getElementById('resetVerifyOtpCode');
 
     if (otpCodeInput) {
         otpCodeInput.value = otpCode;
+    }
+
+    if (resetVerifyOtpCodeInput) {
+        resetVerifyOtpCodeInput.value = otpCode;
     }
 
 }
@@ -1294,17 +1360,15 @@ function updateOtpHiddenInput() {
 
 function clearOtpInputs() {
 
-    if (otpInputs.length > 0) {
+    if (otpInputs.length === 0) return;
 
-        otpInputs.forEach(input => {
-            input.value = '';
-        });
+    otpInputs.forEach(function (input) {
+        input.value = '';
+    });
 
-        updateOtpHiddenInput();
+    updateOtpHiddenInput();
 
-        otpInputs[0].focus();
-
-    }
+    otpInputs[0].focus();
 
 }
 
@@ -1316,7 +1380,6 @@ function clearOtpInputs() {
 window.togglePassword = function (targetOrButton, maybeButton = null) {
 
     let input = null;
-
     let button = null;
 
     if (targetOrButton instanceof HTMLElement) {
@@ -1326,48 +1389,31 @@ window.togglePassword = function (targetOrButton, maybeButton = null) {
         const wrapper = button.closest('.password-input-wrapper');
 
         if (wrapper) {
-
             input = wrapper.querySelector('input');
-
         }
 
     } else {
 
-        const targetId = targetOrButton;
-
+        input = document.getElementById(targetOrButton);
         button = maybeButton;
 
-        input = document.getElementById(targetId);
-
     }
 
-    if (!input) {
-
-        console.log('Input kata sandi tidak ditemukan.');
-
+    if (!input || !button) {
         return;
-
-    }
-
-    if (!button) {
-
-        console.log('Tombol toggle tidak ditemukan.');
-
-        return;
-
     }
 
     if (input.type === 'password') {
 
         input.type = 'text';
-
-        button.textContent = '👁';
+        button.textContent = '🙈';
+        button.setAttribute('aria-label', 'Sembunyikan kata sandi');
 
     } else {
 
         input.type = 'password';
-
         button.textContent = '👁';
+        button.setAttribute('aria-label', 'Tampilkan kata sandi');
 
     }
 
