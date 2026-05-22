@@ -1406,7 +1406,7 @@ window.togglePassword = function (targetOrButton, maybeButton = null) {
     if (input.type === 'password') {
 
         input.type = 'text';
-        button.textContent = '🙈';
+        button.textContent = '👁';
         button.setAttribute('aria-label', 'Sembunyikan kata sandi');
 
     } else {
