@@ -24,7 +24,7 @@
     <div class="modal-auth-card reset-card">
 
         <div class="modal-badge">
-            Email Terverifikasi
+            OTP Terverifikasi
         </div>
 
         <h2 class="modal-auth-title">

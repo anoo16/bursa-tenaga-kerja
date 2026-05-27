@@ -49,7 +49,7 @@
                     <span>Overview</span>
                 </a>
 
-                <a href="#" class="admin-menu-item active">
+                <a href="/dashboard/admin" class="admin-menu-item active">
                     <i class='bx bx-user'></i>
                     <span>Kelola Pengguna</span>
                 </a>
