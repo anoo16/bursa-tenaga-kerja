@@ -64,10 +64,16 @@
                     </select>
                 </div>
 
-                <!-- Lokasi Kantor Pusat -->
-                <div class="space-y-2 md:col-span-2">
-                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-wider">Alamat Kantor Pusat</label>
-                    <input type="text" name="address" value="{{ old('address', $company->address) }}" class="w-full py-3 px-4 bg-slate-50/50 focus:bg-white text-sm text-slate-800 rounded-xl border border-slate-200 focus:border-[#143E72] outline-none transition-all duration-200">
+                <!-- Lokasi Kantor Pusat (Kota/Provinsi) -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-wider">Kantor Pusat (Kota/Negara)</label>
+                    <input type="text" name="hq" value="{{ old('hq', $company->hq) }}" placeholder="Contoh: Jakarta Selatan" class="w-full py-3 px-4 bg-slate-50/50 focus:bg-white text-sm text-slate-800 rounded-xl border border-slate-200 focus:border-[#143E72] outline-none transition-all duration-200">
+                </div>
+
+                <!-- Alamat Lengkap -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-wider">Alamat Lengkap</label>
+                    <input type="text" name="address" value="{{ old('address', $company->address) }}" placeholder="Detail jalan, gedung, dll..." class="w-full py-3 px-4 bg-slate-50/50 focus:bg-white text-sm text-slate-800 rounded-xl border border-slate-200 focus:border-[#143E72] outline-none transition-all duration-200">
                 </div>
 
                 <!-- Deskripsi Perusahaan -->
@@ -273,18 +279,31 @@
 
     // Multiple photos live preview
     document.getElementById('photosInput').addEventListener('change', function(e) {
-        const files = e.target.files;
+        renderNewPhotosPreview();
+    });
+
+    function renderNewPhotosPreview() {
+        const input = document.getElementById('photosInput');
+        const files = input.files;
         const container = document.getElementById('photosPreviewContainer');
         container.innerHTML = '';
         
         if (files.length > 0) {
             container.classList.remove('hidden');
-            Array.from(files).forEach(file => {
+            Array.from(files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     const div = document.createElement('div');
-                    div.className = 'aspect-square rounded-lg overflow-hidden border border-slate-200 relative';
-                    div.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover">`;
+                    div.className = 'aspect-square rounded-lg overflow-hidden border border-slate-200 relative group';
+                    div.innerHTML = `
+                        <img src="${evt.target.result}" class="w-full h-full object-cover">
+                        <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-85 hover:opacity-100 transition-opacity" title="Batal Upload Foto Ini" onclick="removeNewPhoto(${index})">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    `;
                     container.appendChild(div);
                 }
                 reader.readAsDataURL(file);
@@ -292,7 +311,25 @@
         } else {
             container.classList.add('hidden');
         }
-    });
+    }
+
+    window.removeNewPhoto = function(indexToRemove) {
+        const input = document.getElementById('photosInput');
+        const dt = new DataTransfer();
+        
+        // Salin semua file ke DataTransfer baru, kecuali yang ingin dihapus
+        Array.from(input.files).forEach((file, index) => {
+            if (index !== indexToRemove) {
+                dt.items.add(file);
+            }
+        });
+        
+        // Update input file dengan isi DataTransfer yang baru
+        input.files = dt.files;
+        
+        // Render ulang tampilan preview
+        renderNewPhotosPreview();
+    }
 
     // Toggle delete indicator overlay on existing photos
     function toggleDeletePhoto(checkbox) {
