@@ -341,6 +341,7 @@ class AuthController extends Controller
         }
     }
 
+    
     /**
      * Login User.
      */

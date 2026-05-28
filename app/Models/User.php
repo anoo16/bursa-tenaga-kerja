@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\CvProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use App\Models\Experience;
+use App\Models\Skill;
+use App\Models\Certification;
+use App\Models\Education;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -27,6 +32,9 @@ class User extends Authenticatable implements JWTSubject
         'npwp_file',
         'business_license_file',
         'pic_authorization_file',
+        'photo',
+        'summary',
+        'location',
     ];
 
     protected $hidden = [
@@ -52,5 +60,32 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function experiences()
+    {
+        return $this->hasMany(Experience::class);
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(Skill::class);
+    }
+
+    public function certifications()
+    {
+        return $this->hasMany(Certification::class);
+    }
+
+    public function educations()
+    {
+        return $this->hasMany(Education::class);
+    }
+
+    public function cvProfile()
+    {
+        return $this->hasOne(
+            CvProfile::class
+        );
     }
 }

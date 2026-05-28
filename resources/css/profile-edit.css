@@ -1,0 +1,113 @@
+/* Overlay gelap */
+
+.profile-modal-overlay{
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.35);
+    backdrop-filter: blur(4px);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    z-index:999;
+}
+
+/* Modal */
+
+.profile-modal{
+    width:90%;
+    max-width:760px;
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    background:#fff;
+    border-radius:24px;
+
+    position:relative;
+    padding:28px;
+}
+
+/* tombol X */
+
+.modal-close{
+    position:absolute;
+    top:15px;
+    right:15px;
+
+    width:38px;
+    height:38px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#f3f4f6;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    z-index:1000;
+}
+
+.modal-close i{
+    font-size:24px;
+}
+
+.modal-close:hover{
+    background:#e5e7eb;
+}
+
+/* hapus full screen */
+
+.edit-profile-page{
+    padding:0;
+    min-height:auto;
+    background:transparent;
+}
+
+.edit-card{
+    width:100%;
+    max-width:100%;
+    box-shadow:none;
+    padding:0;
+}
+
+.edit-card h1{
+    font-size:24px;
+    margin-bottom:24px;
+}
+
+form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.form-group input,
+.form-group textarea{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    background:#f9fafb;
+}
+
+.save-btn{
+    border:none;
+    background:#1d4d9b;
+    color:white;
+    padding:14px;
+    border-radius:14px;
+    cursor:pointer;
+}

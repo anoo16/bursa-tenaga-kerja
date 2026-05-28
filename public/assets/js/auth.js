@@ -198,44 +198,69 @@ if (loginForm) {
 
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
-        const rememberMe = document.getElementById('rememberMe')?.checked;
 
         try {
 
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch(
+                'http://127.0.0.1:8000/api/auth/login',
+                {
+                    method: 'POST',
 
-                method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                }
+            );
 
-                body: JSON.stringify({
-                    email,
-                    password
-                })
+            const text = await response.text();
 
-            });
+            console.log("RAW RESPONSE:");
+            console.log(text);
 
-            const result = await response.json();
+            let result;
+
+            try {
+
+                result = JSON.parse(text);
+
+            } catch {
+
+                throw new Error(
+                    "Response backend bukan JSON"
+                );
+
+            }
 
             if (!response.ok) {
 
                 showAlert(
                     'danger',
-                    getErrorMessage(result, 'Login gagal. Periksa email dan kata sandi Anda.')
+                    result.message ?? 'Login gagal'
                 );
 
                 return;
 
             }
 
-            const roleId = Number(result.data.user.role_id);
+            console.log(result);
 
+            const roleId = Number(
+                result.data.user.role_id
+            );
+
+            // validasi role login
             if (roleId !== 1) {
 
-                if (selectedRole === 'jobseeker' && roleId !== 3) {
+                if (
+                    selectedRole === 'jobseeker'
+                    && roleId !== 3
+                ) {
 
                     showAlert(
                         'danger',
@@ -246,7 +271,10 @@ if (loginForm) {
 
                 }
 
-                if (selectedRole === 'recruiter' && roleId !== 2) {
+                if (
+                    selectedRole === 'recruiter'
+                    && roleId !== 2
+                ) {
 
                     showAlert(
                         'danger',
@@ -259,46 +287,64 @@ if (loginForm) {
 
             }
 
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            // simpan token
+            localStorage.setItem(
+                'token',
+                result.data.token
+            );
 
-            sessionStorage.removeItem('token');
-            sessionStorage.removeItem('user');
+            localStorage.setItem(
+                'user',
+                JSON.stringify(
+                    result.data.user
+                )
+            );
 
-            const storage = rememberMe ? localStorage : sessionStorage;
+            showAlert(
+                'success',
+                'Login berhasil. Mengarahkan...'
+            );
 
-            storage.setItem('token', result.data.token);
-            storage.setItem('user', JSON.stringify(result.data.user));
+            // redirect dashboard
+            setTimeout(() => {
 
-            if (roleId === 1) {
+                if (roleId === 1) {
 
-                window.location.href = '/dashboard/admin';
+                    window.location.href =
+                        '/admin/dashboard';
 
-            } else if (roleId === 2) {
+                }
 
-                window.location.href = '/dashboard/recruiter';
+                else if (roleId === 2) {
 
-            } else {
+                    window.location.href =
+                        '/recruiter/dashboard';
 
-                window.location.href = '/dashboard/jobseeker';
+                }
 
-            }
+                else {
+
+                    window.location.href =
+                        '/dashboard/jobseeker';
+
+                }
+
+            },1000);
 
         } catch (error) {
 
+            console.error(error);
+
             showAlert(
                 'danger',
-                'Terjadi kesalahan server.'
+                error.message
             );
-
-            console.log(error);
 
         }
 
     });
 
 }
-
 
 /* ===============================
    REGISTER JOBSEEKER
