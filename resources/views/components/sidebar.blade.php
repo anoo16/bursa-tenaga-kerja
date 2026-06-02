@@ -27,10 +27,12 @@
             Cari Lowongan
         </li>
 
-        <li>
-            <i class='bx bx-file'></i>
-            Lamaran Saya
-        </li>
+        <li class="{{ request()->routeIs('applications.lamaran-saya') ? 'active' : '' }}">
+             <a href="{{ route('applications.lamaran-saya') }}">
+                <i class='bx bx-file'></i>
+                Lamaran Saya
+            </a>
+    </li>
 
         <li>
             <i class='bx bx-bookmark'></i>

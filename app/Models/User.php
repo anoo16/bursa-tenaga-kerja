@@ -88,4 +88,8 @@ class User extends Authenticatable implements JWTSubject
             CvProfile::class
         );
     }
+    public function applications()
+    {
+    return $this->hasMany(Application::class);
+    }
 }

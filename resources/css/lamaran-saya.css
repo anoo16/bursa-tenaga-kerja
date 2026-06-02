@@ -1,0 +1,236 @@
+/* ══ RESET & BASE ══ */
+.lmr-wrap {
+    padding: 2rem 2.5rem;
+    background: #f0f2f8;
+    min-height: 100vh;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* ══ HEADER ══ */
+.lmr-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a2b4a;
+    margin-bottom: 0.3rem;
+}
+.lmr-subtitle {
+    color: #7a8599;
+    font-size: 0.93rem;
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+}
+
+/* ══ STAT CARDS ══ */
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 1.3rem 1.5rem 0;
+    overflow: hidden;
+}
+.stat-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #9aa3b8;
+    margin-bottom: 0.6rem;
+}
+.stat-num {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0b6e69;
+    line-height: 1;
+    padding-bottom: 1.1rem;
+}
+.stat-num.grey {
+    color: #c0c8d8;
+}
+.stat-bar {
+    height: 5px;
+    margin: 0 -1.5rem;
+}
+
+/* ══ FILTER BAR ══ */
+.filter-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-bottom: 1.4rem;
+    flex-wrap: wrap;
+}
+.filter-left {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+.fpill {
+    border: none;
+    border-radius: 999px;
+    padding: 0.42rem 1.2rem;
+    font-size: 0.86rem;
+    font-weight: 500;
+    background: transparent;
+    color: #5a667a;
+    cursor: pointer;
+    transition:
+        background 0.15s,
+        color 0.15s;
+}
+.fpill:hover {
+    background: #e2e6f0;
+}
+.fpill.active {
+    background: #1a3570;
+    color: #fff;
+}
+.showing-count {
+    font-size: 0.8rem;
+    color: #9aa3b8;
+    margin-left: 0.6rem;
+    white-space: nowrap;
+}
+.sort-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1.5px solid #d0d5e3;
+    border-radius: 999px;
+    padding: 0.42rem 1.2rem;
+    font-size: 0.86rem;
+    font-weight: 500;
+    background: #fff;
+    color: #1a2b4a;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* ══ JOB CARDS ══ */
+.job-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 1.2rem 1.6rem;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.job-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 1px solid #edf0f7;
+    padding: 4px;
+    flex-shrink: 0;
+    background: #fff;
+}
+.job-info {
+    flex: 1;
+    min-width: 0;
+}
+.job-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a2b4a;
+    margin-bottom: 0.15rem;
+}
+.job-company {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #2a7bd4;
+    margin-bottom: 0.4rem;
+}
+.job-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #9aa3b8;
+}
+.job-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Status */
+.job-status {
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 130px;
+}
+.sbadge {
+    display: inline-block;
+    padding: 0.32rem 1rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+.sbadge-review {
+    background: #d6f5ee;
+    color: #0b6e69;
+}
+.sbadge-diterima {
+    background: #d6f5e2;
+    color: #1a8040;
+}
+.sbadge-ditolak {
+    background: #fde9e9;
+    color: #c0392b;
+}
+.sbadge-menunggu {
+    background: #eef0f8;
+    color: #7a8599;
+}
+.update-time {
+    font-size: 0.75rem;
+    color: #b0b8cb;
+    margin-top: 0.3rem;
+}
+
+/* Detail button */
+.btn-detail {
+    background: #1a3570;
+    color: #fff !important;
+    border: none;
+    border-radius: 10px;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    display: inline-block;
+}
+.btn-detail:hover {
+    background: #12296a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stat-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .job-card {
+        flex-wrap: wrap;
+    }
+    .job-status {
+        min-width: auto;
+    }
+    .lmr-wrap {
+        padding: 1rem;
+    }
+}
