@@ -63,22 +63,6 @@
                 >
             </a>
 
-            <div class="home-menu">
-
-                <a href="#lowongan">
-                    Lowongan
-                </a>
-
-                <a href="#perusahaan">
-                    Perusahaan
-                </a>
-
-                <a href="#tentang">
-                    Tentang
-                </a>
-
-            </div>
-
             <div class="home-nav-actions">
 
                 <a
@@ -88,12 +72,14 @@
                     Login
                 </a>
 
-                <a
-                    href="/register"
+                <button
+                    type="button"
                     class="btn btn-signup"
+                    data-bs-toggle="modal"
+                    data-bs-target="#signupRoleModal"
                 >
                     Sign Up
-                </a>
+                </button>
 
             </div>
 
@@ -106,7 +92,7 @@
 
         <div class="container">
 
-            <div class="row align-items-center">
+            <div class="row align-items-center gy-5">
 
                 <div class="col-lg-6">
 
@@ -119,45 +105,62 @@
                         </h1>
 
                         <p>
-                            Bursa Tenaga Kerja bukan sekadar platform rekrutmen.
-                            Ini adalah ruang pameran bagi bakat terbaik dan peluang
-                            karir yang dikurasi secara editorial.
+                            Bursa Tenaga Kerja menghubungkan pencari kerja
+                            dengan perusahaan terpercaya melalui proses
+                            pendaftaran dan verifikasi yang lebih aman.
                         </p>
 
-                        <form class="home-search-box">
+                        <div class="hero-action-buttons">
 
-                            <div class="search-input-wrapper">
+                            <a
+                                href="/register"
+                                class="btn hero-primary-btn"
+                            >
+                                Daftar Pencari Kerja
+                            </a>
 
-                                <i class="bi bi-search"></i>
+                            <a
+                                href="/register/recruiter"
+                                class="btn hero-secondary-btn"
+                            >
+                                Daftarkan Perusahaan
+                            </a>
 
-                                <input
-                                    type="text"
-                                    placeholder="Cari posisi atau perusahaan..."
-                                >
+                        </div>
+
+                        <div class="home-feature-points">
+
+                            <div class="feature-point">
+
+                                <i class="bi bi-envelope-check"></i>
+
+                                <div>
+                                    <strong>OTP Email</strong>
+                                    <span>Verifikasi akun aman</span>
+                                </div>
 
                             </div>
 
-                            <button type="submit">
-                                Cari Kerja
-                            </button>
+                            <div class="feature-point">
 
-                        </form>
+                                <i class="bi bi-patch-check"></i>
 
-                        <div class="home-stats">
+                                <div>
+                                    <strong>Review Admin</strong>
+                                    <span>Company ditinjau</span>
+                                </div>
 
-                            <div>
-                                <strong>12K+</strong>
-                                <span>Lowongan Aktif</span>
                             </div>
 
-                            <div>
-                                <strong>850</strong>
-                                <span>Perusahaan Top</span>
-                            </div>
+                            <div class="feature-point">
 
-                            <div>
-                                <strong>15K+</strong>
-                                <span>Candidate</span>
+                                <i class="bi bi-shield-lock"></i>
+
+                                <div>
+                                    <strong>Dokumen Aman</strong>
+                                    <span>Akses terlindungi</span>
+                                </div>
+
                             </div>
 
                         </div>
@@ -176,17 +179,15 @@
                             class="hero-main-image"
                         >
 
-                        </div>
-
                         <div class="hero-floating-card">
 
                             <div class="floating-icon">
-                                <i class="bi bi-activity"></i>
+                                <i class="bi bi-shield-check"></i>
                             </div>
 
                             <div>
-                                <small>Gaji Tertinggi</small>
-                                <strong>DAPUR MBG</strong>
+                                <small>Sistem Verifikasi</small>
+                                <strong>OTP EMAIL AKTIF</strong>
                             </div>
 
                         </div>
@@ -201,25 +202,25 @@
 
     </section>
 
-    <!-- CATEGORY -->
-    <section class="category-section">
+    <!-- PLATFORM FEATURES -->
+    <section
+        id="fitur"
+        class="category-section"
+    >
 
         <div class="container">
 
             <div class="section-heading-row">
 
                 <div>
-                    <h2>KATEGORI POPULER</h2>
+
+                    <h2>FITUR PLATFORM</h2>
 
                     <p>
-                        Telusuri peluang berdasarkan bidang keahlian Anda.
+                        Proses rekrutmen yang lebih aman, terarah, dan transparan.
                     </p>
-                </div>
 
-                <a href="#">
-                    Lihat Semua
-                    <i class="bi bi-arrow-right"></i>
-                </a>
+                </div>
 
             </div>
 
@@ -227,15 +228,17 @@
 
                 <div class="col-md-3 col-sm-6">
 
-                    <div class="category-card">
+                    <div class="category-card platform-feature-card">
 
                         <div class="category-icon">
-                            <i class="bi bi-palette"></i>
+                            <i class="bi bi-person-plus"></i>
                         </div>
 
-                        <h5>Design & Creative</h5>
+                        <h5>Registrasi Mudah</h5>
 
-                        <span>2.4k Lowongan</span>
+                        <span>
+                            Buat akun sesuai peran Anda.
+                        </span>
 
                     </div>
 
@@ -243,15 +246,17 @@
 
                 <div class="col-md-3 col-sm-6">
 
-                    <div class="category-card">
+                    <div class="category-card platform-feature-card">
 
                         <div class="category-icon">
-                            <i class="bi bi-code"></i>
+                            <i class="bi bi-envelope-check"></i>
                         </div>
 
-                        <h5>Development</h5>
+                        <h5>OTP Email</h5>
 
-                        <span>3.2k Lowongan</span>
+                        <span>
+                            Verifikasi akun melalui email.
+                        </span>
 
                     </div>
 
@@ -259,15 +264,17 @@
 
                 <div class="col-md-3 col-sm-6">
 
-                    <div class="category-card">
+                    <div class="category-card platform-feature-card">
 
                         <div class="category-icon">
-                            <i class="bi bi-bar-chart"></i>
+                            <i class="bi bi-building-check"></i>
                         </div>
 
-                        <h5>Marketing</h5>
+                        <h5>Review Company</h5>
 
-                        <span>1.2 Lowongan</span>
+                        <span>
+                            Recruiter ditinjau oleh admin.
+                        </span>
 
                     </div>
 
@@ -275,15 +282,17 @@
 
                 <div class="col-md-3 col-sm-6">
 
-                    <div class="category-card">
+                    <div class="category-card platform-feature-card">
 
                         <div class="category-icon">
-                            <i class="bi bi-cash-stack"></i>
+                            <i class="bi bi-file-earmark-lock"></i>
                         </div>
 
-                        <h5>Finance</h5>
+                        <h5>Dokumen Terlindungi</h5>
 
-                        <span>850 Lowongan</span>
+                        <span>
+                            Dokumen diperiksa secara aman.
+                        </span>
 
                     </div>
 
@@ -295,10 +304,10 @@
 
     </section>
 
-    <!-- JOBS -->
+    <!-- USER ROLES -->
     <section
-        id="lowongan"
-        class="jobs-section"
+        id="peran"
+        class="jobs-section role-introduction-section"
     >
 
         <div class="container">
@@ -308,13 +317,14 @@
                 <div class="col-lg-8">
 
                     <h2 class="section-title">
-                        LOWONGAN TERBARU
+                        UNTUK SIAPA PLATFORM INI?
                     </h2>
 
-                    <div class="job-card active-job">
+                    <!-- JOB SEEKER CARD -->
+                    <div class="job-card active-job role-card">
 
                         <div class="job-icon">
-                            <i class="bi bi-building"></i>
+                            <i class="bi bi-person-workspace"></i>
                         </div>
 
                         <div class="job-content">
@@ -322,28 +332,28 @@
                             <div class="job-top">
 
                                 <div>
-                                    <h5>Senior Product Designer</h5>
-                                    <span>Studio Kreatif Digital</span>
+                                    <h5>Pencari Kerja</h5>
+                                    <span>Bangun langkah awal karier Anda</span>
                                 </div>
 
                                 <span class="job-badge">
-                                    Remote
+                                    Job Seeker
                                 </span>
 
                             </div>
 
                             <p>
-                                Kami mencari desainer visioner untuk memimpin tim
-                                produk kami dalam membangun masa depan fintech.
+                                Daftar sebagai pencari kerja, verifikasi akun
+                                melalui email, lalu siapkan profil Anda untuk
+                                menemukan peluang kerja yang sesuai.
                             </p>
 
-                            <div class="job-tags">
+                            <div class="role-card-action">
 
-                                <span>IDR 15M - 25M</span>
-
-                                <span>Figma</span>
-
-                                <span>Leader</span>
+                                <a href="/register">
+                                    Daftar sebagai Pencari Kerja
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
 
                             </div>
 
@@ -351,10 +361,11 @@
 
                     </div>
 
-                    <div class="job-card">
+                    <!-- COMPANY CARD -->
+                    <div class="job-card role-card">
 
-                        <div class="job-icon">
-                            <i class="bi bi-box"></i>
+                        <div class="job-icon company-icon">
+                            <i class="bi bi-buildings"></i>
                         </div>
 
                         <div class="job-content">
@@ -362,28 +373,28 @@
                             <div class="job-top">
 
                                 <div>
-                                    <h5>Front-end Developer (Vue.js)</h5>
-                                    <span>TechNova Solutions</span>
+                                    <h5>Recruiter / Perusahaan</h5>
+                                    <span>Temukan kandidat terbaik untuk perusahaan</span>
                                 </div>
 
-                                <span class="job-badge">
-                                    Jakarta
+                                <span class="job-badge company-badge">
+                                    Company
                                 </span>
 
                             </div>
 
                             <p>
-                                Bergabunglah dengan tim engineering kami yang dinamis.
-                                Fokus pada performa dan skalabilitas aplikasi.
+                                Daftarkan perusahaan, unggah dokumen pendukung,
+                                verifikasi email, dan tunggu persetujuan admin
+                                sebelum menggunakan portal recruiter.
                             </p>
 
-                            <div class="job-tags">
+                            <div class="role-card-action">
 
-                                <span>IDR 12M - 18M</span>
-
-                                <span>Vue 3</span>
-
-                                <span>Mid-Level</span>
+                                <a href="/register/recruiter">
+                                    Daftarkan Perusahaan
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
 
                             </div>
 
@@ -404,30 +415,39 @@
                             <i class="bi bi-patch-check"></i>
 
                             <div>
-                                <strong>Perusahaan Terverifikasi</strong>
-                                <span>Hanya perusahaan terbaik yang dapat memposting.</span>
+                                <strong>Perusahaan Ditinjau</strong>
+
+                                <span>
+                                    Pengajuan recruiter melalui proses review admin.
+                                </span>
                             </div>
 
                         </div>
 
                         <div class="why-item">
 
-                            <i class="bi bi-lightning-charge"></i>
+                            <i class="bi bi-envelope-check"></i>
 
                             <div>
-                                <strong>Proses Cepat</strong>
-                                <span>Dapatkan respon dalam rata-rata 3 hari kerja.</span>
+                                <strong>Verifikasi OTP Email</strong>
+
+                                <span>
+                                    Proses aktivasi akun dilakukan melalui kode OTP.
+                                </span>
                             </div>
 
                         </div>
 
                         <div class="why-item">
 
-                            <i class="bi bi-shield-check"></i>
+                            <i class="bi bi-shield-lock"></i>
 
                             <div>
-                                <strong>Keamanan S3 Cloud</strong>
-                                <span>Dokumen CV Anda disimpan dengan aman menggunakan AWS Cloud terenkripsi.</span>
+                                <strong>Dokumen Terlindungi</strong>
+
+                                <span>
+                                    Dokumen company hanya dapat ditinjau melalui akses admin.
+                                </span>
                             </div>
 
                         </div>
@@ -443,7 +463,10 @@
     </section>
 
     <!-- HOW IT WORKS -->
-    <section class="how-section">
+    <section
+        id="cara-kerja"
+        class="how-section"
+    >
 
         <div class="container">
 
@@ -452,7 +475,7 @@
                 <h2>CARA KERJA</h2>
 
                 <h3>
-                    MULAI KARIR BARU DALAM
+                    MULAI BERGABUNG DALAM
                     <span>4 LANGKAH</span>
                 </h3>
 
@@ -468,11 +491,11 @@
                         1
                     </div>
 
-                    <h5>BUAT PROFIL</h5>
+                    <h5>PILIH PERAN</h5>
 
                     <p>
-                        Lengkapi Data diri, Pengalaman Kerja,
-                        dan Unggah CV Terbaru kamu.
+                        Daftar sebagai pencari kerja atau recruiter
+                        sesuai kebutuhan Anda.
                     </p>
 
                 </div>
@@ -483,11 +506,11 @@
                         2
                     </div>
 
-                    <h5>CARI LOWONGAN</h5>
+                    <h5>ISI DATA AKUN</h5>
 
                     <p>
-                        Temukan ribuan Lowongan yang sesuai
-                        dengan keahlian dan lokasi pilihanmu.
+                        Lengkapi data akun. Recruiter juga mengunggah
+                        dokumen perusahaan pendukung.
                     </p>
 
                 </div>
@@ -498,11 +521,11 @@
                         3
                     </div>
 
-                    <h5>LAMAR PEKERJAAN</h5>
+                    <h5>VERIFIKASI EMAIL</h5>
 
                     <p>
-                        Kirim lamaran dengan satu klik dan
-                        pantau statusnya secara real-time.
+                        Masukkan kode OTP yang dikirimkan ke email
+                        untuk mengaktifkan akun.
                     </p>
 
                 </div>
@@ -513,11 +536,11 @@
                         4
                     </div>
 
-                    <h5>DAPATKAN PEKERJAAN</h5>
+                    <h5>MULAI BERGABUNG</h5>
 
                     <p>
-                        Terima tawaran dan mulai perjalanan
-                        karir baru bersama Perusahaan Impianmu.
+                        Pencari kerja dapat masuk, sedangkan recruiter
+                        menunggu persetujuan admin.
                     </p>
 
                 </div>
@@ -547,12 +570,12 @@
                         Siap <br>
                         Memulai <br>
                         Perjalanan <br>
-                        Karirmu?
+                        Anda?
                     </h2>
 
                     <p>
-                        Bergabung dengan lebih dari 89.000 pencari kerja
-                        yang sudah terdaftar.
+                        Pilih peran Anda dan bergabung dengan Bursa Tenaga Kerja
+                        melalui proses pendaftaran yang aman.
                     </p>
 
                 </div>
@@ -563,14 +586,14 @@
                         href="/register"
                         class="btn cta-outline"
                     >
-                        Daftar Sebagai Pencari Kerja
+                        Daftar Pencari Kerja
                     </a>
 
                     <a
                         href="/register/recruiter"
                         class="btn cta-outline"
                     >
-                        Pasang Lowongan
+                        Daftarkan Perusahaan
                     </a>
 
                 </div>
@@ -603,9 +626,9 @@
                     >
 
                     <p>
-                        Platfrom Rekrutmen Digital yang menghubungkan
-                        pencari kerja dengan perusahaan terbaik
-                        diseluruh indonesia
+                        Platform rekrutmen digital yang menghubungkan
+                        pencari kerja dengan perusahaan melalui proses
+                        pendaftaran dan verifikasi yang aman.
                     </p>
 
                 </div>
@@ -614,13 +637,13 @@
 
                     <h5>Pencari Kerja</h5>
 
-                    <a href="#">Cari Lowongan</a>
+                    <a href="/register">Daftar Akun</a>
 
-                    <a href="#">Buat Profil</a>
+                    <a href="/login">Masuk Akun</a>
 
-                    <a href="#">Upload CV</a>
+                    <a href="#cara-kerja">Cara Kerja</a>
 
-                    <a href="#">Lamaran Saya</a>
+                    <a href="#fitur">Fitur Keamanan</a>
 
                 </div>
 
@@ -628,13 +651,13 @@
 
                     <h5>Perusahaan</h5>
 
-                    <a href="#">Pasang Lowongan</a>
+                    <a href="/register/recruiter">Daftarkan Perusahaan</a>
 
-                    <a href="#">Kelola Pelamar</a>
+                    <a href="/login">Login Recruiter</a>
 
-                    <a href="#">Profil Perusahaan</a>
+                    <a href="#fitur">Review Admin</a>
 
-                    <a href="#">Paket Premium</a>
+                    <a href="#cara-kerja">Proses Pendaftaran</a>
 
                 </div>
 
@@ -642,13 +665,13 @@
 
                     <h5>Informasi</h5>
 
-                    <a href="#">Tentang Kami</a>
+                    <a href="#tentang">Tentang Platform</a>
 
-                    <a href="#">Kontak</a>
+                    <a href="#fitur">Fitur</a>
 
-                    <a href="#">Kebijakan Privasi</a>
+                    <a href="#peran">Jenis Akun</a>
 
-                    <a href="#">Syarat & Ketentuan</a>
+                    <a href="#cara-kerja">Alur Penggunaan</a>
 
                 </div>
 
@@ -671,6 +694,116 @@
         </div>
 
     </footer>
+
+    <!-- SIGN UP ROLE MODAL -->
+    <div
+        class="modal fade signup-role-modal"
+        id="signupRoleModal"
+        tabindex="-1"
+        aria-labelledby="signupRoleModalLabel"
+        aria-hidden="true"
+    >
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content signup-role-content">
+
+                <button
+                    type="button"
+                    class="btn-close signup-role-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Tutup"
+                ></button>
+
+                <div class="signup-role-header">
+
+                    <span class="signup-role-badge">
+                        MULAI BERGABUNG
+                    </span>
+
+                    <h2 id="signupRoleModalLabel">
+                        Daftar Sebagai Apa?
+                    </h2>
+
+                    <p>
+                        Pilih jenis akun yang sesuai dengan kebutuhan Anda.
+                    </p>
+
+                </div>
+
+                <div class="signup-role-options">
+
+                    <a
+                        href="/register"
+                        class="signup-option-card"
+                    >
+                        <div class="signup-option-icon jobseeker">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+
+                        <div class="signup-option-text">
+
+                            <h3>Pencari Kerja</h3>
+
+                            <p>
+                                Temukan peluang kerja dan mulai membangun
+                                perjalanan karier Anda.
+                            </p>
+
+                            <span>
+                                Daftar sebagai Job Seeker
+                                <i class="bi bi-arrow-right"></i>
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <a
+                        href="/register/recruiter"
+                        class="signup-option-card"
+                    >
+                        <div class="signup-option-icon recruiter">
+                            <i class="bi bi-building"></i>
+                        </div>
+
+                        <div class="signup-option-text">
+
+                            <h3>Recruiter / Perusahaan</h3>
+
+                            <p>
+                                Daftarkan perusahaan dan temukan kandidat
+                                berkualitas.
+                            </p>
+
+                            <span>
+                                Daftarkan Perusahaan
+                                <i class="bi bi-arrow-right"></i>
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+                <div class="signup-role-footer">
+
+                    <span>
+                        Sudah memiliki akun?
+                    </span>
+
+                    <a href="/login">
+                        Login di sini
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

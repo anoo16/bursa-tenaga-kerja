@@ -226,7 +226,7 @@
                             id="password"
                             name="password"
                             class="form-control"
-                            placeholder="••••••••"
+                            placeholder=""
                             autocomplete="new-password"
                             required
                         >
@@ -260,7 +260,7 @@
                             id="confirmPassword"
                             name="password_confirmation"
                             class="form-control"
-                            placeholder="••••••••"
+                            placeholder=""
                             autocomplete="new-password"
                             required
                         >

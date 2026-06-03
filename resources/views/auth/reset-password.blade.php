@@ -57,7 +57,7 @@
                         type="password"
                         id="password"
                         class="form-control auth-input"
-                        placeholder="••••••••"
+                        placeholder=""
                         required
                     >
 
@@ -83,7 +83,7 @@
                         type="password"
                         id="confirmPassword"
                         class="form-control auth-input"
-                        placeholder="••••••••"
+                        placeholder=""
                         required
                     >
 

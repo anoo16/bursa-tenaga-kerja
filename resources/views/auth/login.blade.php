@@ -136,7 +136,7 @@
                     type="password"
                     id="password"
                     class="form-control"
-                    placeholder="••••••••"
+                    placeholder=""
                     required
                 >
 

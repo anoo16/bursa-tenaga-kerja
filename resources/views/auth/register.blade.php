@@ -212,7 +212,7 @@
                             type="password"
                             id="password"
                             class="form-control"
-                            placeholder="••••••••"
+                            placeholder=""
                             required
                         >
 
@@ -241,7 +241,7 @@
                             type="password"
                             id="confirmPassword"
                             class="form-control"
-                            placeholder="••••••••"
+                            placeholder=" "
                             required
                         >
 
