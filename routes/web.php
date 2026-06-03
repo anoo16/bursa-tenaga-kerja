@@ -6,6 +6,8 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\JobseekerDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CvController;
+use App\Http\Controllers\CompanyDashboardController;
+use App\Http\Controllers\JobController;
 
 Route::view('/', 'welcome');
 
@@ -153,3 +155,68 @@ Route::middleware([])
     )->name('applications.withdraw');
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| Company / Recruiter Real Dashboard Web Routes (Your Project)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/company/dashboard', [CompanyDashboardController::class, 'index'])->name('company.dashboard');
+Route::get('/company/profile', [CompanyDashboardController::class, 'profile'])->name('company.profile');
+Route::get('/company/profile/edit', [CompanyDashboardController::class, 'editProfile'])->name('company.profile.edit');
+Route::put('/company/profile', [CompanyDashboardController::class, 'updateProfile'])->name('company.profile.update');
+
+// RUTE KELOLA LOWONGAN
+
+// menampilkan halaman kelola lowongan
+Route::get(
+    '/company/jobs',
+    [JobController::class,'index']
+)->name('company.jobs');
+
+
+// menyimpan lowongan baru
+Route::post(
+    '/company/jobs',
+    [JobController::class,'store']
+)->name('company.jobs.store');
+
+// mengupdate lowongan
+Route::put(
+    '/company/jobs/{job}',
+    [JobController::class,'update']
+)->name('company.jobs.update');
+
+// mengubah status aktif/tutup
+Route::patch(
+    '/company/jobs/{job}/toggle-status',
+    [JobController::class,'toggleStatus']
+)->name('company.jobs.toggle');
+
+// menghapus lowongan
+Route::delete(
+    '/company/jobs/{job}',
+    [JobController::class,'destroy']
+)->name('company.jobs.delete');
+
+// RUTE PELAMAR MASUK
+Route::get(
+    '/company/applicants',
+    [CompanyDashboardController::class, 'applicants']
+)->name('company.applicants');
+
+Route::get(
+    '/company/applicants/{id}',
+    [CompanyDashboardController::class, 'showApplicant']
+)->name('company.applicant.show');
+
+Route::get(
+    '/company/applicants/{id}/review',
+    [CompanyDashboardController::class, 'reviewApplicant']
+)->name('company.applicant.review');
+
+Route::patch(
+    '/company/applicants/{id}/status',
+    [CompanyDashboardController::class, 'updateApplicantStatus']
+)->name('company.applicant.update-status');
