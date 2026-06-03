@@ -10,6 +10,10 @@ Route::view('/register', 'auth.register');
 
 Route::view('/register/recruiter', 'auth.register-recruiter');
 
+Route::view('/terms', 'legal.terms')->name('terms');
+
+Route::view('/privacy-policy', 'legal.privacy')->name('privacy.policy');
+
 Route::view('/verify-otp', 'auth.verify-otp');
 
 Route::view('/forgot-password', 'auth.forgot-password');

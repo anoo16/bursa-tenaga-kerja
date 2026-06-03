@@ -639,7 +639,7 @@
 
                     <a href="/register">Daftar Akun</a>
 
-                    <a href="/login">Masuk Akun</a>
+                    <a href="/login">Masuk Pencari Kerja</a>
 
                     <a href="#cara-kerja">Cara Kerja</a>
 
@@ -653,7 +653,7 @@
 
                     <a href="/register/recruiter">Daftarkan Perusahaan</a>
 
-                    <a href="/login">Login Recruiter</a>
+                    <a href="/login">Masuk Perusahaan</a>
 
                     <a href="#fitur">Review Admin</a>
 
@@ -665,8 +665,14 @@
 
                     <h5>Informasi</h5>
 
-                    <a href="#tentang">Tentang Platform</a>
-
+                    <a
+                        href="https://www.instagram.com/asisst.log/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Tentang
+                    </a>
+                    
                     <a href="#fitur">Fitur</a>
 
                     <a href="#peran">Jenis Akun</a>

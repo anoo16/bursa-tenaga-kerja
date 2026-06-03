@@ -18,6 +18,7 @@ const alertBox = document.getElementById('alertBox');
 
 const jobseekerBtn = document.getElementById('jobseekerBtn');
 const recruiterBtn = document.getElementById('recruiterBtn');
+const googleLoginWrapper = document.getElementById('googleLoginWrapper');
 
 const registerLink = document.getElementById('registerLink');
 const registerTabLink = document.getElementById('registerTabLink');
@@ -27,6 +28,21 @@ const otpInputs = document.querySelectorAll('.otp-input');
 let selectedRole = 'jobseeker';
 let otpCountdownInterval = null;
 
+function updateGoogleLoginVisibility() {
+
+    if (!googleLoginWrapper) return;
+
+    if (selectedRole === 'recruiter') {
+
+        googleLoginWrapper.classList.add('d-none');
+
+    } else {
+
+        googleLoginWrapper.classList.remove('d-none');
+
+    }
+
+}
 
 /* ===============================
    ROLE SELECTOR LOGIN
@@ -44,6 +60,8 @@ if (jobseekerBtn && recruiterBtn) {
         registerTabLink.href = '/register';
     }
 
+    updateGoogleLoginVisibility();
+
     jobseekerBtn.addEventListener('click', function () {
 
         selectedRole = 'jobseeker';
@@ -58,6 +76,8 @@ if (jobseekerBtn && recruiterBtn) {
         if (registerTabLink) {
             registerTabLink.href = '/register';
         }
+
+        updateGoogleLoginVisibility();
 
     });
 
@@ -75,6 +95,8 @@ if (jobseekerBtn && recruiterBtn) {
         if (registerTabLink) {
             registerTabLink.href = '/register/recruiter';
         }
+
+        updateGoogleLoginVisibility();
 
     });
 
@@ -125,6 +147,24 @@ function getErrorMessage(result, defaultMessage) {
 
 }
 
+/* ===============================
+   ONLY NUMBER INPUT HELPER
+================================ */
+
+function onlyNumberInput(inputId) {
+
+    const input = document.getElementById(inputId);
+
+    if (!input) return;
+
+    input.addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+}
+
+onlyNumberInput('phone');
+onlyNumberInput('npwp');
 
 /* ===============================
    OTP COUNTDOWN TIMER

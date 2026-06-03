@@ -48,7 +48,7 @@
 
 </head>
 
-<body>
+<body class="@yield('body-class')">
 
     <!-- LOGO -->
     <div class="logo-wrapper">

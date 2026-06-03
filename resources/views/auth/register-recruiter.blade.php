@@ -2,6 +2,8 @@
 
 @section('title', 'Daftar Recruiter - Bursa Tenaga Kerja')
 
+@section('body-class', 'register-page register-recruiter-page')
+
 @section('hero-text')
 
     <div class="hero-custom recruiter-hero">
@@ -156,7 +158,7 @@
                         id="pic_name"
                         name="name"
                         class="form-control"
-                        placeholder="Contoh: Budi Santoso"
+                        placeholder="Nama Lengkap"
                         autocomplete="name"
                         required
                     >
@@ -298,7 +300,8 @@
                         name="npwp"
                         class="form-control mb-2"
                         placeholder="00.000.000.0-000.000"
-                        maxlength="30"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
                         required
                     >
 
@@ -431,9 +434,13 @@
                     for="terms"
                 >
                     Saya setuju dengan
-                    <a href="#">Syarat & Ketentuan</a>
+                    <a href="/terms" target="_blank" rel="noopener noreferrer">
+                        Syarat & Ketentuan
+                    </a>
                     serta
-                    <a href="#">Kebijakan Privasi</a>
+                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                        Kebijakan Privasi
+                    </a>
                     Bursa Tenaga Kerja.
                 </label>
 

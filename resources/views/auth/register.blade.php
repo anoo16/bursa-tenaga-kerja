@@ -2,6 +2,8 @@
 
 @section('title', 'Daftar Job Seeker - Bursa Tenaga Kerja')
 
+@section('body-class', 'register-page register-jobseeker-page')
+
 @section('hero-label', 'MITRA STRATEGIS')
 
 @section('hero-text')
@@ -116,7 +118,7 @@
                         type="text"
                         id="name"
                         class="form-control"
-                        placeholder="Contoh: Budi Santoso"
+                        placeholder="Nama Lengkap"
                         required
                     >
 
@@ -133,7 +135,7 @@
                         type="text"
                         id="education"
                         class="form-control"
-                        placeholder="Contoh: S1/Teknik Informatika"
+                        placeholder="Contoh:S1 Sistem Informasi"
                         required
                     >
 
@@ -171,7 +173,9 @@
                         type="text"
                         id="phone"
                         class="form-control"
-                        placeholder="08123456789"
+                        placeholder="000-000-000"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
                         required
                     >
 
@@ -276,13 +280,17 @@
                     for="jobseekerTerms"
                     style="
                         font-size: 13px;
-                        color: #64748B;
-                    "
+                        color: #64748B;"
                 >
                     Saya setuju dengan
-                    <a href="#">Syarat & Ketentuan</a>
+                    <a href="/terms" target="_blank" rel="noopener noreferrer">
+                        Syarat & Ketentuan
+                    </a>
                     serta
-                    <a href="#">Kebijakan Privasi</a>
+                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                        Kebijakan Privasi
+                    </a>
+                    Bursa Tenaga Kerja.
                 </label>
 
             </div>

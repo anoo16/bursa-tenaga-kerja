@@ -694,8 +694,344 @@ body {
 }
 
 /* ===============================
+   LOGIN PAGE COMPACT FIX
+================================ */
+
+body.login-page {
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+body.login-page .logo-wrapper {
+    padding-top: 10px;
+}
+
+body.login-page .logo-wrapper img {
+    max-height: 78px;
+}
+
+body.login-page .main-content {
+    min-height: calc(100vh - 150px);
+    padding-top: 18px;
+    padding-bottom: 24px;
+}
+
+body.login-page .hero-section h1 {
+    font-size: 54px;
+    line-height: 1.08;
+    margin-bottom: 18px;
+}
+
+body.login-page .hero-section p {
+    max-width: 520px;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+body.login-page .auth-card {
+    padding-top: 28px;
+    padding-bottom: 28px;
+}
+
+body.login-page .auth-card .mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+body.login-page .auth-card .mb-3 {
+    margin-bottom: 0.85rem !important;
+}
+
+body.login-page .role-btn {
+    min-height: 42px;
+}
+
+body.login-page .form-control {
+    min-height: 43px;
+}
+
+body.login-page .password-input-wrapper .form-control {
+    min-height: 43px;
+}
+
+body.login-page #loginForm button[type="submit"] {
+    margin-bottom: 1rem !important;
+}
+
+body.login-page #googleLoginWrapper .mb-4 {
+    margin-bottom: 0.9rem !important;
+}
+
+body.login-page #googleLoginWrapper a {
+    margin-bottom: 1rem !important;
+}
+
+body.login-page .footer-wrapper {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 12px;
+}
+
+
+/* ===============================
+   REGISTER PAGE COMPACT FIX
+================================ */
+
+body.register-page {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body.register-page .logo-wrapper {
+    padding-top: 10px;
+}
+
+body.register-page .logo-wrapper img {
+    max-height: 74px;
+}
+
+body.register-page .main-content {
+    min-height: calc(100vh - 150px);
+    padding-top: 18px;
+    padding-bottom: 26px;
+}
+
+body.register-page .hero-section h1 {
+    font-size: 52px;
+    line-height: 1.08;
+    margin-bottom: 18px;
+}
+
+body.register-page .hero-section p {
+    max-width: 520px;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+body.register-page .auth-card {
+    padding-top: 26px;
+    padding-bottom: 26px;
+}
+
+body.register-page .auth-card .mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+body.register-page .auth-card .mb-3 {
+    margin-bottom: 0.78rem !important;
+}
+
+body.register-page .form-label {
+    margin-bottom: 0.35rem !important;
+}
+
+body.register-page .form-control {
+    min-height: 42px;
+    font-size: 14px;
+}
+
+body.register-page .password-input-wrapper .form-control {
+    min-height: 42px;
+}
+
+body.register-page .toggle-password {
+    height: 42px;
+}
+
+body.register-page .footer-wrapper {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 12px;
+}
+
+
+/* ===============================
+   JOBSEEKER REGISTER COMPACT
+================================ */
+
+body.register-jobseeker-page {
+    overflow: hidden;
+}
+
+body.register-jobseeker-page .auth-card {
+    max-height: calc(100vh - 160px);
+    overflow: visible;
+}
+
+body.register-jobseeker-page .auth-card form {
+    margin-bottom: 0;
+}
+
+body.register-jobseeker-page .auth-card button[type="submit"] {
+    margin-top: 4px;
+}
+
+
+/* ===============================
+   RECRUITER REGISTER LAYOUT FIX
+================================ */
+
+body.register-recruiter-page {
+    overflow: hidden;
+}
+
+/* area utama diberi ruang atas-bawah */
+body.register-recruiter-page .main-content {
+    min-height: calc(100vh - 150px);
+    padding-top: 20px;
+    padding-bottom: 34px;
+    align-items: center;
+}
+
+/* bagian kiri tidak terlalu turun */
+body.register-recruiter-page .hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: auto;
+}
+
+body.register-recruiter-page .hero-section .label-login {
+    width: 100%;
+    margin-bottom: 16px;
+    transform: none;
+}
+
+body.register-recruiter-page .hero-custom,
+body.register-recruiter-page .recruiter-hero {
+    padding: 42px 42px;
+    transform: translateY(-6px);
+}
+
+body.register-recruiter-page .hero-custom h1,
+body.register-recruiter-page .recruiter-hero h1,
+body.register-recruiter-page .hero-section h1 {
+    font-size: 48px;
+    line-height: 1.12;
+    margin-bottom: 20px;
+}
+
+body.register-recruiter-page .hero-custom p,
+body.register-recruiter-page .recruiter-hero p,
+body.register-recruiter-page .hero-section p {
+    max-width: 560px;
+    margin-bottom: 28px;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+body.register-recruiter-page .benefit-item {
+    margin-bottom: 16px;
+}
+
+body.register-recruiter-page .benefit-icon {
+    width: 40px;
+    height: 40px;
+}
+
+body.register-recruiter-page .benefit-item h5 {
+    font-size: 15px;
+}
+
+body.register-recruiter-page .benefit-item span {
+    font-size: 12px;
+}
+
+/* card kanan discroll di dalam, tidak mepet bawah */
+body.register-recruiter-page .auth-card {
+    max-height: calc(100vh - 190px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 30px;
+    padding-bottom: 34px;
+    padding-right: 30px;
+}
+
+/* jarak antar input */
+body.register-recruiter-page .auth-card .mb-3 {
+    margin-bottom: 0.9rem !important;
+}
+
+body.register-recruiter-page .auth-card .mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+/* file upload lebih ringkas */
+body.register-recruiter-page .file-upload-top {
+    margin-top: 6px;
+}
+
+body.register-recruiter-page .file-note {
+    margin-top: 5px;
+}
+
+/* tombol dan login bawah tidak mepet */
+body.register-recruiter-page .auth-card button[type="submit"] {
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+body.register-recruiter-page .auth-card .text-center {
+    padding-bottom: 8px;
+}
+
+/* scrollbar card */
+body.register-recruiter-page .auth-card::-webkit-scrollbar {
+    width: 7px;
+}
+
+body.register-recruiter-page .auth-card::-webkit-scrollbar-track {
+    background: #EEF3F8;
+    border-radius: 999px;
+}
+
+body.register-recruiter-page .auth-card::-webkit-scrollbar-thumb {
+    background: #B8C7DA;
+    border-radius: 999px;
+}
+
+body.register-recruiter-page .auth-card::-webkit-scrollbar-thumb:hover {
+    background: #8EA4BF;
+}
+
+
+/* ===============================
    RESPONSIVE
 ================================ */
+
+@media (max-width: 992px) {
+
+    body.login-page,
+    body.register-page,
+    body.register-jobseeker-page,
+    body.register-recruiter-page {
+        overflow-y: auto;
+    }
+
+    body.login-page .main-content,
+    body.register-page .main-content,
+    body.register-recruiter-page .main-content {
+        min-height: auto;
+        padding-top: 28px;
+        padding-bottom: 70px;
+    }
+
+    body.register-page .auth-card,
+    body.register-jobseeker-page .auth-card,
+    body.register-recruiter-page .auth-card {
+        max-height: none;
+        overflow: visible;
+        transform: none;
+        padding-right: 26px;
+    }
+
+    body.register-recruiter-page .hero-custom,
+    body.register-recruiter-page .recruiter-hero {
+        transform: none;
+        margin-bottom: 28px;
+    }
+
+}
 
 @media (max-width: 768px) {
 
@@ -706,6 +1042,7 @@ body {
 
     .logo-wrapper img {
         height: 120px;
+        max-height: 120px;
     }
 
     .main-content {
@@ -717,16 +1054,35 @@ body {
         margin-bottom: 40px;
     }
 
-    .hero-section h1 {
+    .hero-section h1,
+    body.login-page .hero-section h1,
+    body.register-page .hero-section h1,
+    body.register-recruiter-page .hero-section h1,
+    body.register-recruiter-page .hero-custom h1,
+    body.register-recruiter-page .recruiter-hero h1 {
         font-size: 38px;
     }
 
-    .hero-section p {
+    .hero-section p,
+    body.register-recruiter-page .hero-custom p,
+    body.register-recruiter-page .recruiter-hero p {
         max-width: 100%;
     }
 
     .auth-card {
         padding: 32px 24px;
+    }
+
+    body.register-recruiter-page .auth-card {
+        padding-right: 24px;
+    }
+
+    body.register-recruiter-page .recruiter-hero {
+        padding: 28px 22px;
+    }
+
+    .file-upload-top {
+        margin-top: 0;
     }
 
     .footer-wrapper {
@@ -736,5 +1092,9 @@ body {
         padding: 20px;
     }
 
-}
+    body.login-page .footer-wrapper,
+    body.register-page .footer-wrapper {
+        padding: 16px 20px;
+    }
 
+}
