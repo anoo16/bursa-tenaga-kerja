@@ -21,6 +21,10 @@ Route::view(
     'auth.register-recruiter'
 );
 
+Route::view('/terms', 'legal.terms')->name('terms');
+
+Route::view('/privacy-policy', 'legal.privacy')->name('privacy.policy');
+
 Route::view(
     '/verify-otp',
     'auth.verify-otp'
@@ -54,11 +58,6 @@ Route::view(
 Route::view(
     '/dashboard/admin',
     'dashboard.admin'
-);
-
-Route::view(
-    '/dashboard/recruiter',
-    'dashboard.recruiter'
 );
 
 
@@ -174,7 +173,7 @@ Route::middleware([])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/company/dashboard', [CompanyDashboardController::class, 'index'])->name('company.dashboard');
+Route::get('/dashboard/company', [CompanyDashboardController::class, 'index'])->name('company.dashboard');
 Route::get('/company/profile', [CompanyDashboardController::class, 'profile'])->name('company.profile');
 Route::get('/company/profile/edit', [CompanyDashboardController::class, 'editProfile'])->name('company.profile.edit');
 Route::put('/company/profile', [CompanyDashboardController::class, 'updateProfile'])->name('company.profile.update');

@@ -47,14 +47,14 @@
             background: #1B3A5C;
         }
     </style>
-    <!--script>
+    <script>
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'));
         
         if (!token || !user || Number(user.role_id) !== 2) {
             window.location.href = '/login';
         }
-    </!--script-->
+    </script>
     @yield('styles')
 </head>
 

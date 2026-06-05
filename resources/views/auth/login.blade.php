@@ -2,6 +2,8 @@
 
 @section('title', 'Masuk - Bursa Tenaga Kerja')
 
+@section('body-class', 'login-page')
+
 @section('hero-label', 'MASUK')
 
 @section('hero-text')
@@ -136,7 +138,7 @@
                     type="password"
                     id="password"
                     class="form-control"
-                    placeholder="••••••••"
+                    placeholder=""
                     required
                 >
 
@@ -195,48 +197,53 @@
 
     </form>
 
-    <!-- DIVIDER -->
-    <div class="d-flex align-items-center mb-4">
+    <!-- GOOGLE LOGIN WRAPPER -->
+    <div id="googleLoginWrapper">
 
-        <hr class="flex-grow-1 m-0" style="color: #E2E8F0;">
+        <!-- DIVIDER -->
+        <div class="d-flex align-items-center mb-4">
 
-        <span
-            class="px-3"
+            <hr class="flex-grow-1 m-0" style="color: #E2E8F0;">
+
+            <span
+                class="px-3"
+                style="
+                    font-size: 12px;
+                    color: #94A3B8;
+                    font-weight: 500;
+                    letter-spacing: 0.5px;
+                "
+            >
+                ATAU LANJUTKAN DENGAN
+            </span>
+
+            <hr class="flex-grow-1 m-0" style="color: #E2E8F0;">
+
+        </div>
+
+        <!-- GOOGLE LOGIN -->
+        <a
+            href="/api/auth/google"
+            class="btn w-100 d-flex align-items-center justify-content-center gap-2 py-2 mb-4"
             style="
-                font-size: 12px;
-                color: #94A3B8;
-                font-weight: 500;
-                letter-spacing: 0.5px;
+                background-color: #FFFFFF;
+                border: 1px solid #E2E8F0;
+                color: #1E1E1E;
+                font-weight: 600;
+                font-size: 14px;
+                border-radius: 8px;
             "
         >
-            ATAU LANJUTKAN DENGAN
-        </span>
+            <img
+                src="{{ asset('assets/google.svg') }}"
+                width="20"
+                alt="Google"
+            >
 
-        <hr class="flex-grow-1 m-0" style="color: #E2E8F0;">
+            Masuk Dengan Google
+        </a>
 
     </div>
-
-    <!-- GOOGLE LOGIN -->
-    <a
-        href="/api/auth/google"
-        class="btn w-100 d-flex align-items-center justify-content-center gap-2 py-2 mb-4"
-        style="
-            background-color: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            color: #1E1E1E;
-            font-weight: 600;
-            font-size: 14px;
-            border-radius: 8px;
-        "
-    >
-        <img
-            src="{{ asset('assets/google.svg') }}"
-            width="20"
-            alt="Google"
-        >
-
-        Masuk Dengan Google
-    </a>
 
     <!-- REGISTER -->
     <div

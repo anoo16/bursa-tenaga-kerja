@@ -62,7 +62,7 @@ class AuthController extends Controller
                 'password' => 'required|min:6|confirmed',
                 'role_id' => 'required|integer|in:2,3',
 
-                'phone' => 'nullable|string|max:20',
+                'phone' => 'nullable|regex:/^[0-9]+$/|min:10|max:15',
                 'birth_date' => 'nullable|date',
                 'education' => 'nullable|string|max:255',
 
@@ -71,8 +71,8 @@ class AuthController extends Controller
                     : 'nullable|string|max:255',
 
                 'npwp' => $isRecruiter
-                    ? 'required|string|max:30'
-                    : 'nullable|string|max:30',
+                ? 'required|regex:/^[0-9]+$/|digits:16'
+                : 'nullable|regex:/^[0-9]+$/|digits:16',
 
                 'npwp_file' => $isRecruiter
                     ? 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
@@ -106,8 +106,9 @@ class AuthController extends Controller
                 'role_id.integer' => 'Tipe akun tidak valid.',
                 'role_id.in' => 'Tipe akun tidak valid.',
 
-                'phone.string' => 'Nomor telepon tidak valid.',
-                'phone.max' => 'Nomor telepon maksimal 20 karakter.',
+                'phone.regex' => 'Nomor telepon hanya boleh berisi angka.',
+                'phone.min' => 'Nomor telepon minimal 10 karakter.',
+                'phone.max' => 'Nomor telepon maksimal 15 karakter.',
 
                 'birth_date.date' => 'Format tanggal lahir tidak valid.',
 
@@ -118,9 +119,8 @@ class AuthController extends Controller
                 'company_name.string' => 'Nama perusahaan tidak valid.',
                 'company_name.max' => 'Nama perusahaan maksimal 255 karakter.',
 
-                'npwp.required' => 'Nomor NPWP wajib diisi.',
-                'npwp.string' => 'Nomor NPWP tidak valid.',
-                'npwp.max' => 'Nomor NPWP maksimal 30 karakter.',
+                'npwp.regex' => 'Nomor NPWP hanya boleh berisi angka.',
+                'npwp.digits' => 'Nomor NPWP harus terdiri dari 16 digit.',
 
                 'npwp_file.required' => 'Dokumen NPWP wajib diunggah.',
                 'npwp_file.file' => 'Dokumen NPWP tidak valid.',
@@ -341,7 +341,6 @@ class AuthController extends Controller
         }
     }
 
-    
     /**
      * Login User.
      */
@@ -361,10 +360,19 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+        $userCheck = User::where('email', $request->email)->first();
+
+        if (!$userCheck) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun belum terdaftar. Silakan buat akun terlebih dahulu.'
+            ], 404);
+        }
+
         if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email atau kata sandi salah.'
+                'message' => 'Kata sandi salah.'
             ], 401);
         }
 

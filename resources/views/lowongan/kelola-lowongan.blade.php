@@ -8,6 +8,28 @@
 {{-- Bagian Stylesheet Khusus Halaman Kelola Lowongan --}}
 @section('styles')
     @vite('resources/css/lowongan.css')
+    <style>
+    /* Sembunyikan teks "Showing x to y of z results" pada pagination bawaan Laravel */
+    nav[role="navigation"] .hidden.sm\:flex-1 > div:first-child {
+        display: none;
+    }
+    nav[role="navigation"] .hidden.sm\:flex-1 {
+        justify-content: center !important;
+    }
+    /* Override pagination colors to stay light mode */
+    nav[role="navigation"] a,
+    nav[role="navigation"] span {
+        background-color: #ffffff !important;
+        color: #374151 !important; /* gray-700 */
+        border-color: #d1d5db !important; /* gray-300 */
+    }
+    /* Active page (current) */
+    nav[role="navigation"] span[aria-current="page"] > span {
+        background-color: #F3EFE0 !important;
+        border-color: #F3EFE0 !important;
+        color: #143E72 !important;
+    }
+</style>
 @endsection
 
 {{-- Bagian Script Logika JavaScript Halaman Kelola Lowongan --}}
@@ -142,14 +164,14 @@
     {{-- ===================== TABEL DAFTAR DATA LOWONGAN PEKERJAAN ===================== --}}
     <div class="bg-white rounded-3xl border border-[#EBE8DF] shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
+            <table class="w-full border-collapse table-fixed min-w-[900px]">
                 <thead>
                     <tr class="text-white">
-                        <th class="text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72] rounded-tl-3xl">Lowongan</th>
-                        <th class="text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72]">Status</th>
-                        <th class="text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72]">Pelamar</th>
-                        <th class="text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72]">Deadline</th>
-                        <th class="text-right px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72] rounded-tr-3xl">Aksi</th>
+                        <th class="w-[35%] text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72] rounded-tl-3xl">Lowongan</th>
+                        <th class="w-[15%] text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72]">Status</th>
+                        <th class="w-[15%] text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72]">Pelamar</th>
+                        <th class="w-[15%] text-left px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72]">Deadline</th>
+                        <th class="w-[20%] text-right px-6 py-4.5 text-sm font-extrabold uppercase tracking-wider text-white bg-[#143E72] rounded-tr-3xl">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#F3EFE0]">
@@ -158,7 +180,7 @@
                         {{-- Posisi Pekerjaan & Kategori Lowongan --}}
                         <td class="px-6 py-5 whitespace-normal">
                             <p class="text-sm font-extrabold text-[#113255] leading-tight mb-1">{{ $job->posisi }}</p>
-                            <span class="text-xs text-slate-400 font-semibold">{{ $job->kategori }}</span>
+                            <span class="text-xs text-slate-400 font-semibold">{{ $job->jenis_bidang }} &bull; {{ $job->kategori }}</span>
                         </td>
                         
                         {{-- Badge Status Lowongan (Aktif / Tutup) --}}
@@ -195,7 +217,7 @@
                             <div class="flex items-center justify-end gap-2">
                                 {{-- Tombol Detail: Membuka Pop-Up Detail Lowongan --}}
                                 <button type="button" 
-                                        onclick='lihatLowongan("{{ $job->id }}", "{{ $job->posisi }}", "{{ $job->kategori }}", "{{ $job->gaji }}", "{{ $job->deadline }}", @json($job->tanggung_jawab), @json($job->kualifikasi))'
+                                        onclick='lihatLowongan("{{ $job->id }}", "{{ $job->posisi }}", "{{ $job->kategori }}", "{{ $job->gaji }}", "{{ $job->deadline }}", @json($job->tanggung_jawab), @json($job->kualifikasi), "{{ $job->jenis_bidang }}")'
                                         class="w-10 h-10 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 hover:-translate-y-0.5 active:translate-y-0 text-[#143E72] flex items-center justify-center transition-all duration-200 shadow-sm"
                                         title="Lihat Detail">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -259,6 +281,19 @@
         </div>
         {{-- Pagination Links --}}
         <div class="mt-5">{{ $jobs->links() }}</div>
+         <script>
+         document.addEventListener('DOMContentLoaded', () => {
+           const url = new URL(window.location);
+           const page = Number(url.searchParams.get('page') || 1);
+           const emptyCell = document.querySelector('td[colspan="5"]');
+           const isEmpty = emptyCell && emptyCell.textContent.includes('Belum ada lowongan');
+           if (page > 1 && isEmpty) {
+             const prevPage = page - 1;
+             url.searchParams.set('page', prevPage);
+             window.location = url.toString();
+           }
+         });
+         </script>
     </div>
 </div>
 
