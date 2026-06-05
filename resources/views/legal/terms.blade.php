@@ -319,7 +319,7 @@
 
                     <a
                         href="/"
-                        class="btn-outline-legal"
+                        class="btn-primary-legal"
                     >
                         Beranda
                     </a>
