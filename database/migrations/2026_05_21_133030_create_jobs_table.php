@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,32 +12,32 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-             // Posisi pekerjaan
+            // Posisi pekerjaan
             $table->string('posisi');
 
             // Jenis pekerjaan
             $table->string('kategori');
 
+            // Jenis bidang
+            $table->string('jenis_bidang');
+
             // Rentang gaji
             $table->string('gaji');
 
-            
-            //Menyimpan banyak tanggung jawab
-            
+            // Menyimpan banyak tanggung jawab
+
             $table->json('tanggung_jawab');
 
-            
-            //Menyimpan banyak kualifikasi
+            // Menyimpan banyak kualifikasi
             $table->json('kualifikasi');
 
             /*
-            draft = belum dipublikasi
-            aktif = lowongan aktif
-            ditutup = lowongan ditutup
-            */
+             * aktif = lowongan aktif
+             * ditutup = lowongan ditutup
+             */
             $table->enum(
                 'status',
-                ['buka','tutup']
+                ['buka', 'tutup']
             )->default('buka');
 
             $table->timestamps();

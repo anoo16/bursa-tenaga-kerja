@@ -174,16 +174,7 @@ window.lihatLowongan = function (
     kualifikasi,
     jenis_bidang,
 ) {
-    activeJob = {
-        id,
-        posisi,
-        kategori,
-        gaji,
-        deadline,
-        tanggung,
-        kualifikasi,
-        jenis_bidang,
-    };
+    activeJob = { id, posisi, kategori, gaji, deadline, tanggung, kualifikasi, jenis_bidang };
 
     const detailPosisi = document.getElementById("detail-posisi");
     const detailKategori = document.getElementById("detail-kategori");
@@ -240,16 +231,7 @@ window.editLowonganLangsung = function (
     kualifikasi,
     jenis_bidang,
 ) {
-    activeJob = {
-        id,
-        posisi,
-        kategori,
-        gaji,
-        deadline,
-        tanggung,
-        kualifikasi,
-        jenis_bidang,
-    };
+    activeJob = { id, posisi, kategori, gaji, deadline, tanggung, kualifikasi, jenis_bidang };
     bukaEdit();
 };
 

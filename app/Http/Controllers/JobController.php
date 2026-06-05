@@ -22,6 +22,11 @@ class JobController extends Controller
         // mengambil data terbaru beserta jumlah pelamar
         $jobs = Job::withCount('applications')->latest()->paginate(5);
 
+        // Jika halaman saat ini kosong dan bukan halaman pertama, redirect ke halaman terakhir yang valid
+        if ($jobs->isEmpty() && $jobs->currentPage() > 1) {
+            return redirect()->to($jobs->url($jobs->lastPage()));
+        }
+
         // Ambil ID semua lowongan
         $jobIds = Job::pluck('id');
 
@@ -34,8 +39,8 @@ class JobController extends Controller
             ->count();
 
         // Persentase perekrutan berhasil
-        $persentaseSukses = $totalPelamar > 0 
-            ? round(($perekrutanDiterima / $totalPelamar) * 100) 
+        $persentaseSukses = $totalPelamar > 0
+            ? round(($perekrutanDiterima / $totalPelamar) * 100)
             : 0;
 
         $stats = [
@@ -64,6 +69,7 @@ class JobController extends Controller
         $request->validate([
             'posisi' => 'required|string|max:255',
             'kategori' => 'required|string',
+            'jenis_bidang' => 'required|string',
             'gaji' => 'required|string|max:255',
             'deadline' => 'nullable|date',
             'tanggung_jawab' => 'required|array|min:1',
@@ -75,6 +81,7 @@ class JobController extends Controller
         Job::create([
             'posisi' => $request->posisi,
             'kategori' => $request->kategori,
+            'jenis_bidang' => $request->jenis_bidang,
             'gaji' => $request->gaji,
             // Batas waktu lowongan (opsional)
             'deadline' => $request->deadline ?: null,
@@ -97,12 +104,12 @@ class JobController extends Controller
     public function update(
         Request $request,
         Job $job
-    )
-    {
+    ) {
         // Validasi form
         $request->validate([
             'posisi' => 'required|string|max:255',
             'kategori' => 'required|string',
+            'jenis_bidang' => 'required|string',
             'gaji' => 'required|string|max:255',
             'deadline' => 'nullable|date',
             'tanggung_jawab' => 'nullable|array|min:1',
@@ -115,6 +122,7 @@ class JobController extends Controller
         $job->update([
             'posisi' => $request->posisi,
             'kategori' => $request->kategori,
+            'jenis_bidang' => $request->jenis_bidang,
             'gaji' => $request->gaji,
             'deadline' => $request->deadline ?: null,
             'tanggung_jawab' => $request->tanggung_jawab,

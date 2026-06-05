@@ -207,14 +207,14 @@ yang dikirimkan ke route 'company.jobs.store'.
                     {{-- Tombol Tambah Baris Dinamis Tanggung Jawab --}}
                     <button type="button"
                         onclick="tambahItem('list-tanggung-jawab','tanggung_jawab[]','Jelaskan peran ini secara ringkas dan menarik...')"
-                        class="mt-2 flex items-center gap-2 text-[#143E72] hover:text-[#0f2d54]
-                                   text-sm font-semibold transition-colors">
-                        <div class="w-6 h-6 rounded-full border-2 border-current flex items-center justify-center">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                        </div>
+                        class="mt-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+                                   bg-[#143E72] hover:bg-[#0f2d54]
+                                   text-sm font-semibold text-white
+                                   transition-all duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                         Tambah Poin
                     </button>
                 </div>
@@ -245,22 +245,22 @@ yang dikirimkan ke route 'company.jobs.store'.
                     {{-- Tombol Tambah Baris Dinamis Kualifikasi --}}
                     <button type="button"
                         onclick="tambahItem('list-kualifikasi','kualifikasi[]','Jelaskan peran ini secara ringkas dan menarik...')"
-                        class="mt-2 flex items-center gap-2 text-[#143E72] hover:text-[#0f2d54]
-                                   text-sm font-semibold transition-colors">
-                        <div class="w-6 h-6 rounded-full border-2 border-current flex items-center justify-center">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                        </div>
+                        class="mt-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+                                   bg-[#143E72] hover:bg-[#0f2d54]
+                                   text-sm font-semibold text-white
+                                   transition-all duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                         Tambah Poin
                     </button>
                 </div>
 
                 {{-- Tombol Batal & Simpan --}}
                 <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
-                    <button type="button" onclick="tutupModal()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-slate-600
-                                   hover:bg-slate-100 transition-colors">
+                    <button type="button" onclick="tutupModal()" class="px-6 py-2.5 rounded-xl border border-slate-400 hover:border-slate-500 active:border-slate-600 text-sm font-semibold text-slate-500 hover:text-slate-700
+                                   hover:bg-slate-200 transition-all duration-200">
                         Batal
                     </button>
                     <button type="submit" id="btn-submit" class="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold
@@ -306,52 +306,49 @@ Tanggung Jawab, Kualifikasi). Memiliki tombol redirect ke Form Edit.
             </button>
         </div>
 
-        {{-- Konten Informasi Detail Lowongan --}}
-        <div class="detail-scroll px-7 pt-7 pb-1 space-y-5 overflow-y-auto max-h-[65vh]">
-            {{-- Kategori --}}
-            <div>
-                <h3 class="font-bold text-[#143E72] mb-2">Kategori</h3>
-                <p id="detail-kategori" class="text-sm text-slate-700"></p>
-            </div>
+<div class="detail-scroll px-7 pt-7 pb-1 space-y-6 overflow-y-auto max-h-[65vh]">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Deadline -->
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
+        <h3 class="font-bold text-[#143E72] mb-2">Deadline</h3>
+        <p id="detail-deadline" class="text-sm text-slate-700"></p>
+    </div>
+    <!-- Gaji -->
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
+        <h3 class="font-bold text-[#143E72] mb-2">Rentang Gaji</h3>
+        <p id="detail-gaji" class="text-sm text-slate-700"></p>
+    </div>
+    <!-- Kategori -->
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
+        <h3 class="font-bold text-[#143E72] mb-2">Kategori</h3>
+        <p id="detail-kategori" class="text-sm text-slate-700"></p>
+    </div>
+    <!-- Jenis Bidang -->
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
+        <h3 class="font-bold text-[#143E72] mb-2">Jenis Bidang</h3>
+        <p id="detail-jenis-bidang" class="text-sm text-slate-700"></p>
+    </div>
+</div>
 
-            {{-- Jenis Bidang & Batas Waktu --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <h3 class="font-bold text-[#143E72] mb-2">Jenis Bidang</h3>
-                    <p id="detail-jenis-bidang" class="text-sm text-slate-700"></p>
-                </div>
-                <div>
-                    <h3 class="font-bold text-[#143E72] mb-2">Deadline</h3>
-                    <p id="detail-deadline" class="text-sm text-slate-700"></p>
-                </div>
-            </div>
+    <!-- Tanggung Jawab Card -->
+    <div class="bg-gray-50 rounded-xl p-5 mb-4 shadow-sm border border-gray-200">
+        <h3 class="font-bold text-[#143E72] mb-3">Tanggung Jawab</h3>
+        <ul id="detail-tanggung" class="list-disc pl-5 space-y-2 text-sm text-slate-700"></ul>
+    </div>
 
-            {{-- Rentang Gaji --}}
-            <div>
-                <h3 class="font-bold text-[#143E72] mb-2">Rentang Gaji</h3>
-                <p id="detail-gaji" class="text-sm text-slate-700"></p>
-            </div>
-
-            {{-- Daftar Tanggung Jawab --}}
-            <div>
-                <h3 class="font-bold text-[#143E72] mb-3">Tanggung Jawab</h3>
-                <ul id="detail-tanggung" class="list-disc pl-5 space-y-2 text-sm text-slate-700"></ul>
-            </div>
-
-            {{-- Daftar Kualifikasi --}}
-            <div>
-                <h3 class="font-bold text-[#143E72] mb-3">Kualifikasi</h3>
-                <ul id="detail-kualifikasi" class="list-disc pl-5 space-y-2 text-sm text-slate-700"></ul>
-            </div>
-
-            {{-- Tombol Tutup & Edit --}}
+    <!-- Kualifikasi Card -->
+    <div class="bg-gray-50 rounded-xl p-5 mb-4 shadow-sm border border-gray-200">
+        <h3 class="font-bold text-[#143E72] mb-3">Kualifikasi</h3>
+        <ul id="detail-kualifikasi" class="list-disc pl-5 space-y-2 text-sm text-slate-700"></ul>
+    </div>
+</div>    {{-- Tombol Tutup & Edit --}}
             <div class="flex justify-end items-center gap-3 pt-3 pb-3 mt-4 border-t border-slate-100">
                 <button type="button" onclick="tutupDetail()"
-                    class="px-4 py-2 rounded-xl text-slate-500 hover:bg-slate-100 transition-all duration-200">
+                    class="px-6 py-2 rounded-xl border border-slate-400 hover:border-slate-500 active:border-slate-600 text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all duration-200 mr-2">
                     Tutup
                 </button>
                 <button type="button" onclick="bukaEdit()"
-                    class="px-5 py-2 rounded-xl bg-[#143E72] text-white text-sm hover:bg-[#0F2F57] transition-all duration-200">
+                    class="px-6 py-2 rounded-xl bg-[#143E72] text-white hover:bg-[#0F2F57] transition-all duration-200 mr-2">
                     Edit
                 </button>
             </div>
@@ -452,13 +449,14 @@ melalui metode PUT ke URL action '/company/jobs/{id}' secara dinamis via JS.
                 <div id="edit-list-tanggung-jawab" class="space-y-2"></div>
                 <button type="button"
                     onclick="tambahItem('edit-list-tanggung-jawab','tanggung_jawab[]','Jelaskan peran ini secara ringkas...')"
-                    class="mt-2 flex items-center gap-2 text-[#143E72] hover:text-[#0f2d54] text-sm font-semibold transition-colors">
-                    <div class="w-6 h-6 rounded-full border-2 border-current flex items-center justify-center">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                    </div>
+                    class="mt-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+                               bg-[#143E72] hover:bg-[#0f2d54]
+                               text-sm font-semibold text-white
+                               transition-all duration-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
                     Tambah Poin
                 </button>
             </div>
@@ -469,13 +467,14 @@ melalui metode PUT ke URL action '/company/jobs/{id}' secara dinamis via JS.
                 <div id="edit-list-kualifikasi" class="space-y-2"></div>
                 <button type="button"
                     onclick="tambahItem('edit-list-kualifikasi','kualifikasi[]','Jelaskan kualifikasi ini...')"
-                    class="mt-2 flex items-center gap-2 text-[#143E72] hover:text-[#0f2d54] text-sm font-semibold transition-colors">
-                    <div class="w-6 h-6 rounded-full border-2 border-current flex items-center justify-center">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                    </div>
+                    class="mt-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+                               bg-[#143E72] hover:bg-[#0f2d54]
+                               text-sm font-semibold text-white
+                               transition-all duration-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
                     Tambah Poin
                 </button>
             </div>

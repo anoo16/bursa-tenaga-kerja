@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
+    protected $fillable = [
         // Data yang boleh disimpan
         'posisi',
         'kategori',
+        'jenis_bidang',
         'gaji',
         'deadline',
         'tanggung_jawab',
@@ -20,10 +21,10 @@ class Job extends Model
         'status'
     ];
 
-    protected $casts=[
-        //Mengubah data JSON menjadi array otomatis
-        'tanggung_jawab'=>'array',
-        'kualifikasi'=>'array'
+    protected $casts = [
+        // Mengubah data JSON menjadi array otomatis
+        'tanggung_jawab' => 'array',
+        'kualifikasi' => 'array'
     ];
 
     public function applications()

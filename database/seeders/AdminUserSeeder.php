@@ -16,14 +16,13 @@ class AdminUserSeeder extends Seeder
                 'password' => env('ADMIN_PASSWORD'),
             ],
             [
-                'name' => env('ADMIN2_NAME', 'Admin Kelompok'),
-                'email' => env('ADMIN2_EMAIL'),
-                'password' => env('ADMIN2_PASSWORD'),
+                'name' => 'admin',
+                'email' => 'admin@gmail.com',
+                'password' => 'password',
             ],
         ];
 
         foreach ($admins as $admin) {
-
             if (empty($admin['email']) || empty($admin['password'])) {
                 continue;
             }

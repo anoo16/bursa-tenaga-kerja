@@ -21,11 +21,11 @@
 }
 
 /* Scrollbar halus di panel kanan pop-up */
-#modal-box > div:last-child::-webkit-scrollbar {
+#modal-box>div:last-child::-webkit-scrollbar {
     width: 4px;
 }
 
-#modal-box > div:last-child::-webkit-scrollbar-thumb {
+#modal-box>div:last-child::-webkit-scrollbar-thumb {
     background: #e2e8f0;
     border-radius: 9999px;
 }
@@ -59,39 +59,19 @@ button.bg-gray-200:hover {
 
 button.bg-\[#143E72\],
 button.bg-\[#143E72\]:hover {
-    background-color: #143e72 !important;
+    background-color: #143E72 !important;
     color: #ffffff !important;
 }
 
 /* Prevent color change on theme switch for specific span */
-body
-    > div
-    > div
-    > main
-    > div.p-6
-    > div.bg-white.rounded-3xl.border.border-\[#EBE8DF\].shadow-sm.overflow-hidden
-    > div.mt-5
-    > nav
-    > div.hidden.sm\:flex-1.sm\:flex.sm\:gap-2.sm\:items-center.sm\:justify-between
-    > div:nth-child(2)
-    > span {
+body>div>div>main>div.p-6>div.bg-white.rounded-3xl.border.border-\[#EBE8DF\].shadow-sm.overflow-hidden>div.mt-5>nav>div.hidden.sm\:flex-1.sm\:flex.sm\:gap-2.sm\:items-center.sm\:justify-between>div:nth-child(2)>span {
     color: #111827 !important;
     background-color: #e5e7eb !important;
 }
 
 /* Ensure same colors in dark mode */
 @media (prefers-color-scheme: dark) {
-    body
-        > div
-        > div
-        > main
-        > div.p-6
-        > div.bg-white.rounded-3xl.border.border-[#EBE8DF].shadow-sm.overflow-hidden
-        > div.mt-5
-        > nav
-        > div.hidden.sm\:flex-1.sm\:flex.sm\:gap-2.sm\:items-center.sm\:justify-between
-        > div:nth-child(2)
-        > span {
+    body>div>div>main>div.p-6>div.bg-white.rounded-3xl.border.border-\[#EBE8DF\].shadow-sm.overflow-hidden>div.mt-5>nav>div.hidden.sm\:flex-1.sm\:flex.sm\:gap-2.sm\:items-center.sm\:justify-between>div:nth-child(2)>span {
         color: #111827 !important;
         background-color: #e5e7eb !important;
     }
