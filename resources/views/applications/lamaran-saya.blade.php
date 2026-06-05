@@ -2,138 +2,133 @@
 
 @section('content')
 
-@vite([
-    'resources/css/lamaran-saya.css',
-    
-])
+@vite(['resources/css/lamaran-saya.css'])
+
+{{-- ✅ Inject user_id dari localStorage ke URL --}}
+<script>
+(function() {
+    const url    = new URL(window.location.href);
+    const userId = url.searchParams.get('user_id');
+
+    if (!userId) {
+        const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user');
+        if (userRaw) {
+            try {
+                const user = JSON.parse(userRaw);
+                if (user && user.id) {
+                    url.searchParams.set('user_id', user.id);
+                    // Pertahankan filter status jika ada
+                    window.location.replace(url.toString());
+                }
+            } catch(e) {}
+        }
+    }
+})();
+</script>
 
 <div class="lmr-wrap">
 
     {{-- HEADER --}}
     <h1 class="lmr-title">Lamaran Saya</h1>
     <p class="lmr-subtitle">
-        Kelola dan pantau status lamaran pekerjaan Anda dalam satu galeri yang terkurasi.<br>
+        Kelola dan pantau status lamaran pekerjaan Anda dalam satu tempat.<br>
         Setiap langkah mendekatkan Anda ke tujuan profesional.
     </p>
 
+    {{-- ALERT --}}
+    @if(session('success'))
+        <div class="lmr-alert lmr-alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="lmr-alert lmr-alert-error">{{ session('error') }}</div>
+    @endif
+
     {{-- STATISTIK --}}
     <div class="stat-row">
-
         <div class="stat-card">
             <div class="stat-label">Total Lamaran</div>
-            <div class="stat-num">12</div>
-            <div class="stat-bar" style="background:#0B6E69;"></div>
+            <div class="stat-num" style="color:#1a3570;">{{ $stats['total'] }}</div>
+            <div class="stat-bar" style="background:#1a3570;"></div>
         </div>
-
         <div class="stat-card">
             <div class="stat-label">Sedang Review</div>
-            <div class="stat-num">4</div>
-            <div class="stat-bar" style="background:#0B6E69;"></div>
+            <div class="stat-num" style="color:#0b6e69;">{{ $stats['review'] }}</div>
+            <div class="stat-bar" style="background:#0b6e69;"></div>
         </div>
-
         <div class="stat-card">
             <div class="stat-label">Diterima</div>
-            <div class="stat-num">2</div>
+            <div class="stat-num" style="color:#1a8040;">{{ $stats['diterima'] }}</div>
             <div class="stat-bar" style="background:#38D66B;"></div>
         </div>
-
         <div class="stat-card">
             <div class="stat-label">Menunggu</div>
-            <div class="stat-num grey">6</div>
+            <div class="stat-num grey">{{ $stats['menunggu'] }}</div>
             <div class="stat-bar" style="background:#E5EAF3;"></div>
         </div>
-
     </div>
 
     {{-- FILTER BAR --}}
+    @php
+        $uid  = request('user_id');
+        $base = route('applications.lamaran-saya') . ($uid ? '?user_id=' . $uid : '');
+    @endphp
     <div class="filter-row">
         <div class="filter-left">
-            <button class="fpill active" onclick="setFilter(this)">Semua</button>
-            <button class="fpill" onclick="setFilter(this)">Review</button>
-            <button class="fpill" onclick="setFilter(this)">Diterima</button>
-            <button class="fpill" onclick="setFilter(this)">Ditolak</button>
-            <button class="fpill" onclick="setFilter(this)">Menunggu</button>
-            <span class="showing-count">Menampilkan 1 – 4 dari 12 lamaran</span>
+            <a href="{{ $base }}"
+               class="fpill {{ !request('status') ? 'active' : '' }}">Semua</a>
+            <a href="{{ $base . '&status=REVIEW' }}"
+               class="fpill {{ request('status') === 'REVIEW' ? 'active' : '' }}">Review</a>
+            <a href="{{ $base . '&status=INTERVIEW' }}"
+               class="fpill {{ request('status') === 'INTERVIEW' ? 'active' : '' }}">Interview</a>
+            <a href="{{ $base . '&status=DITERIMA' }}"
+               class="fpill {{ request('status') === 'DITERIMA' ? 'active' : '' }}">Diterima</a>
+            <a href="{{ $base . '&status=DITOLAK' }}"
+               class="fpill {{ request('status') === 'DITOLAK' ? 'active' : '' }}">Ditolak</a>
+            <a href="{{ $base . '&status=BARU' }}"
+               class="fpill {{ request('status') === 'BARU' ? 'active' : '' }}">Menunggu</a>
+            <span class="showing-count">
+                Menampilkan {{ $applications->firstItem() ?? 0 }}–{{ $applications->lastItem() ?? 0 }}
+                dari {{ $applications->total() }} lamaran
+            </span>
         </div>
-        <button class="sort-btn">
+        <div class="sort-btn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2.5">
                 <line x1="3" y1="6"  x2="21" y2="6"/>
                 <line x1="6" y1="12" x2="18" y2="12"/>
                 <line x1="10" y1="18" x2="14" y2="18"/>
             </svg>
-            Urutkan: Terbaru
-        </button>
+            Terbaru
+        </div>
     </div>
 
     {{-- DAFTAR LAMARAN --}}
+    @forelse($applications as $app)
+
     @php
-    $jobs = [
-        [
-            'id'      => '1',  
-            'title'   => 'Senior UX Designer',
-            'company' => 'Tokopedia',
-            'location'=> 'Jakarta, On-Site',
-            'date'    => '12 Okt 2023',
-            'status'  => 'SEDANG REVIEW',
-            'badge'   => 'sbadge-review',
-            'updated' => 'Diperbarui 2 hari yang lalu',
-            'logo'    => 'https://upload.wikimedia.org/wikipedia/commons/4/41/Tokopedia.png',
-        ],
-        [
-            'id'      => '2',        
-            'title'   => 'Product Manager',
-            'company' => 'Erajaya Group',
-            'location'=> 'Bandung, Remote',
-            'date'    => '08 Okt 2023',
-            'status'  => 'DITERIMA',
-            'badge'   => 'sbadge-diterima',
-            'updated' => 'Diperbarui 5 jam yang lalu',
-            'logo'    => 'https://upload.wikimedia.org/wikipedia/id/thumb/b/b1/Erajaya_Group.png/250px-Erajaya_Group.png',
-        ],
-        [
-            'id'      => '3',
-            'title'   => 'Marketing Specialist',
-            'company' => 'Grab Indonesia',
-            'location'=> 'Jakarta Selatan',
-            'date'    => '02 Okt 2023',
-            'status'  => 'DITOLAK',
-            'badge'   => 'sbadge-ditolak',
-            'updated' => 'Diperbarui 1 minggu yang lalu',
-            'logo'    => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Grab_logo_2019.svg/250px-Grab_logo_2019.svg.png',
-        ],
-        [
-            'id'      => '4',
-            'title'   => 'Frontend Developer',
-            'company' => 'Gojek',
-            'location'=> 'Yogyakarta',
-            'date'    => '28 Sep 2023',
-            'status'  => 'MENUNGGU',
-            'badge'   => 'sbadge-menunggu',
-            'updated' => 'Diperbarui 3 hari yang lalu',
-            'logo'    => 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Gojek_logo_2022.svg/250px-Gojek_logo_2022.svg.png',
-        ],
-    ];
+        $statusMap = [
+            'BARU'      => ['label' => 'MENUNGGU',      'badge' => 'sbadge-menunggu'],
+            'REVIEW'    => ['label' => 'SEDANG REVIEW', 'badge' => 'sbadge-review'],
+            'INTERVIEW' => ['label' => 'INTERVIEW',     'badge' => 'sbadge-interview'],
+            'DITERIMA'  => ['label' => 'DITERIMA',      'badge' => 'sbadge-diterima'],
+            'DITOLAK'   => ['label' => 'DITOLAK',       'badge' => 'sbadge-ditolak'],
+        ];
+        $s = $statusMap[$app->status] ?? ['label' => $app->status, 'badge' => 'sbadge-menunggu'];
     @endphp
 
-    @foreach ($jobs as $job)
     <div class="job-card">
 
-        {{-- Logo --}}
-        <img
-            src="{{ $job['logo'] }}"
-            alt="{{ $job['company'] }}"
-            class="job-logo"
-            onerror="this.style.display='none'"
-        >
+        {{-- Inisial posisi sebagai avatar --}}
+        <div class="job-logo-initial">
+            {{ strtoupper(substr($app->job->posisi ?? 'J', 0, 2)) }}
+        </div>
 
-        {{-- Info --}}
+        {{-- Info Lowongan --}}
         <div class="job-info">
-            <div class="job-title">{{ $job['title'] }}</div>
-            <div class="job-company">{{ $job['company'] }}</div>
+            <div class="job-title">{{ $app->job->posisi ?? '-' }}</div>
+            <div class="job-company">{{ $app->job->kategori ?? '-' }}</div>
             <div class="job-meta">
                 <span>
-                    {{-- Calendar icon --}}
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -141,40 +136,75 @@
                         <line x1="8"  y1="2" x2="8"  y2="6"/>
                         <line x1="3"  y1="10" x2="21" y2="10"/>
                     </svg>
-                    {{ $job['date'] }}
+                    {{ ($app->applied_at ?? $app->created_at)->translatedFormat('d M Y') }}
                 </span>
                 <span>
-                    {{-- Location icon --}}
-                    <svg width="11" height="13" viewBox="0 0 24 24" fill="none"
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                        <circle cx="12" cy="9" r="2.5"/>
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                     </svg>
-                    {{ $job['location'] }}
+                    {{ $app->job->gaji ?? '-' }}
+                </span>
+                <span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    {{ $app->updated_at->diffForHumans() }}
                 </span>
             </div>
         </div>
 
         {{-- Status --}}
         <div class="job-status">
-            <span class="sbadge {{ $job['badge'] }}">{{ $job['status'] }}</span>
-            <div class="update-time">{{ $job['updated'] }}</div>
+            <span class="sbadge {{ $s['badge'] }}">{{ $s['label'] }}</span>
+            <div class="update-time">
+                Deadline:
+                {{ $app->job->deadline
+                    ? \Carbon\Carbon::parse($app->job->deadline)->translatedFormat('d M Y')
+                    : '-' }}
+            </div>
         </div>
 
-        {{-- Tombol --}}
-        <a href="{{ route('applications.show', $job['id']) }}" class="btn-detail">Lihat Detail</a>
-        
+        {{-- Tombol Aksi --}}
+        <div class="job-actions">
+            <a href="{{ route('applications.show', $app->id) }}" class="btn-detail">
+                Lihat Detail
+            </a>
+            @if($app->status === 'BARU')
+            <form action="{{ route('applications.withdraw', $app->id) }}"
+                  method="POST"
+                  onsubmit="return confirm('Yakin ingin menarik lamaran ini?')">
+                @csrf
+                <button type="submit" class="btn-withdraw">Tarik Lamaran</button>
+            </form>
+            @endif
+        </div>
 
     </div>
-    @endforeach
+
+    @empty
+    <div class="lmr-empty">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none"
+             stroke="#c0c8d8" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <line x1="9"  y1="15" x2="15" y2="15"/>
+        </svg>
+        <p>Belum ada lamaran{{ request('status') ? ' dengan status ini' : '' }}.</p>
+    </div>
+    @endforelse
+
+    {{-- PAGINATION --}}
+    @if($applications->hasPages())
+    <div class="lmr-pagination">
+        {{ $applications->appends(request()->query())->links() }}
+    </div>
+    @endif
 
 </div>
-
-<script>
-function setFilter(btn) {
-    document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
-</script>
 
 @endsection

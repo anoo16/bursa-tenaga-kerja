@@ -134,15 +134,15 @@ Route::middleware([])
         [ApplicationController::class,'index']
     )->name('applications.lamaran-saya');
 
-    Route::get(
-        '/applications/create/{jobId}',
-        [ApplicationController::class,'create']
-    )->name('applications.create');
-
     Route::post(
         '/applications/store',
         [ApplicationController::class,'store']
     )->name('applications.store');
+
+    Route::get(
+        '/applications/success',
+        [App\Http\Controllers\ApplicationController::class, 'success']
+    )->name('applications.success');
 
     Route::get(
         '/applications/{id}',
@@ -153,6 +153,18 @@ Route::middleware([])
         '/applications/{id}/withdraw',
         [ApplicationController::class,'withdraw']
     )->name('applications.withdraw');
+
+    // CARI LOWONGAN
+    Route::get(
+        '/jobs',
+        [App\Http\Controllers\JobSearchController::class, 'index']
+    )->name('jobs.index');
+
+    // DETAIL LOWONGAN
+    Route::get(
+        '/jobs/{job}',
+        [App\Http\Controllers\JobSearchController::class, 'show']
+    )->name('jobs.show');
 
 });
 

@@ -22,9 +22,11 @@
             </a>
         </li>
 
-        <li>
-            <i class='bx bx-search'></i>
-            Cari Lowongan
+        <li class="{{ request()->routeIs('jobs.index') ? 'active' : '' }}">
+            <a href="{{ route('jobs.index') }}">
+                <i class='bx bx-search'></i>
+                Cari Lowongan
+            </a>
         </li>
 
         <li class="{{ request()->routeIs('applications.lamaran-saya') ? 'active' : '' }}">
@@ -32,7 +34,7 @@
                 <i class='bx bx-file'></i>
                 Lamaran Saya
             </a>
-    </li>
+        </li>
 
         <li>
             <i class='bx bx-bookmark'></i>
