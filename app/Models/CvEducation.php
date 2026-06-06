@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class CvEducation extends Model
 {
+    protected $table = "cv_educations";
+    
     protected $fillable=[
         'cv_profile_id',
         'institution',

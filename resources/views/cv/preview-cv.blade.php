@@ -37,6 +37,37 @@
     </div>
 
 </div>
+
+<form
+    action="{{ route('cv.update') }}"
+    method="POST"
+>
+    @csrf
+    @method('PUT')
+
+    @foreach(session('cv_preview_data') as $key => $value)
+
+        @if(!is_array($value))
+
+            <input
+                type="hidden"
+                name="{{ $key }}"
+                value="{{ $value }}">
+
+        @endif
+
+    @endforeach
+
+    <button
+        type="submit"
+        class="btn-primary">
+
+        Simpan CV
+
+    </button>
+
+</form>
+
 @endsection
 
 @push('styles')

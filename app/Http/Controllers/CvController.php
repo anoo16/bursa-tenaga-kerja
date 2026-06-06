@@ -26,7 +26,10 @@ class CvController extends Controller
             true
         )->get();
 
-        $user = Auth::user();
+        $user =
+            Auth::guard('web')->user()
+            ??
+            Auth::guard('api')->user();
 
         $profile = $user
             ? $user->cvProfile
@@ -49,7 +52,10 @@ class CvController extends Controller
             'template_id' => 'required'
         ]);
 
-        $user = Auth::user();
+         $user =
+            Auth::guard('web')->user()
+            ??
+            Auth::guard('api')->user();
 
         if(!$user){
             return back()
@@ -91,9 +97,23 @@ class CvController extends Controller
     // STEP 2 : Form Edit CV
     // ===============================
 
-    public function edit()
+    public function edit(Request $request)
     {
-        $user = Auth::user();
+        $user =
+            Auth::guard('web')->user()
+            ??
+            Auth::guard('api')->user();
+
+
+        $template = $request->get('template');
+
+        if($template){
+
+            session([
+                'selected_cv_template' => $template
+            ]);
+
+        }
 
         if(!$user){
 
@@ -107,32 +127,26 @@ class CvController extends Controller
         }
 
         $profile = CvProfile::with([
-
             'experiences',
             'educations',
             'skills',
             'certifications'
-
         ])->firstOrCreate(
-
             [
                 'user_id'=>$user->id
             ],
-
             [
                 'full_name'=>$user->name,
                 'email'=>$user->email,
                 'template_id'=>'modern',
                 'primary_color'=>'#1a3c8f'
             ]
-
         );
 
-        $templates =
-            CvTemplate::where(
-                'is_active',
-                true
-            )->get();
+        $templates = CvTemplate::where(
+            'is_active',
+            true
+        )->get();
 
         return view(
             'cv.edit',
@@ -148,10 +162,13 @@ class CvController extends Controller
     // STEP 3 : Simpan CV
     // ===============================
 
-    public function update(
-        Request $request
-    )
+    public function update(Request $request)
     {
+        $user = auth()->user();
+
+        if(!$user){
+            abort(404);
+        }
 
         $request->validate([
 
@@ -177,11 +194,7 @@ class CvController extends Controller
 
         ]);
 
-
-        DB::transaction(function()
-        use($request){
-
-            $user = Auth::user();
+        DB::transaction(function() use ($request, $user){
 
             $profile=
                 CvProfile::firstOrCreate(
@@ -257,8 +270,10 @@ class CvController extends Controller
                 'linkedin'=>
                     $request->linkedin,
 
-                'summary'=>
-                    $request->summary,
+                'summary' =>
+                    $request->summary .
+                    "\n\nOrganisasi:\n" .
+                    ($request->organization ?? ''),
 
                 'template_id'=>
                     $request->template_id
@@ -280,45 +295,32 @@ class CvController extends Controller
             // Experience
             // ===================
 
-            $profile
-                ->experiences()
-                ->delete();
+            $profile->experiences()->delete();
 
-            foreach(
-                ($request->experiences ?? [])
-                as $i=>$exp
-            ){
+            foreach($request->experiences ?? [] as $i => $exp){
+
+                if(empty($exp['company'])){
+                    continue;
+                }
 
                 CvExperience::create([
 
-                    'cv_profile_id'=>
-                        $profile->id,
+                    'cv_profile_id' => $profile->id,
 
-                    'company'=>
-                        $exp['company'],
+                    'company' => $exp['company'],
 
-                    'position'=>
-                        $exp['position'],
+                    'position' => $exp['position'] ?? null,
 
-                    'start_date'=>
-                        $exp['start_date'],
+                    'start_date' => $exp['start_date'] ?? null,
 
-                    'end_date'=>
-                        $exp['end_date']
-                        ?? null,
+                    'end_date' => $exp['end_date'] ?? null,
 
-                    'is_current'=>
-                        $exp['is_current']
-                        ?? false,
+                    'description' => $exp['description'] ?? null,
 
-                    'description'=>
-                        $exp['description']
-                        ?? null,
+                    'sort_order' => $i
 
-                    'sort_order'=>$i
                 ]);
             }
-
 
             // ===================
             // Education
@@ -328,80 +330,57 @@ class CvController extends Controller
                 ->educations()
                 ->delete();
 
-            foreach(
-                ($request->educations ?? [])
-                as $i=>$edu
-            ){
+            foreach($request->educations ?? [] as $i => $education){
+
+                if(empty($education['school'])){
+                    continue;
+                }
 
                 CvEducation::create([
 
-                    'cv_profile_id'=>
-                        $profile->id,
+                    'cv_profile_id' => $profile->id,
 
-                    'institution'=>
-                        $edu['institution'],
+                    'institution' => $education['school'],
 
-                    'degree'=>
-                        $edu['degree'],
+                    'degree' => $education['major'] ?? null,
 
-                    'field_of_study'=>
-                        $edu['field_of_study']
-                        ?? null,
+                    'start_year' => $education['start_year'] ?? null,
 
-                    'start_year'=>
-                        $edu['start_year'],
+                    'end_year' => $education['end_year'] ?? null,
 
-                    'end_year'=>
-                        $edu['end_year']
-                        ?? null,
+                    'gpa' => $education['gpa'] ?? null,
 
-                    'gpa'=>
-                        $edu['gpa']
-                        ?? null,
+                    'sort_order' => $i
 
-                    'description'=>
-                        $edu['description']
-                        ?? null,
-
-                    'sort_order'=>$i
                 ]);
             }
-
-
 
             // ===================
             // Skills
             // ===================
 
-            $profile
-                ->skills()
-                ->delete();
+            $profile->skills()->delete();
 
-            foreach(
-                ($request->skills ?? [])
-                as $i=>$skill
-            ){
+                foreach($request->skills ?? [] as $i => $skill){
 
-                CvSkill::create([
+                    if(empty($skill['name'])){
+                        continue;
+                    }
 
-                    'cv_profile_id'=>
-                        $profile->id,
+                    CvSkill::create([
 
-                    'name'=>
-                        $skill['name'],
+                        'cv_profile_id' => $profile->id,
 
-                    'level'=>
-                        $skill['level']
-                        ?? 80,
+                        'name' => $skill['name'],
 
-                    'category'=>
-                        $skill['category']
-                        ?? 'Technical',
+                        'level' => 80,
 
-                    'sort_order'=>$i
-                ]);
-            }
+                        'category' => 'General',
 
+                        'sort_order' => $i
+
+                    ]);
+                }
 
 
             // ===================
@@ -443,63 +422,52 @@ class CvController extends Controller
 
         });
 
+
+        $profile = CvProfile::with([
+            'educations',
+            'skills',
+            'experiences',
+            'certifications'
+        ])->where('user_id', $user->id)->first();
+
         return redirect()
-            ->route(
-                'cv.preview'
-            )
+            ->route('cv.preview')
             ->with(
                 'success',
                 'CV berhasil disimpan'
             );
     }
 
-
-
     // ===============================
-    // Preview CV
+    // Preview CV yang SUDAH tersimpan
     // ===============================
-
     public function preview()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
-        if(!$user){
+        $profile = CvProfile::with([
+            'experiences',
+            'educations',
+            'skills',
+            'certifications'
+        ])
+        ->where('user_id', $user->id)
+        ->firstOrFail();
 
-            abort(404);
-        }
+        $templateView = match ($profile->template_id) {
 
-        $profile=
-            CvProfile::with([
+            'modern-blue'
+                => 'cv.templates.modern-blue',
 
-                'experiences',
-                'educations',
-                'skills',
-                'certifications'
+            'professional-white'
+                => 'cv.templates.professional-white',
 
-            ])
-            ->where(
-                'user_id',
-                $user->id
-            )
-            ->firstOrFail();
+            'corporate-elegant'
+                => 'cv.templates.corporate-elegant',
 
-
-        $templateView=
-            'templates.'.
-            $profile->template_id;
-
-
-        if(
-            !view()
-            ->exists(
-                $templateView
-            )
-        ){
-
-            $templateView=
-            'templates.modern';
-        }
-
+            default
+                => 'cv.templates.modern-blue'
+        };
 
         return view(
             'cv.preview',
@@ -511,6 +479,50 @@ class CvController extends Controller
     }
 
 
+    // ===============================
+    // Preview CV SEBELUM disimpan
+    // ===============================
+    public function previewDraft(Request $request)
+    {
+        session([
+            'cv_preview_data' => $request->all()
+        ]);
+
+        return redirect()
+            ->route('cv.preview.show');
+    }
+
+
+    // ===============================
+    // Tampilkan preview draft
+    // ===============================
+    public function showPreview()
+    {
+        $profile = session('cv_preview_data');
+
+        $templateView = match ($profile['template_id'] ?? 'modern-blue') {
+
+            'modern-blue'
+                => 'cv.templates.modern-blue',
+
+            'professional-white'
+                => 'cv.templates.professional-white',
+
+            'corporate-elegant'
+                => 'cv.templates.corporate-elegant',
+
+            default
+                => 'cv.templates.modern-blue'
+        };
+
+        return view(
+            'cv.preview-cv',
+            compact(
+                'profile',
+                'templateView'
+            )
+        );
+    }
 
     // ===============================
     // Hapus item section
@@ -521,7 +533,6 @@ class CvController extends Controller
         int $id
     )
     {
-
         $map=[
 
             'experience'=>
@@ -548,8 +559,14 @@ class CvController extends Controller
 
         $record = $map[$section]::findOrFail($id);
 
+        $user =
+            Auth::guard('web')->user()
+            ??
+            Auth::guard('api')->user();
+
+
         abort_unless(
-            $record->profile->user_id === Auth::id(),
+            $record->profile->user_id === Auth::guard('api')->id(),
             403
         );
 

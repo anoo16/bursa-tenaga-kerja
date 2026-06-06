@@ -125,3 +125,16 @@ Route::middleware(['auth:api', 'role:3'])->group(function () {
     });
 
 });
+
+Route::get('/test-jwt', function () {
+    return response()->json([
+        'user' => auth('api')->user(),
+    ]);
+})->middleware('auth:api');
+
+use App\Http\Controllers\ProfileController;
+
+Route::middleware('auth:api')->post(
+    '/profile/update',
+    [ProfileController::class, 'update']
+);
