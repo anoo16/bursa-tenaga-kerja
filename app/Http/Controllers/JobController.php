@@ -70,7 +70,8 @@ class JobController extends Controller
             'posisi' => 'required|string|max:255',
             'kategori' => 'required|string',
             'jenis_bidang' => 'required|string',
-            'gaji' => 'required|string|max:255',
+            'gaji_minimum' => 'required|numeric|min:0',
+            'gaji_maksimum' => 'required|numeric|min:0',
             'deadline' => 'nullable|date',
             'tanggung_jawab' => 'required|array|min:1',
             'tanggung_jawab.*' => 'required|string',
@@ -79,10 +80,12 @@ class JobController extends Controller
         ]);
 
         Job::create([
+            'company_id' => 1, // Pastikan company_id disertakan
             'posisi' => $request->posisi,
             'kategori' => $request->kategori,
             'jenis_bidang' => $request->jenis_bidang,
-            'gaji' => $request->gaji,
+            'gaji_minimum' => $request->gaji_minimum,
+            'gaji_maksimum' => $request->gaji_maksimum,
             // Batas waktu lowongan (opsional)
             'deadline' => $request->deadline ?: null,
             // Mengambil array tanggung jawab
@@ -110,7 +113,8 @@ class JobController extends Controller
             'posisi' => 'required|string|max:255',
             'kategori' => 'required|string',
             'jenis_bidang' => 'required|string',
-            'gaji' => 'required|string|max:255',
+            'gaji_minimum' => 'required|numeric|min:0',
+            'gaji_maksimum' => 'required|numeric|min:0',
             'deadline' => 'nullable|date',
             'tanggung_jawab' => 'nullable|array|min:1',
             'tanggung_jawab.*' => 'required|string',
@@ -123,7 +127,8 @@ class JobController extends Controller
             'posisi' => $request->posisi,
             'kategori' => $request->kategori,
             'jenis_bidang' => $request->jenis_bidang,
-            'gaji' => $request->gaji,
+            'gaji_minimum' => $request->gaji_minimum,
+            'gaji_maksimum' => $request->gaji_maksimum,
             'deadline' => $request->deadline ?: null,
             'tanggung_jawab' => $request->tanggung_jawab,
             'kualifikasi' => $request->kualifikasi,

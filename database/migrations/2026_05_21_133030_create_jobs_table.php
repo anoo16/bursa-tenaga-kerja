@@ -12,6 +12,10 @@ return new class extends Migration {
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
+
+            // Relasi ke tabel companies
+            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+
             // Posisi pekerjaan
             $table->string('posisi');
 
@@ -22,7 +26,8 @@ return new class extends Migration {
             $table->string('jenis_bidang');
 
             // Rentang gaji
-            $table->string('gaji');
+            $table->integer('gaji_minimum');
+            $table->integer('gaji_maksimum');
 
             // Menyimpan banyak tanggung jawab
 

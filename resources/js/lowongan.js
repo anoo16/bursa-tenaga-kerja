@@ -46,13 +46,19 @@ document.addEventListener("DOMContentLoaded", function () {
             let rupiah = new Intl.NumberFormat("id-ID").format(angka);
             this.value = angka ? "Rp " + rupiah : "";
 
-            if (this.id === "gaji-min" || this.id === "gaji-max") {
-                gabungGaji();
-            } else if (
-                this.id === "edit-gaji-min" ||
-                this.id === "edit-gaji-max"
-            ) {
-                gabungGajiEdit();
+            // Menyimpan angka mentah (tanpa Rp) ke hidden input yang sesuai
+            if (this.id === "gaji-min") {
+                const hiddenMin = document.getElementById("hidden-gaji-min");
+                if (hiddenMin) hiddenMin.value = angka;
+            } else if (this.id === "gaji-max") {
+                const hiddenMax = document.getElementById("hidden-gaji-max");
+                if (hiddenMax) hiddenMax.value = angka;
+            } else if (this.id === "edit-gaji-min") {
+                const hiddenEditMin = document.getElementById("hidden-edit-gaji-min");
+                if (hiddenEditMin) hiddenEditMin.value = angka;
+            } else if (this.id === "edit-gaji-max") {
+                const hiddenEditMax = document.getElementById("hidden-edit-gaji-max");
+                if (hiddenEditMax) hiddenEditMax.value = angka;
             }
         });
     });
@@ -145,46 +151,34 @@ window.perbaruiTombolHapus = function (listId, prefix) {
     });
 };
 
-window.gabungGaji = function () {
-    const minInput = document.getElementById("gaji-min");
-    const maxInput = document.getElementById("gaji-max");
-    const finalInput = document.getElementById("gaji-final");
-    if (minInput && maxInput && finalInput) {
-        finalInput.value = minInput.value + " - " + maxInput.value;
-    }
-};
-
-window.gabungGajiEdit = function () {
-    const minInput = document.getElementById("edit-gaji-min");
-    const maxInput = document.getElementById("edit-gaji-max");
-    const finalInput = document.getElementById("edit-gaji-final");
-    if (minInput && maxInput && finalInput) {
-        finalInput.value = minInput.value + " - " + maxInput.value;
-    }
-};
-
 /* ---- Detail Lowongan ---- */
 window.lihatLowongan = function (
     id,
     posisi,
     kategori,
-    gaji,
+    gaji_minimum,
+    gaji_maksimum,
     deadline,
     tanggung,
     kualifikasi,
     jenis_bidang,
 ) {
-    activeJob = { id, posisi, kategori, gaji, deadline, tanggung, kualifikasi, jenis_bidang };
+    activeJob = { id, posisi, kategori, gaji_minimum, gaji_maksimum, deadline, tanggung, kualifikasi, jenis_bidang };
 
     const detailPosisi = document.getElementById("detail-posisi");
     const detailKategori = document.getElementById("detail-kategori");
-    const detailGaji = document.getElementById("detail-gaji");
+    const detailGajiMin = document.getElementById("detail-gaji-min");
+    const detailGajiMax = document.getElementById("detail-gaji-max");
     const detailDeadline = document.getElementById("detail-deadline");
     const detailJenisBidang = document.getElementById("detail-jenis-bidang");
 
     if (detailPosisi) detailPosisi.innerText = posisi;
     if (detailKategori) detailKategori.innerText = kategori;
-    if (detailGaji) detailGaji.innerText = gaji;
+    // Format langsung menggunakan format Rupiah
+    const formatRp = (angka) => angka ? "Rp " + new Intl.NumberFormat("id-ID").format(angka) : "-";
+    if (detailGajiMin) detailGajiMin.innerText = formatRp(gaji_minimum);
+    if (detailGajiMax) detailGajiMax.innerText = formatRp(gaji_maksimum);
+
     if (detailDeadline)
         detailDeadline.innerText = deadline || "Tidak ada batas waktu";
     if (detailJenisBidang)
@@ -225,13 +219,14 @@ window.editLowonganLangsung = function (
     id,
     posisi,
     kategori,
-    gaji,
+    gaji_minimum,
+    gaji_maksimum,
     deadline,
     tanggung,
     kualifikasi,
     jenis_bidang,
 ) {
-    activeJob = { id, posisi, kategori, gaji, deadline, tanggung, kualifikasi, jenis_bidang };
+    activeJob = { id, posisi, kategori, gaji_minimum, gaji_maksimum, deadline, tanggung, kualifikasi, jenis_bidang };
     bukaEdit();
 };
 
@@ -268,22 +263,20 @@ window.bukaEdit = function () {
     const editDeadline = document.getElementById("edit-deadline");
     if (editDeadline) editDeadline.value = activeJob.deadline || "";
 
-    let gajiMin = "";
-    let gajiMax = "";
-    if (activeJob.gaji && activeJob.gaji.includes(" - ")) {
-        const parts = activeJob.gaji.split(" - ");
-        gajiMin = parts[0] ? parts[0].trim() : "";
-        gajiMax = parts[1] ? parts[1].trim() : "";
-    } else {
-        gajiMin = activeJob.gaji || "";
-    }
-
+    const formatRp = (angka) => angka ? "Rp " + new Intl.NumberFormat("id-ID").format(angka) : "";
+    
     const minInput = document.getElementById("edit-gaji-min");
     const maxInput = document.getElementById("edit-gaji-max");
-    const finalInput = document.getElementById("edit-gaji-final");
-    if (minInput) minInput.value = gajiMin;
-    if (maxInput) maxInput.value = gajiMax;
-    if (finalInput) finalInput.value = activeJob.gaji;
+    const hiddenMin = document.getElementById("hidden-edit-gaji-min");
+    const hiddenMax = document.getElementById("hidden-edit-gaji-max");
+    
+    // Tampilkan format Rupiah di visual input
+    if (minInput) minInput.value = formatRp(activeJob.gaji_minimum);
+    if (maxInput) maxInput.value = formatRp(activeJob.gaji_maksimum);
+    
+    // Simpan angka murni di hidden input
+    if (hiddenMin) hiddenMin.value = activeJob.gaji_minimum || "";
+    if (hiddenMax) hiddenMax.value = activeJob.gaji_maksimum || "";
 
     const tanggungContainer = document.getElementById(
         "edit-list-tanggung-jawab",

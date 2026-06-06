@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('jobs', function (Blueprint $table) {
             // Kolom batas waktu lowongan (opsional)
-            $table->date('deadline')->nullable()->after('gaji');
+            $table->date('deadline')->nullable()->after('gaji_maksimum');
         });
     }
 

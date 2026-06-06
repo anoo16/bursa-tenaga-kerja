@@ -93,7 +93,7 @@ yang dikirimkan ke route 'company.jobs.store'.
                         <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                             Kategori
                         </label>
-                        {{-- New Dropdown select for category --}}
+                        {{-- Memilih Kategori --}}
                         <div class="mt-2">
                             <label for="input-kategori-select"
                                 class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1"></label>
@@ -177,8 +177,9 @@ yang dikirimkan ke route 'company.jobs.store'.
                                        focus:bg-white transition-all duration-200">
                         </div>
                     </div>
-                    {{-- Nilai akhir gabungan (Min - Max) untuk disimpan ke database --}}
-                    <input type="hidden" name="gaji" id="gaji-final">
+                    {{-- Input Hidden untuk menyimpan nilai numerik (angka murni) --}}
+                    <input type="hidden" name="gaji_minimum" id="hidden-gaji-min">
+                    <input type="hidden" name="gaji_maksimum" id="hidden-gaji-max">
                 </div>
 
                 {{-- Kolom Dinamis Tanggung Jawab --}}
@@ -307,26 +308,34 @@ Tanggung Jawab, Kualifikasi). Memiliki tombol redirect ke Form Edit.
         </div>
 
 <div class="detail-scroll px-7 pt-7 pb-1 space-y-6 overflow-y-auto max-h-[65vh]">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
     <!-- Deadline -->
-    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200 text-center">
         <h3 class="font-bold text-[#143E72] mb-2">Deadline</h3>
         <p id="detail-deadline" class="text-sm text-slate-700"></p>
     </div>
-    <!-- Gaji -->
-    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
-        <h3 class="font-bold text-[#143E72] mb-2">Rentang Gaji</h3>
-        <p id="detail-gaji" class="text-sm text-slate-700"></p>
-    </div>
     <!-- Kategori -->
-    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200 text-center">
         <h3 class="font-bold text-[#143E72] mb-2">Kategori</h3>
         <p id="detail-kategori" class="text-sm text-slate-700"></p>
     </div>
     <!-- Jenis Bidang -->
-    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200">
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200 text-center">
         <h3 class="font-bold text-[#143E72] mb-2">Jenis Bidang</h3>
         <p id="detail-jenis-bidang" class="text-sm text-slate-700"></p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <!-- Gaji Minimum -->
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200 text-center">
+        <h3 class="font-bold text-[#143E72] mb-2">Gaji Minimum</h3>
+        <p id="detail-gaji-min" class="text-sm text-slate-700"></p>
+    </div>
+    <!-- Gaji Maksimum -->
+    <div class="bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-200 text-center">
+        <h3 class="font-bold text-[#143E72] mb-2">Gaji Maksimum</h3>
+        <p id="detail-gaji-max" class="text-sm text-slate-700"></p>
     </div>
 </div>
 
@@ -439,8 +448,9 @@ melalui metode PUT ke URL action '/company/jobs/{id}' secara dinamis via JS.
                     <input type="text" id="edit-gaji-max" placeholder="Maksimum"
                         class="format-rupiah w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:border-[#143E72] focus:bg-white transition-all duration-200">
                 </div>
-                {{-- Input Hidden hasil gabungan gaji --}}
-                <input type="hidden" name="gaji" id="edit-gaji-final">
+                {{-- Input Hidden untuk menyimpan nilai numerik (angka murni) --}}
+                <input type="hidden" name="gaji_minimum" id="hidden-edit-gaji-min">
+                <input type="hidden" name="gaji_maksimum" id="hidden-edit-gaji-max">
             </div>
 
             {{-- Kolom Dinamis Tanggung Jawab --}}

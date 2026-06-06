@@ -217,7 +217,7 @@
                             <div class="flex items-center justify-end gap-2">
                                 {{-- Tombol Detail: Membuka Pop-Up Detail Lowongan --}}
                                 <button type="button" 
-                                        onclick='lihatLowongan("{{ $job->id }}", "{{ $job->posisi }}", "{{ $job->kategori }}", "{{ $job->gaji }}", "{{ $job->deadline }}", @json($job->tanggung_jawab), @json($job->kualifikasi), "{{ $job->jenis_bidang }}")'
+                                        onclick='lihatLowongan("{{ $job->id }}", "{{ $job->posisi }}", "{{ $job->kategori }}", "{{ $job->gaji_minimum }}", "{{ $job->gaji_maksimum }}", "{{ $job->deadline }}", @json($job->tanggung_jawab), @json($job->kualifikasi), "{{ $job->jenis_bidang }}")'
                                         class="w-10 h-10 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 hover:-translate-y-0.5 active:translate-y-0 text-[#143E72] flex items-center justify-center transition-all duration-200 shadow-sm"
                                         title="Lihat Detail">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

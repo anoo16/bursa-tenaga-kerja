@@ -4,12 +4,23 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Job;
+use App\Models\Company;
 
 class DummyJobSeeder extends Seeder
 {
     public function run(): void
     {
         Job::query()->delete();
+
+        // Buat dummy company jika belum ada agar FK company_id terpenuhi
+        if (Company::count() == 0) {
+            Company::create([
+                'id' => 1,
+                'name' => 'PT Teknologi Nusantara',
+                'industry' => 'Technology',
+                'is_verified' => true
+            ]);
+        }
 
         Job::insert([
 
@@ -18,7 +29,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Lead Experience Architect',
                 'kategori' => 'PEKERJA TETAP',
                 'jenis_bidang' => 'IT',
-                'gaji' => 'Rp 8.000.000 - Rp 10.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 8000000,
+                'gaji_maksimum' => 10000000,
                 'deadline' => '2026-12-31',
                 'tanggung_jawab' => json_encode([
                     'Mendesain UI/UX yang intuitif dan responsif untuk platform web dan mobile.',
@@ -40,7 +53,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Senior React Engineer',
                 'kategori' => 'PEKERJA TETAP',
                 'jenis_bidang' => 'IT',
-                'gaji' => 'Rp 10.000.000 - Rp 15.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 10000000,
+                'gaji_maksimum' => 15000000,
                 'deadline' => '2026-12-31',
                 'tanggung_jawab' => json_encode([
                     'Membangun dan mengembangkan aplikasi web menggunakan React.js.',
@@ -62,7 +77,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Growth Lead',
                 'kategori' => 'KONTRAK',
                 'jenis_bidang' => 'Marketing',
-                'gaji' => 'Rp 12.000.000 - Rp 18.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 12000000,
+                'gaji_maksimum' => 18000000,
                 'deadline' => '2026-12-31',
                 'tanggung_jawab' => json_encode([
                     'Merancang dan mengeksekusi strategi pertumbuhan pengguna (growth strategy).',
@@ -84,7 +101,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Video Editor',
                 'kategori' => 'KONTRAK',
                 'jenis_bidang' => 'Marketing',
-                'gaji' => 'Rp 5.000.000 - Rp 8.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 5000000,
+                'gaji_maksimum' => 8000000,
                 'deadline' => '2026-12-31',
                 'tanggung_jawab' => json_encode([
                     'Melakukan editing video untuk konten media sosial perusahaan.',
@@ -106,7 +125,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Financial Analyst',
                 'kategori' => 'PEKERJA TETAP',
                 'jenis_bidang' => 'Finance',
-                'gaji' => 'Rp 9.000.000 - Rp 14.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 9000000,
+                'gaji_maksimum' => 14000000,
                 'deadline' => '2026-09-30',
                 'tanggung_jawab' => json_encode([
                     'Menyusun laporan analisis keuangan bulanan dan tahunan.',
@@ -128,7 +149,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'HR Recruitment Specialist',
                 'kategori' => 'PEKERJA TETAP',
                 'jenis_bidang' => 'HR',
-                'gaji' => 'Rp 6.000.000 - Rp 9.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 6000000,
+                'gaji_maksimum' => 9000000,
                 'deadline' => '2026-10-15',
                 'tanggung_jawab' => json_encode([
                     'Mengelola seluruh siklus rekrutmen dari sourcing hingga offering.',
@@ -150,7 +173,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Social Media Manager',
                 'kategori' => 'KONTRAK',
                 'jenis_bidang' => 'Marketing',
-                'gaji' => 'Rp 7.000.000 - Rp 11.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 7000000,
+                'gaji_maksimum' => 11000000,
                 'deadline' => '2026-08-31',
                 'tanggung_jawab' => json_encode([
                     'Merencanakan dan mengeksekusi konten harian di berbagai saluran media sosial.',
@@ -172,7 +197,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'DevOps Engineer',
                 'kategori' => 'PEKERJA TETAP',
                 'jenis_bidang' => 'IT',
-                'gaji' => 'Rp 12.000.000 - Rp 18.000.000',
+                'company_id' => 1,
+                'gaji_minimum' => 12000000,
+                'gaji_maksimum' => 18000000,
                 'deadline' => '2026-11-30',
                 'tanggung_jawab' => json_encode([
                     'Mengelola dan mengoptimalkan infrastruktur cloud (AWS/GCP/Azure).',
@@ -194,7 +221,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Accounting Staff',
                 'kategori' => 'PEKERJA TETAP',
                 'jenis_bidang' => 'Finance',
-                'gaji' => 'Rp 5.500.000 - Rp 7.500.000',
+                'company_id' => 1,
+                'gaji_minimum' => 5500000,
+                'gaji_maksimum' => 7500000,
                 'deadline' => '2026-07-31',
                 'tanggung_jawab' => json_encode([
                     'Memproses transaksi keuangan harian dan melakukan rekonsiliasi bank.',
@@ -216,7 +245,9 @@ class DummyJobSeeder extends Seeder
                 'posisi' => 'Content Writer Intern',
                 'kategori' => 'MAGANG',
                 'jenis_bidang' => 'Marketing',
-                'gaji' => 'Rp 2.000.000 - Rp 3.500.000',
+                'company_id' => 1,
+                'gaji_minimum' => 2000000,
+                'gaji_maksimum' => 3500000,
                 'deadline' => '2026-06-30',
                 'tanggung_jawab' => json_encode([
                     'Menulis artikel SEO-friendly untuk blog dan website perusahaan.',

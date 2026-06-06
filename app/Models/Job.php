@@ -11,10 +11,12 @@ class Job extends Model
 
     protected $fillable = [
         // Data yang boleh disimpan
+        'company_id',
         'posisi',
         'kategori',
         'jenis_bidang',
-        'gaji',
+        'gaji_minimum',
+        'gaji_maksimum',
         'deadline',
         'tanggung_jawab',
         'kualifikasi',
