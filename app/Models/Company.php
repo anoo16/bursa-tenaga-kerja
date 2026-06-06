@@ -21,6 +21,7 @@ class Company extends Model
         'logo_path',
         'banner_path',
         'is_verified',
+        'profile_template_id',
     ];
 
     public function perks(): HasMany

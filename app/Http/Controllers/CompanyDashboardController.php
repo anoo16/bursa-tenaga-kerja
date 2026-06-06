@@ -33,8 +33,9 @@ class CompanyDashboardController extends Controller
             ->update(['status' => 'tutup']);
 
         // Fetch active jobs from database
-        $realActiveJobs = Job::where('status', 'buka')->withCount('applications')->latest()->get();
-        $lowonganAktifCount = $realActiveJobs->count();
+        $activeJobsQuery = Job::where('status', 'buka')->withCount('applications')->latest();
+        $lowonganAktifCount = $activeJobsQuery->count();
+        $realActiveJobs = $activeJobsQuery->take(5)->get();
 
         $allJobIds = Job::pluck('id');
 
@@ -47,8 +48,29 @@ class CompanyDashboardController extends Controller
             ->count();
 
         // Diterima bulan ini real
-        $diterimaBulanIniReal = \App\Models\JobApplication::whereIn('job_id', $allJobIds)
+        $diterimaBulanIniQuery = \App\Models\JobApplication::whereIn('job_id', $allJobIds)
             ->where('status', 'DITERIMA')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year);
+            
+        $diterimaBulanIniReal = $diterimaBulanIniQuery->count();
+        
+        // Ambil maksimal 2 pelamar yang diterima bulan ini untuk diambil inisialnya
+        $diterimaBulanIniPelamar = $diterimaBulanIniQuery->with('user')->latest()->take(2)->get();
+        
+        $diterimaAvatars = [];
+        $bgColors = ['bg-sky-200 text-sky-800', 'bg-amber-200 text-amber-800'];
+        foreach ($diterimaBulanIniPelamar as $index => $app) {
+            $name = $app->user->name ?? 'X';
+            $initial = strtoupper(substr(trim($name), 0, 1));
+            $diterimaAvatars[] = [
+                'initial' => $initial,
+                'color' => $bgColors[$index % count($bgColors)]
+            ];
+        }
+
+        // Lowongan baru yang dibuka khusus bulan ini
+        $lowonganBulanIni = Job::where('status', 'buka')
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->count();
@@ -57,7 +79,7 @@ class CompanyDashboardController extends Controller
         $stats = [
             'lowongan_aktif' => [
                 'value' => $lowonganAktifCount,
-                'note' => '+2 bulan ini'
+                'note' => $lowonganBulanIni > 0 ? '+' . $lowonganBulanIni . ' bulan ini' : '0 bulan ini'
             ],
             'total_pelamar' => [
                 'value' => $totalPelamarReal,
@@ -69,7 +91,8 @@ class CompanyDashboardController extends Controller
             ],
             'diterima_bulan_ini' => [
                 'value' => $diterimaBulanIniReal,
-                'note' => ''
+                'note' => '',
+                'avatars' => $diterimaAvatars
             ]
         ];
 
@@ -128,7 +151,12 @@ class CompanyDashboardController extends Controller
         $company = Company::with(['perks', 'galleries'])->first();
         
         if (!$company) {
-            abort(404, 'Company profile not found.');
+            $company = new Company([
+                'name' => 'Perusahaan Belum Diatur',
+                'description' => 'Silakan lengkapi data perusahaan Anda terlebih dahulu.',
+            ]);
+            $company->setRelation('perks', collect());
+            $company->setRelation('galleries', collect());
         }
 
         return view('company.profile', compact('company'));
@@ -142,7 +170,10 @@ class CompanyDashboardController extends Controller
         $company = Company::first();
 
         if (!$company) {
-            abort(404, 'Company profile not found.');
+            $company = new Company([
+                'name' => '',
+                'description' => '',
+            ]);
         }
         
         return view('company.edit-profile', compact('company'));
@@ -153,7 +184,7 @@ class CompanyDashboardController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        $company = Company::firstOrFail();
+        $company = Company::first();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -166,31 +197,46 @@ class CompanyDashboardController extends Controller
             'about' => 'nullable|string',
             'mission' => 'nullable|string',
             'culture' => 'nullable|string',
+            'profile_template_id' => 'nullable|string|max:50',
             'perks' => 'nullable|array',
             'perks.*' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg|max:4096',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'photos' => 'nullable|array',
-            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg|max:4096',
+            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'delete_photos' => 'nullable|array',
             'delete_photos.*' => 'nullable|integer',
+        ], [
+            'logo.max' => 'Ukuran file Logo maksimal 2MB.',
+            'banner.max' => 'Ukuran file Banner maksimal 2MB.',
+            'photos.*.max' => 'Ukuran setiap file Foto Galeri maksimal 2MB.',
+            'logo.image' => 'File Logo harus berupa gambar.',
+            'banner.image' => 'File Banner harus berupa gambar.',
+            'photos.*.image' => 'File Foto Galeri harus berupa gambar.',
+            'logo.mimes' => 'Format Logo harus berupa jpeg, png, jpg, atau svg.',
+            'banner.mimes' => 'Format Banner harus berupa jpeg, png, atau jpg.',
+            'photos.*.mimes' => 'Format Foto Galeri harus berupa jpeg, png, atau jpg.',
         ]);
 
         if ($request->hasFile('logo')) {
-            if ($company->logo_path) {
+            if ($company && $company->logo_path) {
                 Storage::disk('public')->delete($company->logo_path);
             }
             $validated['logo_path'] = $request->file('logo')->store('company_images', 'public');
         }
 
         if ($request->hasFile('banner')) {
-            if ($company->banner_path) {
+            if ($company && $company->banner_path) {
                 Storage::disk('public')->delete($company->banner_path);
             }
             $validated['banner_path'] = $request->file('banner')->store('company_images', 'public');
         }
 
-        $company->update($validated);
+        if ($company) {
+            $company->update($validated);
+        } else {
+            $company = Company::create($validated);
+        }
 
         // Keep logged-in user's company_name in users table synchronized
         try {
