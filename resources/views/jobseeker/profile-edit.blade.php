@@ -9,152 +9,357 @@
 
 @section('content')
 
-{{-- BACKDROP --}}
 <div class="profile-modal-overlay">
 
-    {{-- MODAL --}}
     <div class="profile-modal">
 
-        <button class="modal-close">
-            <i class='bx bx-x'></i>
-        </button>
+        {{-- MODAL HEADER --}}
+        <div class="profile-modal-header">
 
-<div class="edit-profile-page">
-
-    <div class="edit-card">
-
-        <h1>Edit Profile</h1>
-
-        <form method="POST"
-              action="{{ route('profile.update') }}"
-              enctype="multipart/form-data">
-
-            @csrf
-
-            {{-- FOTO PROFILE --}}
-            <div class="form-group">
-
-                <label>Foto Profile</label>
-
-                <input type="file"
-                       name="photo">
-
+            <div>
+                <h2>Edit Profil Lengkap</h2>
+                <p>Lengkapi informasi profesional Anda</p>
             </div>
 
-            {{-- NAMA --}}
-            <div class="form-group">
+            <button type="button" class="modal-close">
+                <i class='bx bx-x'></i>
+            </button>
 
-                <label>Nama</label>
+        </div>
 
-                <input type="text"
-                       name="name"
-                       value="{{ $user->name ?? '' }}">
+        <form id="profileForm" enctype="multipart/form-data">
 
-            </div>
+            {{-- IDENTITAS --}}
+            <section class="edit-section">
 
-            {{-- HEADLINE --}}
-            <div class="form-group">
+                <div class="section-heading">
+                    <div class="section-icon">
+                        <i class='bx bx-user'></i>
+                    </div>
 
-                <label>Professional Headline</label>
+                    <h3>Identitas & Kontak</h3>
+                </div>
 
-                <input type="text"
-                       name="headline"
-                       placeholder="UI/UX Designer | Frontend Developer"
-                       value="{{ $user->headline ?? '' }}">
+                <div class="identity-layout">
 
-            </div>
+                    <div class="avatar-area">
 
-            {{-- LOKASI --}}
-            <div class="form-group">
+                        <img
+                            id="profilePreview"
+                            src="{{ asset('assets/profile.png') }}"
+                            alt="Profile"
+                            class="edit-avatar"
+                        >
 
-                <label>Lokasi</label>
+                        <label for="photoInput" class="avatar-edit">
+                            <i class='bx bx-pencil'></i>
+                        </label>
 
-                <input type="text"
-                       name="location"
-                       value="{{ $user->location ?? '' }}">
+                        <input
+                            type="file"
+                            id="photoInput"
+                            name="photo"
+                            accept="image/*"
+                            hidden
+                        >
 
-            </div>
+                    </div>
 
-            {{-- EMAIL --}}
-            <div class="form-group">
+                    <div class="identity-fields">
 
-                <label>Email</label>
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Masukkan nama lengkap"
+                            >
+                        </div>
 
-                <input type="email"
-                       name="email"
-                       value="{{ $user->email ?? '' }}">
+                        <div class="form-group">
+                            <label>Headline Profesional</label>
+                            <input
+                                type="text"
+                                name="headline"
+                                placeholder="Contoh: UI/UX Designer"
+                            >
+                        </div>
 
-            </div>
+                        <div class="form-group input-icon">
+                            <label>Lokasi</label>
+                            <div class="icon-input">
+                                <i class='bx bx-map'></i>
+                                <input
+                                    type="text"
+                                    name="location"
+                                    placeholder="Contoh: Manado, Indonesia"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group input-icon">
+                            <label>LinkedIn</label>
+
+                            <div class="icon-input">
+                                <i class='bx bxl-linkedin'></i>
+
+                                <input
+                                    type="url"
+                                    name="linkedin"
+                                    placeholder="https://linkedin.com/in/username"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group input-icon">
+                            <label>GitHub</label>
+
+                            <div class="icon-input">
+                                <i class='bx bxl-github'></i>
+
+                                <input
+                                    type="url"
+                                    name="github"
+                                    placeholder="https://github.com/username"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Masukkan email"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label>No Telepon</label>
+                            <input
+                                type="text"
+                                name="phone"
+                                placeholder="Masukkan nomor telepon"
+                            >
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
 
             {{-- RINGKASAN --}}
-            <div class="form-group">
+            <section class="edit-section">
 
-                <label>Ringkasan Professional</label>
+                <div class="section-heading">
+                    <div class="section-icon">
+                        <i class='bx bx-file'></i>
+                    </div>
 
-                <textarea name="summary"
-                          rows="5"
-                          placeholder="Ceritakan tentang diri anda...">{{ $user->summary ?? '' }}</textarea>
+                    <h3>Ringkasan Profesional</h3>
+                </div>
 
-            </div>
+                <div class="form-group">
+                    <label>Tentang Saya</label>
+
+                    <textarea
+                        name="summary"
+                        id="summaryInput"
+                        maxlength="500"
+                        placeholder="Ceritakan tentang pengalaman dan keahlian profesional Anda..."
+                    ></textarea>
+
+                    <div class="char-count">
+                        <span id="summaryCount">0</span>/500
+                    </div>
+                </div>
+
+            </section>
 
             {{-- PENGALAMAN --}}
-            <div class="form-group">
+            <section class="edit-section">
 
-                <label>Pengalaman Kerja</label>
+                <div class="section-heading between">
+                    <div class="section-title-inline">
+                        <div class="section-icon">
+                            <i class='bx bx-briefcase'></i>
+                        </div>
 
-                <textarea name="experience"
-                          rows="5"
-                          placeholder="Masukkan pengalaman kerja...">{{ $user->experience ?? '' }}</textarea>
+                        <h3>Pengalaman Kerja</h3>
+                    </div>
 
-            </div>
+                    <button type="button" class="add-link" id="toggleExperienceForm">
+                        + Tambah Posisi
+                    </button>
+                </div>
 
-            {{-- KEAHLIAN --}}
-            <div class="form-group">
+                <div class="inline-add-form" id="experienceFormBox">
 
-                <label>Keahlian & Kompetensi</label>
+                    <input type="text" id="expPosition" placeholder="Posisi / Jabatan">
 
-                <textarea name="skills"
-                          rows="4"
-                          placeholder="Contoh: Figma, UI/UX, Laravel">{{ $user->skills ?? '' }}</textarea>
+                    <input type="text" id="expCompany" placeholder="Perusahaan / Organisasi">
 
-            </div>
+                    <input type="text" id="expPeriod" placeholder="Periode, contoh: 2025 - Present">
+
+                    <textarea id="expDescription" placeholder="Deskripsi pengalaman"></textarea>
+
+                    <button type="button" class="btn-add-dynamic" id="addExperienceBtn">
+                        Simpan Pengalaman
+                    </button>
+
+                </div>
+
+                <div id="experienceList" class="dynamic-list"></div>
+
+            </section>
+
+
+            {{-- SKILLS --}}
+            <section class="edit-section">
+
+                <div class="section-heading">
+                    <div class="section-icon">
+                        <i class='bx bx-star'></i>
+                    </div>
+
+                    <h3>Keahlian & Kompetensi</h3>
+                </div>
+
+                <label class="sub-label">Cari & Tambah Keahlian</label>
+
+                <div class="skills-box">
+
+                    <div class="skills-tags" id="skillsList"></div>
+
+                    <div class="skill-input-wrap">
+
+                        <select
+                            id="skillSelect"
+                            class="skill-select"
+                        >
+                            <option value="">
+                                Pilih Keahlian
+                            </option>
+
+                            <option>IT & Software</option>
+                            <option>Data Science & AI</option>
+                            <option>Cyber Security</option>
+                            <option>Business & Management</option>
+                            <option>Finance & Accounting</option>
+                            <option>Marketing & Sales</option>
+                            <option>Human Resources</option>
+                            <option>Education</option>
+                            <option>Healthcare</option>
+                            <option>Engineering</option>
+                            <option>Lainnya</option>
+                        </select>
+
+                        <button
+                            type="button"
+                            class="skill-add"
+                            id="addSkillBtn"
+                        >
+                            <i class='bx bx-plus'></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
 
             {{-- SERTIFIKAT --}}
-            <div class="form-group">
+            <section class="edit-section">
 
-                <label>Sertifikat Keahlian</label>
+                <div class="section-heading between">
+                    <div class="section-title-inline">
+                        <div class="section-icon">
+                            <i class='bx bx-award'></i>
+                        </div>
 
-                <textarea name="certification"
-                          rows="4"
-                          placeholder="Masukkan sertifikat yang dimiliki">{{ $user->certification ?? '' }}</textarea>
+                        <h3>Sertifikat Keahlian</h3>
+                    </div>
 
-            </div>
+                    <button type="button" class="add-link" id="toggleCertificationForm">
+                        + Tambah Sertifikat
+                    </button>
+                </div>
+
+                <div class="inline-add-form" id="certificationFormBox">
+
+                    <input type="text" id="certTitle" placeholder="Nama sertifikat">
+
+                    <input type="text" id="certIssuer" placeholder="Penerbit / Platform">
+
+                    <input type="text" id="certYear" placeholder="Tahun / Bulan">
+
+                    <button type="button" class="btn-add-dynamic" id="addCertificationBtn">
+                        Simpan Sertifikat
+                    </button>
+
+                </div>
+
+                <div id="certificationList" class="dynamic-list"></div>
+
+            </section>
+
 
             {{-- PENDIDIKAN --}}
-            <div class="form-group">
+            <section class="edit-section">
 
-                <label>Pendidikan</label>
+                <div class="section-heading between">
+                    <div class="section-title-inline">
+                        <div class="section-icon">
+                            <i class='bx bxs-graduation'></i>
+                        </div>
 
-                <textarea name="education"
-                          rows="4"
-                          placeholder="Riwayat pendidikan">{{ $user->education ?? '' }}</textarea>
+                        <h3>Pendidikan</h3>
+                    </div>
+
+                    <button type="button" class="add-link" id="toggleEducationForm">
+                        + Tambah Pendidikan
+                    </button>
+                </div>
+
+                <div class="inline-add-form" id="educationFormBox">
+
+                    <input type="text" id="eduLevel" placeholder="Jenjang, contoh: S1">
+
+                    <input type="text" id="eduMajor" placeholder="Jurusan">
+
+                    <input type="text" id="eduSchool" placeholder="Sekolah / Universitas">
+
+                    <input type="text" id="eduYear" placeholder="Tahun lulus">
+
+                    <button type="button" class="btn-add-dynamic" id="addEducationBtn">
+                        Simpan Pendidikan
+                    </button>
+
+                </div>
+
+                <div id="educationList" class="dynamic-list"></div>
+
+            </section>
+
+            {{-- FOOTER --}}
+            <div class="modal-footer">
+
+                <button type="button" class="btn-cancel modal-close-secondary">
+                    Batal
+                </button>
+
+                <button type="submit" class="btn-save">
+                    Simpan Perubahan
+                </button>
 
             </div>
-
-            <button class="save-btn"
-                    type="submit">
-
-                Simpan Perubahan
-
-            </button>
 
         </form>
 
     </div>
 
-</div>
-
-    </div>
 </div>
 
 @endsection

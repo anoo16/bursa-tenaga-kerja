@@ -3,67 +3,79 @@
 @section('title','Edit CV')
 
 @vite([
-'resources/css/cv-wizard.css'
+'resources/css/cv-wizard.css',
+'resources/js/cv-wizard.js'
 ])
 
 @section('content')
 
-<div class="cv-wizard">
+    <div class="cv-wizard">
 
-    {{-- SIDEBAR --}}
-    <div class="wizard-sidebar">
+        <div class="wizard-topbar">
 
-        <h4>Application Status</h4>
+            <div class="wizard-header">
 
-                <div class="progress-text">
+                <a href="{{ route('profile') }}" class="wizard-back">
+                     <i class='bx bx-arrow-back'></i>
+                        KEMBALI
+                </a>
 
-                <div class="progress-bar">
-                <div
-                id="progressFill"
-                style="width:20%"
-                ></div>
+                <div class="wizard-status">
+                    <span class="saved-badge">
+                        ✓ Tersimpan
+                    </span>
+
+                    <span id="progressText">
+                        Progress: 0%
+                    </span>
+
+                    <div class="progress-bar">
+                        <div id="progressFill"></div>
+                    </div>
                 </div>
-
-                <span id="progressText">
-                20%
-                </span>
-
-                COMPLETED
 
             </div>
 
-        <ul class="wizard-menu">
+            <div class="wizard-progress">
 
-            <li class="wizard-item active">
-                <i class='bx bx-user'></i>
-                <span>Profile</span>
-            </li>
+                <div class="wizard-step active">
+                    <span class="step-circle">1</span>
+                    <span>Profile</span>
+                </div>
 
-            <li class="wizard-item">
-                <i class='bx bx-book'></i>
-                <span>Education</span>
-            </li>
+                <div class="wizard-line"></div>
 
-            <li class="wizard-item">
-                <i class='bx bx-brain'></i>
-                <span>Skill</span>
-            </li>
+                <div class="wizard-step">
+                    <span class="step-circle">2</span>
+                    <span>Pendidikan</span>
+                </div>
 
-            <li class="wizard-item">
-                <i class='bx bx-group'></i>
-                <span>Summary</span>
-            </li>
+                <div class="wizard-line"></div>
 
-            <li class="wizard-item">
-                <i class='bx bx-briefcase'></i>
-                <span>Experience</span>
-            </li>
+                <div class="wizard-step">
+                    <span class="step-circle">3</span>
+                    <span>Skill</span>
+                </div>
 
-        </ul>
+                <div class="wizard-line"></div>
+
+                <div class="wizard-step">
+                    <span class="step-circle">4</span>
+                    <span>Tentang Saya</span>
+                </div>
+
+                <div class="wizard-line"></div>
+
+                <div class="wizard-step">
+                    <span class="step-circle">5</span>
+                    <span>Pengalaman</span>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
-
 
     {{-- CONTENT --}}
     <div class="wizard-content">
@@ -83,7 +95,6 @@
             Lengkapi informasi CV
         </p>
 
-
 <form
 action="{{ route('cv.update') }}"
 method="POST"
@@ -94,6 +105,17 @@ enctype="multipart/form-data"
 @csrf
 @method('PUT')
 
+<input
+    type="hidden"
+    name="user_id"
+    id="user_id"
+>
+
+<input
+    type="hidden"
+    name="template_id"
+    value="{{ session('selected_cv_template', $profile?->template_id) }}"
+>
 
 {{-- STEP 1 PROFILE --}}
 <div class="step-content active">
@@ -144,50 +166,87 @@ value="{{ old('location',$profile?->location) }}"
 {{-- STEP 2 EDUCATION --}}
 <div class="step-content">
 
-<h3>Riwayat Pendidikan</h3>
+    <div id="educationContainer">
 
-<div id="educationList">
+        <div class="education-item">
 
-@forelse($profile?->educations ?? [] as $i=>$edu)
+            <div class="form-grid-2">
 
-@include(
-'cv.partials.education-row',
-['edu'=>$edu,'i'=>$i]
-)
+                <input type="text"
+                    name="educations[0][school]"
+                    class="form-input"
+                    placeholder="Nama Sekolah / Universitas">
 
-@empty
+                <input type="text"
+                    name="educations[0][major]"
+                    class="form-input"
+                    placeholder="Jurusan">
 
-<div>Belum ada pendidikan</div>
+                <input type="text"
+                    name="educations[0][start_year]"
+                    class="form-input"
+                    placeholder="Tahun Masuk">
 
-@endforelse
+                <input type="text"
+                    name="educations[0][end_year]"
+                    class="form-input"
+                    placeholder="Tahun Lulus">
+
+                <input type="text"
+                    name="educations[0][gpa]"
+                    class="form-input"
+                    placeholder="IPK">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="education-actions">
+
+        <button
+            type="button"
+            class="btn-add"
+            id="addEducation">
+
+            <i class='bx bx-plus'></i>
+            Tambah Pendidikan
+
+        </button>
+
+    </div>
 
 </div>
-
-</div>
-
-
 
 {{-- STEP 3 SKILL --}}
 <div class="step-content">
 
-<h3>Keahlian</h3>
+    <div id="skillContainer">
 
-<div id="skillList">
+        <div class="skill-item">
 
-@forelse($profile?->skills ?? [] as $i=>$skill)
+            <input
+                type="text"
+                name="skills[0][name]"
+                class="form-input"
+                placeholder="Keahlian">
 
-@include(
-'cv.partials.skill-row',
-['skill'=>$skill,'i'=>$i]
-)
+        </div>
 
-@empty
+    </div>
 
-Belum ada skill
+    <div class="section-actions">
+        <button
+            type="button"
+            class="btn-add"
+            id="addSkill">
 
-@endforelse
+            <i class='bx bx-plus'></i>
+            Tambah Skill
 
-</div>
+        </button>
+    </div>
 
 </div>
 
@@ -196,7 +255,7 @@ Belum ada skill
 {{-- STEP 4 SUMMARY + ORGANISASI --}}
 <div class="step-content">
 
-<h3>Summary</h3>
+<h3>Tentang Saya</h3>
 
 <textarea
 class="form-textarea"
@@ -229,291 +288,92 @@ placeholder="Masukkan pengalaman organisasi"
 {{-- STEP 5 EXPERIENCE --}}
 <div class="step-content">
 
-<h3>Pengalaman Kerja</h3>
+    <div id="experienceContainer">
 
-<div id="experienceList">
+        <div class="experience-item">
 
-@forelse($profile?->experiences ?? [] as $i=>$exp)
+            <div class="form-grid-2">
 
-@include(
-'cv.partials.experience-row',
-['exp'=>$exp,'i'=>$i]
-)
+                <input
+                    type="text"
+                    name="experiences[0][company]"
+                    class="form-input"
+                    placeholder="Nama Perusahaan">
 
-@empty
+                <input
+                    type="text"
+                    name="experiences[0][position]"
+                    class="form-input"
+                    placeholder="Posisi">
 
-Belum ada pengalaman kerja
+                <input
+                    type="date"
+                    name="experiences[0][start_date]"
+                    class="form-input">
 
-@endforelse
+                <input
+                    type="date"
+                    name="experiences[0][end_date]"
+                    class="form-input">
+
+            </div>
+
+            <textarea
+                class="form-textarea"
+                name="experiences[0][description]"
+                rows="5"
+                placeholder="Deskripsi pekerjaan"></textarea>
+
+        </div>
+
+    </div>
+
+    <div class="section-actions">
+        <button
+            type="button"
+            class="btn-add"
+            id="addExperience">
+
+            <i class='bx bx-plus'></i>
+            Tambah Pengalaman
+
+        </button>
+    </div>
 
 </div>
-
-</div>
-
-
 
 <div class="wizard-footer">
 
-<button
-type="button"
-id="prevBtn"
-class="btn-outline">
+    <button
+        type="button"
+        id="prevBtn"
+        class="btn-outline">
+        ← Kembali
+    </button>
 
-← Kembali
+    <button
+        type="button"
+        id="nextBtn"
+        class="btn-primary">
+        Lanjut →
+    </button>
 
-</button>
+    {{-- tombol preview --}}
+    <button
+        type="button"
+        id="previewBtn"
+        class="btn-outline">
+        Preview CV
+    </button>
 
-
-<button
-type="button"
-id="nextBtn"
-class="btn-primary">
-
-Lanjut →
-
-</button>
-
-
-<button
-type="submit"
-id="submitBtn"
-style="display:none"
-class="btn-primary">
-
-Simpan CV
-
-</button>
-
-</div>
-
-
-</form>
+    <button
+        type="submit"
+        id="submitBtn"
+        style="display:none"
+        class="btn-primary">
+        Simpan CV
+    </button>
 
 </div>
-
-</div>
-
 
 @endsection
-
-
-@push('scripts')
-
-<script>
-
-let currentStep = 0;
-
-const steps =
-document.querySelectorAll(
-'.step-content'
-);
-
-const menu =
-document.querySelectorAll(
-'.wizard-item'
-);
-
-const nextBtn =
-document.getElementById(
-'nextBtn'
-);
-
-const prevBtn =
-document.getElementById(
-'prevBtn'
-);
-
-const submitBtn =
-document.getElementById(
-'submitBtn'
-);
-
-
-const titles=[
-
-"Personal Biodata",
-
-"Riwayat Pendidikan",
-
-"Keahlian",
-
-"Summary & Organisasi",
-
-"Pengalaman Kerja"
-
-];
-
-
-showStep();
-
-
-
-function showStep(){
-
-
-steps.forEach(
-(step,index)=>{
-
-step.classList.remove(
-'active'
-)
-
-if(index===currentStep){
-
-step.classList.add(
-'active'
-)
-
-}
-
-})
-
-
-menu.forEach(
-(item,index)=>{
-
-item.classList.remove(
-'active'
-)
-
-if(index===currentStep){
-
-item.classList.add(
-'active'
-)
-
-}
-
-}
-)
-
-
-
-document
-.getElementById(
-'stepTitle'
-)
-.innerText=
-titles[currentStep]
-
-
-
-document
-.getElementById(
-'stepCounter'
-)
-.innerText=
-
-String(
-currentStep+1
-).padStart(2,'0')
-
-+' / 05'
-
-
-
-let percent=
-((currentStep+1)*20);
-
-document
-.getElementById(
-'progressText'
-)
-.innerText=
-percent+'%'
-
-
-document
-.getElementById(
-'progressFill'
-)
-.style.width=
-percent+'%'
-
-
-
-prevBtn.style.display=
-
-currentStep===0
-?'none'
-:'inline-flex'
-
-
-
-nextBtn.style.display=
-
-currentStep===steps.length-1
-?'none'
-:'inline-flex'
-
-
-
-submitBtn.style.display=
-
-currentStep===steps.length-1
-?'inline-flex'
-:'none'
-
-}
-
-
-
-nextBtn.addEventListener(
-'click',
-()=>{
-
-if(
-currentStep<
-steps.length-1
-){
-
-currentStep++
-
-showStep()
-
-}
-
-}
-)
-
-
-
-prevBtn.addEventListener(
-'click',
-()=>{
-
-if(
-currentStep>0
-){
-
-currentStep--
-
-showStep()
-
-}
-
-}
-)
-
-
-
-menu.forEach(
-(item,index)=>{
-
-item.addEventListener(
-'click',
-()=>{
-
-currentStep=index
-
-showStep()
-
-})
-
-})
-
-
-
-</script>
-
-@endpush

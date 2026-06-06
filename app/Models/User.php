@@ -84,9 +84,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function cvProfile()
     {
-        return $this->hasOne(
-            CvProfile::class
-        );
+        return $this->hasOne(CvProfile::class);
     }
     public function applications()
     {

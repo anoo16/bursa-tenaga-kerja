@@ -112,6 +112,16 @@ Route::prefix('cv')
             [CvController::class, 'preview']
         )->name('preview');
 
+        Route::post(
+        '/preview-draft',
+        [CvController::class, 'previewDraft']
+        )->name('preview.draft');
+
+        Route::get(
+        '/preview-draft/show',
+        [CvController::class, 'showPreview']
+        )->name('preview.show');
+
         Route::delete(
             '/section/{section}/{id}',
             [CvController::class, 'deleteSection']

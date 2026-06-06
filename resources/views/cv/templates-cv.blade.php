@@ -1,79 +1,306 @@
 @extends('layouts.jobseeker')
-@section('title', 'Pilih Template CV')
-@section('page-title', 'Pilih Template CV')
+
+@section('title', 'Template CV')
+
+@vite([
+    'resources/css/template-cv.css',
+    'resources/js/template-cv.js'
+])
 
 @section('content')
-<div class="cv-page">
 
-    {{-- Stepper --}}
-    <div class="cv-stepper">
-        <div class="step active">
-            <div class="step-circle">1</div>
-            <span>Pilih Template</span>
+<div class="cv-template-page">
+
+    {{-- HEADER --}}
+    <div class="cv-template-header">
+
+        <div>
+            <h1>Template CV</h1>
+            <p>
+                Pilih template CV profesional yang sesuai dengan kebutuhan karier Anda.
+            </p>
         </div>
-        <div class="step-line"></div>
-        <div class="step">
-            <div class="step-circle">2</div>
-            <span>Isi Data CV</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-            <div class="step-circle">3</div>
-            <span>Preview & Selesai</span>
-        </div>
+
+        <a href="{{ route('profile') }}" class="back-profile-btn">
+            <i class='bx bx-arrow-back'></i>
+            Kembali ke Profil
+        </a>
+
     </div>
 
-    <h2 class="cv-section-title">Pilih Template CV Kamu</h2>
-    <p class="cv-section-sub">Pilih desain yang sesuai dengan profil dan industri yang kamu tuju</p>
+    </div>
 
-    <form action="{{ route('cv.templates.select') }}" method="POST" id="templateForm">
-        @csrf
-        <input type="hidden" name="template_id" id="selectedTemplate"
-               value="{{ $profile->template_id ?? 'modern' }}">
+    {{-- TEMPLATE GRID --}}
+    <div class="cv-template-grid">
 
-        <div class="templates-grid">
-            @foreach($templates as $tpl)
-            <div class="template-card {{ ($profile->template_id ?? 'modern') === $tpl->slug ? 'selected' : '' }}"
-                 onclick="selectTemplate('{{ $tpl->slug }}', this)">
+        {{-- TEMPLATE 1 --}}
+        <div class="cv-template-card" data-category="modern">
 
-                {{-- Preview area --}}
-                <div class="template-preview tpl-{{ $tpl->slug }}">
-                    @if($tpl->slug === 'modern')
-                        @include('templates.modern')
-                    @elseif($tpl->slug === 'classic')
-                        @include('templates.classic')
-                    @else
-                        @include('templates.minimal')
-                    @endif
+            <div class="template-preview modern-template">
+
+                <div class="preview-sidebar">
+                    <div class="preview-avatar"></div>
+                    <div class="preview-line short"></div>
+                    <div class="preview-line"></div>
+                    <div class="preview-line"></div>
                 </div>
 
-                <div class="template-meta">
-                    <div class="template-check"><i class="fas fa-check-circle"></i></div>
-                    <h4 class="template-name">{{ $tpl->name }}</h4>
-                    <p class="template-desc">{{ $tpl->description }}</p>
+                <div class="preview-content">
+                    <div class="preview-title"></div>
+                    <div class="preview-subtitle"></div>
+
+                    <div class="preview-section">
+                        <div></div>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="preview-section">
+                        <div></div>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
+
             </div>
-            @endforeach
+
+            <div class="template-info">
+
+                <div>
+                    <h3>Modern Blue</h3>
+                    <p>Cocok untuk UI/UX Designer, Web Developer, dan Product Designer.</p>
+                </div>
+
+                <span class="template-badge modern">
+                    Modern
+                </span>
+
+            </div>
+
+            <div class="template-actions">
+
+                <button class="preview-btn" data-template="modern-blue">
+                    <i class='bx bx-show'></i>
+                    Preview
+                </button>
+
+               <a
+                    href="{{ route('cv.edit', ['template' => 'modern-blue']) }}"
+                    class="use-btn"
+                >
+                    Gunakan
+                </a>
+
+            </div>
+
         </div>
 
-        <div class="cv-form-footer">
-            <a href="{{ route('profile.index') }}" class="btn-outline-gray">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
-            <button type="submit" class="btn-primary">
-                Gunakan Template Ini <i class="fas fa-arrow-right"></i>
-            </button>
+        {{-- TEMPLATE 2 --}}
+        <div class="cv-template-card" data-category="professional">
+
+            <div class="template-preview professional-template">
+
+                <div class="preview-header"></div>
+
+                <div class="preview-content full">
+                    <div class="preview-title"></div>
+                    <div class="preview-subtitle"></div>
+
+                    <div class="preview-section">
+                        <div></div>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="preview-section">
+                        <div></div>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="template-info">
+
+                <div>
+                    <h3>Professional White</h3>
+                    <p>Desain formal untuk kebutuhan melamar kerja di perusahaan profesional.</p>
+                </div>
+
+                <span class="template-badge professional">
+                    Profesional
+                </span>
+
+            </div>
+
+            <div class="template-actions">
+
+                <button class="preview-btn" data-template="professional-white">
+                    <i class='bx bx-show'></i>
+                    Preview
+                </button>
+
+                <a
+                    href="{{ route('cv.edit', ['template' => 'professional-white']) }}"
+                    class="use-btn"
+                >
+                    Gunakan
+                </a>
+
+            </div>
+
         </div>
-    </form>
+
+        {{-- TEMPLATE 6 --}}
+        <div class="cv-template-card" data-category="professional">
+
+            <div class="template-preview corporate-template">
+
+                <div class="corporate-top"></div>
+
+                <div class="preview-content full">
+                    <div class="preview-title"></div>
+                    <div class="preview-subtitle"></div>
+
+                    <div class="preview-section">
+                        <div></div>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="preview-section">
+                        <div></div>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="template-info">
+
+                <div>
+                    <h3>Corporate Elegant</h3>
+                    <p>Template elegan untuk posisi administrasi, finance, dan management.</p>
+                </div>
+
+                <span class="template-badge professional">
+                    Profesional
+                </span>
+
+            </div>
+
+            <div class="template-actions">
+
+                <button class="preview-btn" data-template="corporate-elegant">
+                    <i class='bx bx-show'></i>
+                    Preview
+                </button>
+
+                <a
+                    href="{{ route('cv.edit', ['template' => 'corporate-elegant']) }}"
+                    class="use-btn"
+                >
+                    Gunakan
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-@endsection
 
-@push('scripts')
-<script>
-function selectTemplate(slug, el) {
-    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    document.getElementById('selectedTemplate').value = slug;
-}
-</script>
-@endpush
+{{-- PREVIEW MODAL --}}
+<div class="cv-preview-overlay" id="cvPreviewOverlay">
+
+    <div class="cv-preview-modal">
+
+        <div class="cv-preview-header">
+
+            <div>
+                <h2 id="previewTemplateName">
+                    Preview Template
+                </h2>
+
+                <p>
+                    Tampilan contoh CV berdasarkan template yang dipilih.
+                </p>
+            </div>
+
+            <button class="close-preview" id="closePreview">
+                <i class='bx bx-x'></i>
+            </button>
+
+        </div>
+
+        <div class="cv-preview-body">
+
+            <div class="cv-paper" id="cvPaperPreview">
+
+                <div class="cv-paper-header">
+
+                    <div>
+                        <h1 id="cvPreviewName">Bryan Larumunde</h1>
+                        <p id="cvPreviewHeadline">UI/UX Designer • Manado, Indonesia</p>
+                    </div>
+
+                    <div class="cv-paper-photo" id="cvPreviewPhoto"></div>
+
+                </div>
+
+                <div class="cv-paper-section">
+                    <h3>Ringkasan</h3>
+                    <p id="cvPreviewSummary">
+                        UI/UX Designer dengan pengalaman dalam perancangan produk digital,
+                        user research, prototyping, dan visual strategy.
+                    </p>
+                </div>
+
+                <div class="cv-paper-section">
+                    <h3>Pengalaman</h3>
+
+                    <h4 id="cvPreviewExperienceTitle">Staff Division UI/UX</h4>
+                    <span id="cvPreviewExperienceCompany">UKM Unity • 2025 - Present</span>
+
+                    <p id="cvPreviewExperienceDesc">
+                        Melakukan riset pengguna dan membantu proses perancangan antarmuka
+                        untuk solusi berbasis teknologi.
+                    </p>
+                </div>
+
+                <div class="cv-paper-section">
+                    <h3>Keahlian</h3>
+
+                    <div class="cv-paper-skills" id="cvPreviewSkills">
+                        <span>Figma</span>
+                        <span>UI Design</span>
+                        <span>UX Research</span>
+                        <span>Laravel</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="cv-preview-footer">
+
+            <button class="cancel-preview" id="cancelPreview">
+                Batal
+            </button>
+
+            <button class="use-template-final" id="useTemplateFinal">
+                Gunakan Template
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+@endsection

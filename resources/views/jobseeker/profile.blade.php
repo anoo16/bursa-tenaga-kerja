@@ -18,9 +18,8 @@
 
             <div class="profile-avatar-wrapper">
 
-                <img src="{{ $user && $user->photo
-                    ? asset('storage/' . $user->photo)
-                    : asset('assets/profile.png') }}"
+                <img src="{{ asset('assets/profile.png') }}"
+                    id="profile-photo"
                     alt="Profile"
                     class="profile-avatar">
 
@@ -32,8 +31,8 @@
 
             <div>
 
-                <h2 class="profile-name">
-                    {{ $user ? $user->name : 'Bryan Larumunde' }}
+                <h2 class="profile-name" id="profile-name">
+                    Bryan Larumunde
                 </h2>
 
             </div>
@@ -54,24 +53,22 @@
         {{-- LEFT --}}
         <div class="profile-left">
 
-            {{-- SUMMARY --}}
+            {{-- Tentang Saya --}}
             <div class="card summary-card">
 
-                <p class="summary-text">
-                    {{ $user && $user->summary
-                        ? $user->summary
-                        : 'I am a first semester student studying at Sam Ratulangi University majoring in Information Systems, with experience in project management and strategy development.' }}
+                <p class="summary-text" id="profile-summary">
+                    I am a first semester student studying at Sam Ratulangi University...
                 </p>
 
             </div>
 
-            {{-- EXPERIENCE --}}
+            {{-- Pengalaman --}}
             <div class="card">
 
                 <div class="section-header">
 
                     <h3 class="section-title">
-                        Experience
+                        Pengalaman
                     </h3>
 
                 </div>
@@ -146,13 +143,13 @@
             {{-- BOTTOM --}}
             <div class="bottom-row">
 
-                {{-- EDUCATION --}}
+                {{-- Pendidikan --}}
                 <div class="card">
 
                     <div class="section-header">
 
                         <h3 class="section-title">
-                            Education
+                            Pendidikan
                         </h3>
 
                     </div>
@@ -214,32 +211,23 @@
                     <div class="section-header">
 
                         <h3 class="section-title">
-                            Credentials & CV
+                            CV(Curiculum Vitae)
                         </h3>
 
                     </div>
 
                     <p class="credentials-hint">
-                        Keep your professional profile and CV up to date.
+                        Pastikan profil dan CV Anda selalu diperbarui.
                     </p>
 
                     <div class="credentials-actions">
-
-                        {{-- EDIT CV --}}
-                        <a href="{{ route('cv.edit') }}"
-                        class="btn-primary">
-
-                            <i class='bx bx-edit'></i>
-                            Edit CV
-
-                        </a>
 
                         {{-- PILIH TEMPLATE --}}
                         <a href="{{ route('cv.templates') }}"
                         class="btn-outline">
 
                             <i class='bx bx-layout'></i>
-                            Template CV
+                            Edit CV
 
                         </a>
 
@@ -254,20 +242,19 @@
         {{-- RIGHT --}}
         <div class="profile-right">
 
-            {{-- IDENTITY --}}
+            {{-- IDENTITAS --}}
             <div class="card identity-card">
 
                 <div class="identity-label">
-                    IDENTITY DETAILS
+                    Detai Identitas
                 </div>
 
                 <div class="identity-item">
 
                     <i class='bx bx-envelope'></i>
 
-                    {{ $user
-                        ? $user->email
-                        : 'bryanlarumunde17@gmail.com' }}
+                    <span id="profile-email">
+                    </span>
 
                 </div>
 
@@ -275,15 +262,46 @@
 
                     <i class='bx bx-map'></i>
 
-                    {{ $user && $user->location
-                        ? $user->location
-                        : 'Manado, Sulawesi Utara' }}
+                    <span id="profile-location">
+                        Manado, Sulawesi Utara
+                    </span>
 
                 </div>
 
             </div>
 
-            {{-- CERTIFICATION --}}
+            @if($user?->linkedin)
+
+            <div class="identity-item">
+
+                <i class='bx bxl-linkedin'></i>
+
+                <a href="{{ $user->linkedin }}"
+                target="_blank">
+                    LinkedIn
+                </a>
+
+            </div>
+
+            @endif
+
+
+            @if($user?->github)
+
+            <div class="identity-item">
+
+                <i class='bx bxl-github'></i>
+
+                <a href="{{ $user->github }}"
+                target="_blank">
+                    GitHub
+                </a>
+
+            </div>
+
+            @endif
+
+            {{-- SERTIFIKASI --}}
             <div class="card sertifikasi-card">
 
                 <div class="section-header">
@@ -325,13 +343,13 @@
 
             </div>
 
-            {{-- SKILLS --}}
+            {{-- KEAHLIAN --}}
             <div class="card">
 
                 <div class="section-header">
 
                     <h3 class="section-title">
-                        Expertise
+                        Keahlian
                     </h3>
 
                 </div>
@@ -372,5 +390,60 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const user = JSON.parse(
+        localStorage.getItem('user')
+    );
+
+    if(!user) return;
+
+    // nama
+    const profileName =
+        document.getElementById('profile-name');
+
+    if(profileName){
+        profileName.textContent = user.name;
+    }
+
+    // email
+    const profileEmail =
+        document.getElementById('profile-email');
+
+    if(profileEmail){
+        profileEmail.textContent = user.email;
+    }
+
+    // lokasi
+    const profileLocation =
+        document.getElementById('profile-location');
+
+    if(profileLocation && user.location){
+        profileLocation.textContent =
+            user.location;
+    }
+
+    // summary
+    const profileSummary =
+        document.getElementById('profile-summary');
+
+    if(profileSummary && user.summary){
+        profileSummary.textContent =
+            user.summary;
+    }
+
+    // photo
+    const profilePhoto =
+        document.getElementById('profile-photo');
+
+    if(profilePhoto && user.photo){
+        profilePhoto.src =
+            '/storage/' + user.photo;
+    }
+
+});
+</script>
 
 @endsection

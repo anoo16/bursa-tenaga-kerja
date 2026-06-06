@@ -20,6 +20,8 @@ $user = Auth::guard('api')->user();
         'resources/css/dashboard.css'
     ])
     
+    @stack('styles')
+    
     {{-- FONT --}}
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
@@ -51,6 +53,8 @@ $user = Auth::guard('api')->user();
     </main>
 
 </div>
+
+@stack('scripts')
 
 </body>
 </html>

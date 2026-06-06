@@ -1,128 +1,424 @@
-.cv-wizard{
-display:flex;
-gap:30px;
-padding:30px;
+.cv-wizard {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.wizard-sidebar{
-width:250px;
-background:#f7f5dc;
-padding:25px;
-border-radius:20px;
+/* ==========================
+   TOPBAR
+========================== */
+
+.wizard-topbar {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
-.wizard-item{
-padding:14px;
-display:flex;
-gap:10px;
-margin-bottom:10px;
-border-radius:10px;
-cursor:pointer;
+.wizard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 }
 
-.wizard-item.active{
-background:white;
-color:#1d4ed8;
-font-weight:600;
+.wizard-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #1e3a8a;
+    text-decoration: none !important;
 }
 
-.wizard-content{
-flex:1;
-background:white;
-padding:40px;
-border-radius:20px;
+.wizard-back:hover,
+.wizard-back:focus,
+.wizard-back:active,
+.wizard-back:visited {
+    color: #1e3a8a;
+    text-decoration: none !important;
 }
 
-.form-grid-2{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
+/* ==========================
+   STATUS
+========================== */
+
+.wizard-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.saved-badge {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.progress-bar {
+    width: 160px;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+#progressFill {
+    width: 20%;
+    height: 100%;
+    background: #2563eb;
+    transition: 0.3s;
+}
+
+/* ==========================
+   STEPPER
+========================== */
+
+.wizard-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #9ca3af;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.step-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.wizard-step.active {
+    color: #1e3a8a;
+}
+
+.wizard-step.active .step-circle {
+    background: #1e3a8a;
+    color: #fff;
+}
+
+.wizard-step.done {
+    color: #16a34a;
+}
+
+.wizard-step.done .step-circle {
+    background: #16a34a;
+    color: #fff;
+}
+
+.wizard-line {
+    width: 70px;
+    height: 2px;
+    background: #d1d5db;
+    margin: 0 10px;
+}
+
+.wizard-line.done {
+    background: #16a34a;
+}
+
+/* ==========================
+   CONTENT
+========================== */
+
+.wizard-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.wizard-content h1 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.wizard-content p {
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+/* ==========================
+   FORM
+========================== */
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
 }
 
 .form-input,
-.form-textarea{
-width:100%;
-padding:14px;
-border:1px solid #ddd;
-border-radius:10px;
+.form-textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: 0.2s;
 }
 
-.wizard-footer{
-display:flex;
-justify-content:space-between;
-margin-top:40px;
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #1e3a8a;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.08);
 }
 
-.btn-primary{
-background:#1d4ed8;
-color:white;
-padding:12px 25px;
-border:none;
-border-radius:10px;
+.form-textarea {
+    resize: vertical;
 }
 
-.btn-outline{
-padding:12px 25px;
-border:1px solid #1d4ed8;
-background:white;
+/* ==========================
+   CARD ITEM
+========================== */
+
+.education-item,
+.skill-item,
+.experience-item {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
-.progress-bar{
-height:8px;
-background:#e5e7eb;
-border-radius:30px;
-margin:10px 0;
-overflow:hidden;
+.experience-item textarea {
+    margin-top: 15px;
 }
 
-#progressFill{
-height:100%;
-width:20%;
-background:#1e3a8a;
-transition:.4s;
-border-radius:30px;
+/* ==========================
+   BUTTON TAMBAH
+========================== */
+
+.section-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-.wizard-item.active{
-background:#eef4ff;
-color:#1e3a8a;
-font-weight:600;
-border-radius:12px;
+.btn-add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 12px 22px;
+
+    border: 2px dashed #1e3a8a;
+
+    border-radius: 12px;
+
+    background: #f8faff;
+
+    color: #1e3a8a;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.25s;
 }
 
-.step-content{
-animation:fade .35s ease;
+.btn-add:hover {
+    background: #1e3a8a;
+    color: #fff;
+    transform: translateY(-2px);
 }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateX(15px)
-}
-to{
-opacity:1;
-transform:none
-}
+/* ==========================
+   BUTTON HAPUS
+========================== */
+
+.btn-delete {
+    background: #fef2f2;
+    color: #dc2626;
+
+    border: 1px solid #fca5a5;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    margin-top: 15px;
+
+    transition: 0.2s;
 }
 
-/* sembunyikan semua step */
-.step-content{
-display:none;
-animation:fade .35s ease;
+.btn-delete:hover {
+    background: #dc2626;
+    color: white;
 }
 
-/* tampilkan step aktif */
-.step-content.active{
-display:block;
+/* ==========================
+   FOOTER
+========================== */
+
+.wizard-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
 }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateX(15px)
+.btn-primary {
+    background: #1e3a8a;
+    color: white;
+
+    border: none;
+
+    padding: 12px 24px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
 }
-to{
-opacity:1;
-transform:translateX(0)
+
+.btn-primary:hover {
+    background: #173074;
 }
+
+.btn-outline {
+    background: white;
+
+    border: 1px solid #1e3a8a;
+
+    color: #1e3a8a;
+
+    padding: 12px 24px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-outline:hover {
+    background: #1e3a8a;
+    color: white;
+}
+
+/* ==========================
+   STEP ANIMATION
+========================== */
+
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+    animation: fade 0.3s ease;
+}
+
+.education-item,
+.experience-item {
+    position: relative;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    background: #fafafa;
+}
+
+.skill-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.skill-item .form-input {
+    flex: 1;
+}
+
+#addEducation,
+#addSkill,
+#addExperience {
+    margin-top: 10px;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 768px) {
+    .wizard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .wizard-status {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .wizard-line {
+        display: none;
+    }
+
+    .wizard-progress {
+        gap: 10px;
+    }
+
+    .wizard-footer {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .wizard-footer button {
+        width: 100%;
+    }
 }
