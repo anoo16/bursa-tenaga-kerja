@@ -18,8 +18,11 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'PT BONGKAR TURET',
+            'email' => 'mobilelegend@moontoon.com',
+            'password' => 'mainsampegila',
+            'role_id' => 2,
+            'is_verified' =>true,
         ]);
 
        $this->call([
@@ -27,7 +30,8 @@ class DatabaseSeeder extends Seeder
         DummyApplicantSeeder::class,
         DummyJobSeeder::class,
         JobApplicationSeeder::class,
-
+        AdminUserSeeder::class,
+        
         ]);
     }
 }

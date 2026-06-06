@@ -14,6 +14,8 @@ class Job extends Model
         'posisi',
         'kategori',
         'jenis_bidang',
+        'gaji_min_angka',   // ← tambah
+        'gaji_max_angka',   // ← tambah
         'gaji',
         'deadline',
         'tanggung_jawab',

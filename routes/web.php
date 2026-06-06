@@ -167,6 +167,27 @@ Route::middleware([])
             '/jobs/{job}',
             [App\Http\Controllers\JobSearchController::class, 'show']
         )->name('jobs.show');
+
+        // SIMPAN LOWONGAN
+        Route::get(
+            '/jobseeker/simpan',
+            [App\Http\Controllers\SavedJobController::class, 'index']
+        )->name('jobseeker.simpan');
+        
+        Route::post(
+            '/jobs/{jobId}/simpan',
+            [App\Http\Controllers\SavedJobController::class, 'toggle']
+        )->name('jobseeker.simpan.toggle');
+        
+        Route::delete(
+            '/jobseeker/simpan/{savedId}',
+            [App\Http\Controllers\SavedJobController::class, 'remove']
+        )->name('jobseeker.simpan.remove');
+        
+        Route::delete(
+            '/jobseeker/simpan',
+            [App\Http\Controllers\SavedJobController::class, 'clearAll']
+        )->name('jobseeker.simpan.clear');
     });
 
 /*

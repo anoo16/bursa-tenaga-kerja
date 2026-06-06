@@ -58,6 +58,17 @@ class JobController extends Controller
         );
     }
 
+    // Tambahkan helper parsing gaji di atas method store() dan update()
+    private function parseGaji(?string $val): ?int
+    {
+        if (!$val) return null;
+        $clean = preg_replace('/[^0-9]/', '', $val);
+        if (!$clean) return null;
+        $num = (int) $clean;
+        // Jika angka kecil (<= 999), anggap dalam juta
+        return $num <= 999 ? $num * 1000000 : $num;
+    }
+
     /*
      * Menyimpan lowongan baru
      */
@@ -82,6 +93,8 @@ class JobController extends Controller
             'posisi' => $request->posisi,
             'kategori' => $request->kategori,
             'jenis_bidang' => $request->jenis_bidang,
+            'gaji_min_angka' => $this->parseGaji($request->gaji_min_angka),
+            'gaji_max_angka' => $this->parseGaji($request->gaji_max_angka),
             'gaji' => $request->gaji,
             // Batas waktu lowongan (opsional)
             'deadline' => $request->deadline ?: null,
@@ -123,6 +136,8 @@ class JobController extends Controller
             'posisi' => $request->posisi,
             'kategori' => $request->kategori,
             'jenis_bidang' => $request->jenis_bidang,
+            'gaji_min_angka' => $this->parseGaji($request->gaji_min_angka),
+            'gaji_max_angka' => $this->parseGaji($request->gaji_max_angka),
             'gaji' => $request->gaji,
             'deadline' => $request->deadline ?: null,
             'tanggung_jawab' => $request->tanggung_jawab,

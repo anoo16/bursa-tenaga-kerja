@@ -71,8 +71,8 @@ class AuthController extends Controller
                     : 'nullable|string|max:255',
 
                 'npwp' => $isRecruiter
-                ? 'required|regex:/^[0-9]+$/|digits:16'
-                : 'nullable|regex:/^[0-9]+$/|digits:16',
+                    ? 'required|string|regex:/^\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3}$/'
+                    : 'nullable|string|regex:/^\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3}$/',
 
                 'npwp_file' => $isRecruiter
                     ? 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
@@ -119,8 +119,7 @@ class AuthController extends Controller
                 'company_name.string' => 'Nama perusahaan tidak valid.',
                 'company_name.max' => 'Nama perusahaan maksimal 255 karakter.',
 
-                'npwp.regex' => 'Nomor NPWP hanya boleh berisi angka.',
-                'npwp.digits' => 'Nomor NPWP harus terdiri dari 16 digit.',
+                'npwp.regex' => 'Format NPWP harus lengkap, contoh: 00.000.000.0-000.000.',
 
                 'npwp_file.required' => 'Dokumen NPWP wajib diunggah.',
                 'npwp_file.file' => 'Dokumen NPWP tidak valid.',
@@ -683,7 +682,7 @@ class AuthController extends Controller
      * Membuka dokumen recruiter secara aman untuk admin.
      */
     public function viewRecruiterDocument($id, $type)
-    {
+    { 
         $documentTypes = [
             'npwp' => [
                 'column' => 'npwp_file',

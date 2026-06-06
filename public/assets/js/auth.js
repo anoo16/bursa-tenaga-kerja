@@ -124,7 +124,168 @@ function getErrorMessage(result, defaultMessage) {
 }
 
 /* ===============================
-   ONLY NUMBER INPUT HELPER
+   CUSTOM VALIDATION HELPER
+================================ */
+
+function hideAlert() {
+    if (!alertBox) return;
+
+    alertBox.classList.add("d-none");
+    alertBox.classList.remove("alert-success", "alert-danger");
+    alertBox.innerHTML = "";
+}
+
+function setInvalid(input) {
+    if (!input) return;
+
+    input.classList.add("is-invalid");
+}
+
+function clearInvalidState(form) {
+    if (!form) return;
+
+    const invalidInputs = form.querySelectorAll(".is-invalid");
+
+    invalidInputs.forEach(function (input) {
+        input.classList.remove("is-invalid");
+    });
+}
+
+function scrollToSafeElement(element) {
+    if (!element) return;
+
+    const authCard = element.closest(".auth-card");
+
+    if (authCard) {
+        authCard.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+        });
+
+        return;
+    }
+
+    element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+    });
+}
+
+function validateRequiredFields(form, options = {}) {
+    const excludedTypes = options.excludedTypes || [];
+
+    let isValid = true;
+    let firstInvalidElement = null;
+
+    const requiredFields = form.querySelectorAll(
+        "input[required], select[required], textarea[required]",
+    );
+
+    requiredFields.forEach(function (input) {
+        const inputType = (input.type || "").toLowerCase();
+
+        if (excludedTypes.includes(inputType)) {
+            return;
+        }
+
+        if (!input.checkValidity()) {
+            isValid = false;
+            setInvalid(input);
+
+            if (!firstInvalidElement) {
+                firstInvalidElement = input;
+            }
+        }
+    });
+
+    return {
+        isValid,
+        firstInvalidElement,
+    };
+}
+
+function validatePasswordPair(passwordInput, confirmPasswordInput) {
+    if (!passwordInput || !confirmPasswordInput) {
+        return {
+            isValid: true,
+            message: null,
+            element: null,
+        };
+    }
+
+    if (passwordInput.value.length > 0 && passwordInput.value.length < 6) {
+        return {
+            isValid: false,
+            message: "Kata sandi minimal 6 karakter.",
+            element: passwordInput,
+        };
+    }
+
+    if (
+        passwordInput.value.length > 0 &&
+        confirmPasswordInput.value.length > 0 &&
+        passwordInput.value !== confirmPasswordInput.value
+    ) {
+        return {
+            isValid: false,
+            message: "Konfirmasi kata sandi tidak cocok.",
+            element: confirmPasswordInput,
+        };
+    }
+
+    return {
+        isValid: true,
+        message: null,
+        element: null,
+    };
+}
+
+function validateTermsCheckbox(termsInput) {
+    if (!termsInput || termsInput.checked) {
+        return {
+            isValid: true,
+            element: null,
+        };
+    }
+
+    setInvalid(termsInput);
+
+    return {
+        isValid: false,
+        element: termsInput,
+    };
+}
+
+function clearInvalidOnInput(form) {
+    if (!form) return;
+
+    form.addEventListener("input", function (event) {
+        const target = event.target;
+
+        if (!target) return;
+
+        hideAlert();
+
+        if (target.classList.contains("is-invalid") && target.checkValidity()) {
+            target.classList.remove("is-invalid");
+        }
+    });
+
+    form.addEventListener("change", function (event) {
+        const target = event.target;
+
+        if (!target) return;
+
+        hideAlert();
+
+        if (target.classList.contains("is-invalid") && target.checkValidity()) {
+            target.classList.remove("is-invalid");
+        }
+    });
+}
+
+/* ===============================
+   INPUT FILTER HELPER
 ================================ */
 
 function onlyNumberInput(inputId) {
@@ -137,8 +298,43 @@ function onlyNumberInput(inputId) {
     });
 }
 
+function npwpInput(inputId) {
+    const input = document.getElementById(inputId);
+
+    if (!input) return;
+
+    input.addEventListener("input", function () {
+        let value = this.value.replace(/\D/g, "");
+
+        value = value.substring(0, 15);
+
+        if (value.length > 12) {
+            value = value.replace(
+                /^(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{0,3}).*/,
+                "$1.$2.$3.$4-$5.$6",
+            );
+        } else if (value.length > 9) {
+            value = value.replace(
+                /^(\d{2})(\d{3})(\d{3})(\d{1})(\d{0,3}).*/,
+                "$1.$2.$3.$4-$5",
+            );
+        } else if (value.length > 8) {
+            value = value.replace(
+                /^(\d{2})(\d{3})(\d{3})(\d{0,1}).*/,
+                "$1.$2.$3.$4",
+            );
+        } else if (value.length > 5) {
+            value = value.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, "$1.$2.$3");
+        } else if (value.length > 2) {
+            value = value.replace(/^(\d{2})(\d{0,3}).*/, "$1.$2");
+        }
+
+        this.value = value;
+    });
+}
+
 onlyNumberInput("phone");
-onlyNumberInput("npwp");
+npwpInput("npwp");
 
 /* ===============================
    OTP COUNTDOWN TIMER
@@ -278,35 +474,81 @@ if (loginForm) {
 ================================ */
 
 if (registerForm) {
+    clearInvalidOnInput(registerForm);
+
     registerForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
+        hideAlert();
+        clearInvalidState(registerForm);
 
-        const password = document.getElementById("password").value;
-        const confirmPassword =
-            document.getElementById("confirmPassword").value;
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const educationInput = document.getElementById("education");
+        const birthDateInput = document.getElementById("birth_date");
+        const phoneInput = document.getElementById("phone");
+        const termsInput = document.getElementById("jobseekerTerms");
 
-        const education = document.getElementById("education")?.value.trim();
-        const birthDate = document.getElementById("birth_date")?.value;
-        const phone = document.getElementById("phone")?.value.trim();
-        const terms = document.getElementById("jobseekerTerms")?.checked;
+        let isValid = true;
+        let firstInvalidElement = null;
+        let validationMessage =
+            "Lengkapi data yang masih kosong atau belum sesuai.";
 
-        if (password !== confirmPassword) {
-            showAlert("danger", "Konfirmasi kata sandi tidak cocok.");
+        const requiredValidation = validateRequiredFields(registerForm);
+
+        if (!requiredValidation.isValid) {
+            isValid = false;
+            firstInvalidElement = requiredValidation.firstInvalidElement;
+        }
+
+        const passwordValidation = validatePasswordPair(
+            passwordInput,
+            confirmPasswordInput,
+        );
+
+        if (!passwordValidation.isValid) {
+            isValid = false;
+            setInvalid(passwordValidation.element);
+
+            if (!firstInvalidElement) {
+                firstInvalidElement = passwordValidation.element;
+            }
+
+            validationMessage = passwordValidation.message;
+        }
+
+        const termsValidation = validateTermsCheckbox(termsInput);
+
+        if (!termsValidation.isValid) {
+            isValid = false;
+
+            if (!firstInvalidElement) {
+                firstInvalidElement = termsValidation.element;
+            }
+
+            validationMessage =
+                "Anda wajib menyetujui Syarat & Ketentuan serta Kebijakan Privasi.";
+        }
+
+        if (!isValid) {
+            showAlert("danger", validationMessage);
+            scrollToSafeElement(firstInvalidElement);
 
             return;
         }
 
-        if (!terms) {
-            showAlert(
-                "danger",
-                "Anda wajib menyetujui Syarat & Ketentuan serta Kebijakan Privasi.",
-            );
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
 
-            return;
-        }
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        const education = educationInput?.value.trim();
+        const birthDate = birthDateInput?.value;
+        const phone = phoneInput?.value.trim();
+        const terms = termsInput?.checked;
 
         try {
             const response = await fetch("/api/auth/register", {
@@ -369,6 +611,30 @@ if (registerForm) {
    RECRUITER FILE VALIDATION
 ================================ */
 
+const recruiterFileFields = [
+    {
+        inputId: "npwp_file",
+        labelId: "npwpFileName",
+        errorId: "npwpFileError",
+        documentName: "Dokumen NPWP",
+        emptyMessage: "Dokumen NPWP wajib diunggah.",
+    },
+    {
+        inputId: "business_license_file",
+        labelId: "businessLicenseFileName",
+        errorId: "businessLicenseFileError",
+        documentName: "Dokumen izin usaha",
+        emptyMessage: "Dokumen izin usaha wajib diunggah.",
+    },
+    {
+        inputId: "pic_authorization_file",
+        labelId: "picAuthorizationFileName",
+        errorId: "picAuthorizationFileError",
+        documentName: "Surat kuasa PIC",
+        emptyMessage: "Surat kuasa PIC wajib diunggah.",
+    },
+];
+
 function isAllowedRecruiterFile(file) {
     const allowedExtensions = ["pdf", "jpg", "jpeg", "png"];
 
@@ -377,26 +643,82 @@ function isAllowedRecruiterFile(file) {
     return allowedExtensions.includes(fileExtension);
 }
 
-function validateRecruiterFile(file, documentName) {
+function showRecruiterFileError(field, message) {
+    const input = document.getElementById(field.inputId);
+    const error = document.getElementById(field.errorId);
+
+    if (input) {
+        input.classList.add("is-invalid-file");
+    }
+
+    if (error) {
+        error.textContent = message;
+        error.classList.remove("d-none");
+    }
+}
+
+function hideRecruiterFileError(field) {
+    const input = document.getElementById(field.inputId);
+    const error = document.getElementById(field.errorId);
+
+    if (input) {
+        input.classList.remove("is-invalid-file");
+    }
+
+    if (error) {
+        error.textContent = "";
+        error.classList.add("d-none");
+    }
+}
+
+function updateRecruiterFileName(field) {
+    const input = document.getElementById(field.inputId);
+    const label = document.getElementById(field.labelId);
+
+    if (!input || !label) return;
+
+    label.textContent =
+        input.files.length > 0 ? input.files[0].name : "No file chosen";
+}
+
+function validateRecruiterFileField(field) {
+    const input = document.getElementById(field.inputId);
     const maxFileSize = 2 * 1024 * 1024;
 
+    if (!input) {
+        return true;
+    }
+
+    hideRecruiterFileError(field);
+
+    const file = input.files[0];
+
     if (!file) {
-        showAlert("danger", `${documentName} wajib diunggah.`);
+        showRecruiterFileError(field, field.emptyMessage);
 
         return false;
     }
 
     if (!isAllowedRecruiterFile(file)) {
-        showAlert(
-            "danger",
-            `${documentName} harus berupa PDF, JPG, JPEG, atau PNG.`,
+        showRecruiterFileError(
+            field,
+            `${field.documentName} harus berupa PDF, JPG, JPEG, atau PNG.`,
         );
+
+        input.value = "";
+        updateRecruiterFileName(field);
 
         return false;
     }
 
     if (file.size > maxFileSize) {
-        showAlert("danger", `${documentName} maksimal berukuran 2 MB.`);
+        showRecruiterFileError(
+            field,
+            `${field.documentName} maksimal berukuran 2 MB.`,
+        );
+
+        input.value = "";
+        updateRecruiterFileName(field);
 
         return false;
     }
@@ -409,49 +731,133 @@ function validateRecruiterFile(file, documentName) {
 ================================ */
 
 if (recruiterRegisterForm) {
-    const recruiterFileFields = [
-        {
-            inputId: "npwp_file",
-            labelId: "npwpFileName",
-        },
-        {
-            inputId: "business_license_file",
-            labelId: "businessLicenseFileName",
-        },
-        {
-            inputId: "pic_authorization_file",
-            labelId: "picAuthorizationFileName",
-        },
-    ];
+    clearInvalidOnInput(recruiterRegisterForm);
 
     recruiterFileFields.forEach(function (field) {
         const input = document.getElementById(field.inputId);
-        const label = document.getElementById(field.labelId);
 
-        if (input && label) {
-            input.addEventListener("change", function () {
-                label.textContent =
-                    this.files.length > 0
-                        ? this.files[0].name
-                        : "No file chosen";
-            });
-        }
+        if (!input) return;
+
+        input.addEventListener("change", function () {
+            updateRecruiterFileName(field);
+            validateRecruiterFileField(field);
+            hideAlert();
+        });
     });
 
     recruiterRegisterForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const picName = document.getElementById("pic_name").value.trim();
-        const companyName = document
-            .getElementById("company_name")
-            .value.trim();
-        const email = document.getElementById("email").value.trim();
+        hideAlert();
+        clearInvalidState(recruiterRegisterForm);
 
-        const password = document.getElementById("password").value;
-        const confirmPassword =
-            document.getElementById("confirmPassword").value;
+        const picNameInput = document.getElementById("pic_name");
+        const companyNameInput = document.getElementById("company_name");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const npwpInputElement = document.getElementById("npwp");
+        const termsInput = document.getElementById("terms");
 
-        const npwp = document.getElementById("npwp").value.trim();
+        let isValid = true;
+        let firstInvalidElement = null;
+        let validationMessage =
+            "Lengkapi data yang masih kosong atau belum sesuai.";
+
+        const requiredValidation = validateRequiredFields(
+            recruiterRegisterForm,
+            {
+                excludedTypes: ["file"],
+            },
+        );
+
+        if (!requiredValidation.isValid) {
+            isValid = false;
+            firstInvalidElement = requiredValidation.firstInvalidElement;
+        }
+
+        const npwpPattern = /^\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3}$/;
+
+        if (
+            npwpInputElement &&
+            npwpInputElement.value.trim().length > 0 &&
+            !npwpPattern.test(npwpInputElement.value.trim())
+        ) {
+            isValid = false;
+            setInvalid(npwpInputElement);
+
+            if (!firstInvalidElement) {
+                firstInvalidElement = npwpInputElement;
+            }
+
+            validationMessage =
+                "Format NPWP harus lengkap, contoh: 00.000.000.0-000.000.";
+        }
+
+        const passwordValidation = validatePasswordPair(
+            passwordInput,
+            confirmPasswordInput,
+        );
+
+        if (!passwordValidation.isValid) {
+            isValid = false;
+            setInvalid(passwordValidation.element);
+
+            if (!firstInvalidElement) {
+                firstInvalidElement = passwordValidation.element;
+            }
+
+            validationMessage = passwordValidation.message;
+        }
+
+        recruiterFileFields.forEach(function (field) {
+            const input = document.getElementById(field.inputId);
+            const fileValid = validateRecruiterFileField(field);
+
+            if (!fileValid) {
+                isValid = false;
+
+                if (!firstInvalidElement && input) {
+                    firstInvalidElement = input.closest(".file-field") || input;
+                }
+
+                if (
+                    validationMessage ===
+                    "Lengkapi data yang masih kosong atau belum sesuai."
+                ) {
+                    validationMessage = field.emptyMessage;
+                }
+            }
+        });
+
+        const termsValidation = validateTermsCheckbox(termsInput);
+
+        if (!termsValidation.isValid) {
+            isValid = false;
+
+            if (!firstInvalidElement) {
+                firstInvalidElement = termsValidation.element;
+            }
+
+            validationMessage =
+                "Anda wajib menyetujui Syarat & Ketentuan serta Kebijakan Privasi.";
+        }
+
+        if (!isValid) {
+            showAlert("danger", validationMessage);
+            scrollToSafeElement(firstInvalidElement);
+
+            return;
+        }
+
+        const picName = picNameInput.value.trim();
+        const companyName = companyNameInput.value.trim();
+        const email = emailInput.value.trim();
+
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        const npwp = npwpInputElement.value.trim();
 
         const npwpFile = document.getElementById("npwp_file").files[0];
         const businessLicenseFile = document.getElementById(
@@ -460,41 +866,6 @@ if (recruiterRegisterForm) {
         const picAuthorizationFile = document.getElementById(
             "pic_authorization_file",
         ).files[0];
-
-        const terms = document.getElementById("terms").checked;
-
-        if (password !== confirmPassword) {
-            showAlert("danger", "Konfirmasi kata sandi tidak cocok.");
-
-            return;
-        }
-
-        if (!npwp) {
-            showAlert("danger", "Nomor NPWP wajib diisi.");
-
-            return;
-        }
-
-        if (!validateRecruiterFile(npwpFile, "Dokumen NPWP")) {
-            return;
-        }
-
-        if (!validateRecruiterFile(businessLicenseFile, "Dokumen izin usaha")) {
-            return;
-        }
-
-        if (!validateRecruiterFile(picAuthorizationFile, "Surat kuasa PIC")) {
-            return;
-        }
-
-        if (!terms) {
-            showAlert(
-                "danger",
-                "Anda wajib menyetujui Syarat & Ketentuan serta Kebijakan Privasi.",
-            );
-
-            return;
-        }
 
         const formData = new FormData();
 
