@@ -8,7 +8,7 @@
 
 @section('hero-text')
 
-    <div class="hero-custom">
+    <div class="hero-custom jobseeker-hero">
 
         <h1>
             Find your job <br>
@@ -58,7 +58,7 @@
         <div class="benefit-item">
 
             <div class="benefit-icon">
-                 <i class="bi bi-window-stack"></i>
+                <i class="bi bi-window-stack"></i>
             </div>
 
             <div>
@@ -77,10 +77,10 @@
 
 @section('auth-form')
 
-    <div class="register-wrapper">
+    <div class="register-wrapper register-jobseeker-wrapper">
 
         <!-- TITLE -->
-        <div class="mb-4">
+        <div class="register-heading">
 
             <h2 class="register-title">
                 Daftar Akun Job Seeker
@@ -100,7 +100,11 @@
         ></div>
 
         <!-- FORM -->
-        <form id="registerForm">
+        <form
+            id="registerForm"
+            class="register-jobseeker-form"
+             novalidate
+        >
 
             @csrf
 
@@ -110,15 +114,20 @@
                 <!-- NAME -->
                 <div class="col-md-6 mb-3">
 
-                    <label class="custom-label">
+                    <label
+                        for="name"
+                        class="custom-label"
+                    >
                         NAMA LENGKAP
                     </label>
 
                     <input
                         type="text"
                         id="name"
+                        name="name"
                         class="form-control"
                         placeholder="Nama Lengkap"
+                        autocomplete="name"
                         required
                     >
 
@@ -127,15 +136,19 @@
                 <!-- EDUCATION -->
                 <div class="col-md-6 mb-3">
 
-                    <label class="custom-label">
+                    <label
+                        for="education"
+                        class="custom-label"
+                    >
                         PENDIDIKAN TERAKHIR
                     </label>
 
                     <input
                         type="text"
                         id="education"
+                        name="education"
                         class="form-control"
-                        placeholder="Contoh:S1 Sistem Informasi"
+                        placeholder="Contoh: S1 Sistem Informasi"
                         required
                     >
 
@@ -149,13 +162,17 @@
                 <!-- BIRTH DATE -->
                 <div class="col-md-6 mb-3">
 
-                    <label class="custom-label">
+                    <label
+                        for="birth_date"
+                        class="custom-label"
+                    >
                         TANGGAL LAHIR
                     </label>
 
                     <input
                         type="date"
                         id="birth_date"
+                        name="birth_date"
                         class="form-control"
                         required
                     >
@@ -165,13 +182,17 @@
                 <!-- PHONE -->
                 <div class="col-md-6 mb-3">
 
-                    <label class="custom-label">
+                    <label
+                        for="phone"
+                        class="custom-label"
+                    >
                         NO TELEPON
                     </label>
 
                     <input
                         type="text"
                         id="phone"
+                        name="phone"
                         class="form-control"
                         placeholder="000-000-000"
                         inputmode="numeric"
@@ -186,15 +207,20 @@
             <!-- EMAIL -->
             <div class="mb-3">
 
-                <label class="custom-label">
+                <label
+                    for="email"
+                    class="custom-label"
+                >
                     EMAIL
                 </label>
 
                 <input
                     type="email"
                     id="email"
+                    name="email"
                     class="form-control"
                     placeholder="nama@email.com"
+                    autocomplete="email"
                     required
                 >
 
@@ -206,7 +232,10 @@
                 <!-- PASSWORD -->
                 <div class="col-md-6 mb-3">
 
-                    <label class="custom-label">
+                    <label
+                        for="password"
+                        class="custom-label"
+                    >
                         KATA SANDI
                     </label>
 
@@ -215,8 +244,10 @@
                         <input
                             type="password"
                             id="password"
+                            name="password"
                             class="form-control"
                             placeholder=""
+                            autocomplete="new-password"
                             required
                         >
 
@@ -224,6 +255,7 @@
                             type="button"
                             class="toggle-password"
                             onclick="togglePassword(this)"
+                            aria-label="Tampilkan kata sandi"
                         >
                             👁
                         </button>
@@ -235,7 +267,10 @@
                 <!-- CONFIRM PASSWORD -->
                 <div class="col-md-6 mb-3">
 
-                    <label class="custom-label">
+                    <label
+                        for="confirmPassword"
+                        class="custom-label"
+                    >
                         KONFIRMASI SANDI
                     </label>
 
@@ -244,8 +279,10 @@
                         <input
                             type="password"
                             id="confirmPassword"
+                            name="password_confirmation"
                             class="form-control"
-                            placeholder=" "
+                            placeholder=""
+                            autocomplete="new-password"
                             required
                         >
 
@@ -253,6 +290,7 @@
                             type="button"
                             class="toggle-password"
                             onclick="togglePassword(this)"
+                            aria-label="Tampilkan konfirmasi kata sandi"
                         >
                             👁
                         </button>
@@ -264,7 +302,7 @@
             </div>
 
             <!-- CHECKBOX -->
-            <div class="form-check mb-4">
+            <div class="form-check jobseeker-terms">
 
                 <input
                     class="form-check-input"
@@ -278,9 +316,6 @@
                 <label
                     class="form-check-label"
                     for="jobseekerTerms"
-                    style="
-                        font-size: 13px;
-                        color: #64748B;"
                 >
                     Saya setuju dengan
                     <a href="/terms" target="_blank" rel="noopener noreferrer">
@@ -306,16 +341,15 @@
         </form>
 
         <!-- LOGIN -->
-        <div class="text-center mt-4">
+        <div class="text-center jobseeker-login-text">
 
-            <span style="color: #64748B;">
+            <span>
                 Sudah memiliki akun?
             </span>
 
             <a
                 href="/login"
                 class="text-decoration-none fw-semibold"
-                style="color: #1A4885;"
             >
                 Login di sini
             </a>
@@ -327,5 +361,7 @@
 @endsection
 
 @push('scripts')
+
     <script src="{{ asset('assets/js/auth.js') }}"></script>
+
 @endpush

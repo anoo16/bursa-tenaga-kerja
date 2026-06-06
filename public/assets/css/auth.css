@@ -531,6 +531,34 @@ body {
     line-height: 1.4;
 }
 
+/* ===============================
+   RECRUITER FILE ERROR STATE
+================================ */
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.file-error-message {
+    margin-top: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #dc2626;
+    line-height: 1.4;
+}
+
+.file-field:has(.is-invalid-file) .file-upload-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.file-field:has(.is-invalid-file) .file-note {
+    color: #dc2626;
+}
+
 .recruiter-terms {
     display: flex;
     align-items: flex-start;
@@ -842,24 +870,96 @@ body.register-page .footer-wrapper {
 }
 
 /* ===============================
-   JOBSEEKER REGISTER COMPACT
+   JOBSEEKER REGISTER COMPACT FIX
 ================================ */
 
 body.register-jobseeker-page {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body.register-jobseeker-page .main-content {
+    min-height: auto;
+    padding-top: 18px;
+    padding-bottom: 56px;
+    align-items: center;
 }
 
 body.register-jobseeker-page .auth-card {
-    max-height: calc(100vh - 160px);
+    max-height: none;
     overflow: visible;
+    padding: 30px 32px 34px;
 }
 
-body.register-jobseeker-page .auth-card form {
+body.register-jobseeker-page .register-jobseeker-wrapper {
+    width: 100%;
+}
+
+body.register-jobseeker-page .register-heading {
+    margin-bottom: 18px;
+}
+
+body.register-jobseeker-page .register-title {
+    font-size: 31px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+}
+
+body.register-jobseeker-page .register-subtitle {
     margin-bottom: 0;
 }
 
-body.register-jobseeker-page .auth-card button[type="submit"] {
-    margin-top: 4px;
+body.register-jobseeker-page .auth-card .mb-3 {
+    margin-bottom: 0.85rem !important;
+}
+
+body.register-jobseeker-page .form-control {
+    min-height: 44px;
+}
+
+body.register-jobseeker-page .password-input-wrapper .form-control {
+    min-height: 44px;
+}
+
+body.register-jobseeker-page .jobseeker-terms {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding-left: 0;
+    margin-top: 2px;
+    margin-bottom: 22px;
+}
+
+body.register-jobseeker-page .jobseeker-terms .form-check-input {
+    position: static;
+    margin: 3px 0 0;
+    flex-shrink: 0;
+}
+
+body.register-jobseeker-page .jobseeker-terms .form-check-label {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+body.register-jobseeker-page .jobseeker-terms a {
+    color: #1a4885;
+    font-weight: 600;
+}
+
+body.register-jobseeker-page .register-btn {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+body.register-jobseeker-page .jobseeker-login-text {
+    margin-top: 22px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+body.register-jobseeker-page .jobseeker-login-text a {
+    color: #1a4885;
 }
 
 /* ===============================
@@ -867,36 +967,34 @@ body.register-jobseeker-page .auth-card button[type="submit"] {
 ================================ */
 
 body.register-recruiter-page {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-/* area utama diberi ruang atas-bawah */
 body.register-recruiter-page .main-content {
-    min-height: calc(100vh - 150px);
-    padding-top: 20px;
-    padding-bottom: 34px;
+    min-height: auto;
+    padding-top: 18px;
+    padding-bottom: 58px;
     align-items: center;
 }
 
-/* bagian kiri tidak terlalu turun */
+/* HERO KIRI */
 body.register-recruiter-page .hero-section {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    min-height: auto;
 }
 
 body.register-recruiter-page .hero-section .label-login {
     width: 100%;
     margin-bottom: 16px;
-    transform: none;
 }
 
 body.register-recruiter-page .hero-custom,
 body.register-recruiter-page .recruiter-hero {
     padding: 42px 42px;
-    transform: translateY(-6px);
+    transform: none;
 }
 
 body.register-recruiter-page .hero-custom h1,
@@ -933,61 +1031,98 @@ body.register-recruiter-page .benefit-item span {
     font-size: 12px;
 }
 
-/* card kanan discroll di dalam, tidak mepet bawah */
+/* CARD KANAN */
 body.register-recruiter-page .auth-card {
-    max-height: calc(100vh - 190px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-top: 30px;
-    padding-bottom: 34px;
-    padding-right: 30px;
+    max-height: none;
+    overflow: visible;
+    padding: 28px 32px 34px;
 }
 
-/* jarak antar input */
+body.register-recruiter-page .recruiter-register-wrapper {
+    width: 100%;
+}
+
+body.register-recruiter-page .register-title {
+    font-size: 30px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+}
+
+body.register-recruiter-page .register-subtitle {
+    margin-bottom: 0;
+}
+
 body.register-recruiter-page .auth-card .mb-3 {
-    margin-bottom: 0.9rem !important;
+    margin-bottom: 0.82rem !important;
 }
 
 body.register-recruiter-page .auth-card .mb-4 {
     margin-bottom: 1rem !important;
 }
 
-/* file upload lebih ringkas */
+body.register-recruiter-page .form-control {
+    min-height: 42px;
+    font-size: 14px;
+}
+
+body.register-recruiter-page .password-input-wrapper .form-control {
+    min-height: 42px;
+}
+
 body.register-recruiter-page .file-upload-top {
-    margin-top: 6px;
+    margin-top: 0;
+}
+
+body.register-recruiter-page .file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 body.register-recruiter-page .file-note {
     margin-top: 5px;
 }
 
-/* tombol dan login bawah tidak mepet */
-body.register-recruiter-page .auth-card button[type="submit"] {
-    margin-top: 8px;
-    margin-bottom: 16px;
+body.register-recruiter-page .file-error-message {
+    margin-top: 5px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #dc2626;
+    line-height: 1.4;
 }
 
-body.register-recruiter-page .auth-card .text-center {
-    padding-bottom: 8px;
+body.register-recruiter-page
+    .file-field:has(.is-invalid-file)
+    .file-upload-btn {
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
-/* scrollbar card */
-body.register-recruiter-page .auth-card::-webkit-scrollbar {
-    width: 7px;
+body.register-recruiter-page .file-field:has(.is-invalid-file) .file-note {
+    color: #dc2626;
 }
 
-body.register-recruiter-page .auth-card::-webkit-scrollbar-track {
-    background: #eef3f8;
-    border-radius: 999px;
+/* TERMS */
+body.register-recruiter-page .recruiter-terms {
+    margin-top: 4px;
+    margin-bottom: 22px !important;
 }
 
-body.register-recruiter-page .auth-card::-webkit-scrollbar-thumb {
-    background: #b8c7da;
-    border-radius: 999px;
+body.register-recruiter-page .recruiter-terms .form-check-label {
+    font-size: 11px;
+    line-height: 1.55;
 }
 
-body.register-recruiter-page .auth-card::-webkit-scrollbar-thumb:hover {
-    background: #8ea4bf;
+/* BUTTON DAN LOGIN */
+body.register-recruiter-page .register-btn {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+body.register-recruiter-page .recruiter-login-text {
+    margin-top: 22px !important;
+    padding-bottom: 0;
 }
 
 /* ===============================
@@ -1004,6 +1139,7 @@ body.register-recruiter-page .auth-card::-webkit-scrollbar-thumb:hover {
 
     body.login-page .main-content,
     body.register-page .main-content,
+    body.register-jobseeker-page .main-content,
     body.register-recruiter-page .main-content {
         min-height: auto;
         padding-top: 28px;
@@ -1087,5 +1223,29 @@ body.register-recruiter-page .auth-card::-webkit-scrollbar-thumb:hover {
     body.login-page .footer-wrapper,
     body.register-page .footer-wrapper {
         padding: 16px 20px;
+    }
+
+    body.register-jobseeker-page .auth-card {
+        padding: 28px 22px 32px;
+    }
+
+    body.register-jobseeker-page .register-title {
+        font-size: 26px;
+    }
+
+    body.register-jobseeker-page .jobseeker-terms .form-check-label {
+        font-size: 11px;
+    }
+
+    body.register-recruiter-page .auth-card {
+        padding: 28px 22px 32px;
+    }
+
+    body.register-recruiter-page .register-title {
+        font-size: 26px;
+    }
+
+    body.register-recruiter-page .recruiter-terms .form-check-label {
+        font-size: 11px;
     }
 }

@@ -36,9 +36,11 @@
             </a>
         </li>
 
-        <li>
-            <i class='bx bx-bookmark'></i>
-            Simpan Lowongan
+        <li class="{{ request()->routeIs('jobseeker.simpan') ? 'active' : '' }}">
+            <a href="{{ route('jobseeker.simpan') }}">
+                <i class='bx bx-bookmark'></i>
+                Simpan Lowongan
+            </a>
         </li>
 
         <li>

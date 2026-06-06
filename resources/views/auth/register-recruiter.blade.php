@@ -109,6 +109,7 @@
         <form
             id="recruiterRegisterForm"
             enctype="multipart/form-data"
+            novalidate
         >
 
             @csrf
@@ -285,7 +286,7 @@
             <!-- NPWP & BUSINESS LICENSE -->
             <div class="row">
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-3 file-field">
 
                     <label
                         for="npwp"
@@ -301,40 +302,47 @@
                         class="form-control mb-2"
                         placeholder="00.000.000.0-000.000"
                         inputmode="numeric"
-                        pattern="[0-9]*"
+                        maxlength="20"
                         required
                     >
 
-                    <label
-                        for="npwp_file"
-                        class="file-upload-btn"
-                    >
-                        Choose File
-                    </label>
+                    <div class="file-input-wrapper">
+                        <label
+                            for="npwp_file"
+                            class="file-upload-btn"
+                        >
+                            Choose File
+                        </label>
 
-                    <input
-                        type="file"
-                        id="npwp_file"
-                        name="npwp_file"
-                        class="document-file-input"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        required
-                    >
+                        <input
+                            type="file"
+                            id="npwp_file"
+                            name="npwp_file"
+                            class="document-file-input"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            data-required-file="true"
+                        >
 
-                    <span
-                        id="npwpFileName"
-                        class="file-name"
-                    >
-                        No file chosen
-                    </span>
+                        <span
+                            id="npwpFileName"
+                            class="file-name"
+                        >
+                            No file chosen
+                        </span>
+                    </div>
 
                     <small class="file-note">
                         Unggah file PDF/JPG/PNG (Maks. 2MB)
                     </small>
 
+                    <div
+                        id="npwpFileError"
+                        class="file-error-message d-none"
+                    ></div>
+
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-3 file-field">
 
                     <label
                         for="business_license_file"
@@ -343,32 +351,39 @@
                         IZIN USAHA (SIUP/TDP/NIB)
                     </label>
 
-                    <label
-                        for="business_license_file"
-                        class="file-upload-btn file-upload-top"
-                    >
-                        Choose File
-                    </label>
+                    <div class="file-input-wrapper">
+                        <label
+                            for="business_license_file"
+                            class="file-upload-btn file-upload-top"
+                        >
+                            Choose File
+                        </label>
 
-                    <input
-                        type="file"
-                        id="business_license_file"
-                        name="business_license_file"
-                        class="document-file-input"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        required
-                    >
+                        <input
+                            type="file"
+                            id="business_license_file"
+                            name="business_license_file"
+                            class="document-file-input"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            data-required-file="true"
+                        >
 
-                    <span
-                        id="businessLicenseFileName"
-                        class="file-name"
-                    >
-                        No file chosen
-                    </span>
+                        <span
+                            id="businessLicenseFileName"
+                            class="file-name"
+                        >
+                            No file chosen
+                        </span>
+                    </div>
 
                     <small class="file-note">
                         Unggah file PDF/JPG/PNG (Maks. 2MB)
                     </small>
+
+                    <div
+                        id="businessLicenseFileError"
+                        class="file-error-message d-none"
+                    ></div>
 
                 </div>
 
@@ -377,7 +392,7 @@
             <!-- PIC AUTHORIZATION -->
             <div class="row">
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-3 file-field">
 
                     <label
                         for="pic_authorization_file"
@@ -386,32 +401,39 @@
                         SURAT KUASA PIC
                     </label>
 
-                    <label
-                        for="pic_authorization_file"
-                        class="file-upload-btn"
-                    >
-                        Choose File
-                    </label>
+                    <div class="file-input-wrapper">
+                        <label
+                            for="pic_authorization_file"
+                            class="file-upload-btn"
+                        >
+                            Choose File
+                        </label>
 
-                    <input
-                        type="file"
-                        id="pic_authorization_file"
-                        name="pic_authorization_file"
-                        class="document-file-input"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        required
-                    >
+                        <input
+                            type="file"
+                            id="pic_authorization_file"
+                            name="pic_authorization_file"
+                            class="document-file-input"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            data-required-file="true"
+                        >
 
-                    <span
-                        id="picAuthorizationFileName"
-                        class="file-name"
-                    >
-                        No file chosen
-                    </span>
+                        <span
+                            id="picAuthorizationFileName"
+                            class="file-name"
+                        >
+                            No file chosen
+                        </span>
+                    </div>
 
                     <small class="file-note">
                         Unggah file PDF/JPG/PNG (Maks. 2MB)
                     </small>
+
+                    <div
+                        id="picAuthorizationFileError"
+                        class="file-error-message d-none"
+                    ></div>
 
                 </div>
 
@@ -479,5 +501,5 @@
 @push('scripts')
 
     <script src="{{ asset('assets/js/auth.js') }}"></script>
-
+    
 @endpush

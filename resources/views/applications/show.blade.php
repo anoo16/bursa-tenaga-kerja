@@ -592,7 +592,7 @@
                     {{ $company->website ?? 'Akan dikonfirmasi' }}
                 </div>
             </div>
-            @if($company->website)
+            @if($company->website)??
             <a href="{{ $company->website }}" target="_blank" class="ds-info-action">
                 Buka Tautan
             </a>

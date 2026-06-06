@@ -58,6 +58,17 @@ class JobController extends Controller
         );
     }
 
+    // Tambahkan helper parsing gaji di atas method store() dan update()
+    private function parseGaji(?string $val): ?int
+    {
+        if (!$val) return null;
+        $clean = preg_replace('/[^0-9]/', '', $val);
+        if (!$clean) return null;
+        $num = (int) $clean;
+        // Jika angka kecil (<= 999), anggap dalam juta
+        return $num <= 999 ? $num * 1000000 : $num;
+    }
+
     /*
      * Menyimpan lowongan baru
      */
