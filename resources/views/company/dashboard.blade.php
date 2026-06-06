@@ -30,7 +30,7 @@
                     <!-- VERIFIED BADGE -->
                     <span class="inline-flex items-center justify-center gap-[4px] bg-[#E6F2FE] text-[#143E72] text-[10px] font-bold px-[8px] py-[3px] rounded-full uppercase tracking-wider">
                         <!-- Check icon (Image Asset) -->
-                        <img src="{{ asset('images/verified.png') }}" class="w-[12px] h-[12px] object-contain" alt="Verified">
+                        <img src="{{ asset('assets/verified.png') }}" class="w-[12px] h-[12px] object-contain" alt="Verified">
                         TERVERIFIKASI
                     </span>
                 </div>
@@ -95,9 +95,18 @@
             
             <!-- OVERLAPPING AVATARS STACK -->
             <div class="flex items-center -space-x-2.5 mt-2">
-                <div class="w-6 h-6 rounded-full bg-sky-200 border-2 border-white flex items-center justify-center text-[9px] font-bold text-sky-800">C</div>
-                <div class="w-6 h-6 rounded-full bg-amber-200 border-2 border-white flex items-center justify-center text-[9px] font-bold text-amber-800">A</div>
-                <div class="w-6 h-6 rounded-full bg-slate-900 border-2 border-white flex items-center justify-center text-[9px] font-bold text-white">+13</div>
+                @if(isset($stats['diterima_bulan_ini']['avatars']) && count($stats['diterima_bulan_ini']['avatars']) > 0)
+                    @foreach($stats['diterima_bulan_ini']['avatars'] as $avatar)
+                        <div class="w-6 h-6 rounded-full {{ $avatar['color'] }} border-2 border-white flex items-center justify-center text-[9px] font-bold">{{ $avatar['initial'] }}</div>
+                    @endforeach
+                    
+                    @if($stats['diterima_bulan_ini']['value'] > 2)
+                        <div class="w-6 h-6 rounded-full bg-slate-900 border-2 border-white flex items-center justify-center text-[9px] font-bold text-white">+{{ $stats['diterima_bulan_ini']['value'] - 2 }}</div>
+                    @endif
+                @else
+                    <!-- Teks placeholder jika belum ada pelamar -->
+                    <span class="text-xs text-slate-400 font-medium">Belum ada</span>
+                @endif
             </div>
         </div>
 
@@ -110,7 +119,7 @@
         <div class="lg:col-span-2 space-y-4">
             <div class="flex items-center justify-between">
                 <h3 class="text-2xl font-extrabold text-[#113255] tracking-tight">Tabel Lowongan Aktif</h3>
-                <a href="#" class="text-sm font-bold text-[#143E72] hover:underline">Lihat Semua</a>
+                <a href="{{ route('company.jobs') }}" class="text-sm font-bold text-[#143E72] hover:underline">Lihat Semua</a>
             </div>
 
             <div class="bg-white border border-[#EBE8DF] rounded-3xl overflow-hidden shadow-sm">
@@ -118,20 +127,20 @@
                 <table class="w-full border-collapse min-w-[500px]">
                     <thead>
                         <tr class="text-white">
-                            <th class="px-4 py-4 lg:px-6 lg:py-4.5 text-left text-sm font-extrabold text-white bg-[#143E72] uppercase tracking-wider w-full rounded-tl-3xl">Posisi</th>
-                            <th class="px-4 py-4 lg:px-6 lg:py-4.5 text-left text-sm font-extrabold text-white bg-[#143E72] uppercase tracking-wider">Pelamar</th>
-                            <th class="px-4 py-4 lg:px-6 lg:py-4.5 text-left text-sm font-extrabold text-white bg-[#143E72] uppercase tracking-wider rounded-tr-3xl">Deadline</th>
+                            <th class="px-4 py-4 lg:px-6 lg:py-4.5 text-left text-sm font-extrabold text-white bg-[#143E72] uppercase tracking-wider w-1/2 rounded-tl-3xl">Posisi</th>
+                            <th class="px-4 py-4 lg:px-6 lg:py-4.5 text-center text-sm font-extrabold text-white bg-[#143E72] uppercase tracking-wider whitespace-nowrap w-1/4">Pelamar</th>
+                            <th class="px-4 py-4 lg:px-6 lg:py-4.5 text-center text-sm font-extrabold text-white bg-[#143E72] uppercase tracking-wider whitespace-nowrap rounded-tr-3xl w-1/4">Tenggat Waktu</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#F3EFE0]">
                         @forelse($activeJobs as $job)
                         <tr class="hover:bg-slate-50/40 transition-colors">
-                            <td class="px-4 py-4 lg:px-6 lg:py-5.5 whitespace-normal w-full">
+                            <td class="px-4 py-4 lg:px-6 lg:py-5.5 whitespace-normal w-1/2">
                                 <p class="text-sm font-extrabold text-[#113255] leading-tight mb-1">{{ $job['posisi'] }}</p>
                                 <span class="text-xs font-semibold text-slate-400">{{ $job['team'] }} • {{ $job['lokasi'] }}</span>
                             </td>
                             
-                            <td class="px-4 py-4 lg:px-6 lg:py-5.5 whitespace-nowrap">
+                            <td class="px-4 py-4 lg:px-6 lg:py-5.5 whitespace-nowrap text-center w-1/4">
                                 <a href="{{ route('company.applicants') }}" 
                                    class="text-sm font-semibold text-slate-500 hover:text-[#143E72] hover:underline transition-colors"
                                    title="Lihat Pelamar">
@@ -139,7 +148,7 @@
                                 </a>
                             </td>
 
-                            <td class="px-4 py-4 lg:px-6 lg:py-5.5 whitespace-nowrap">
+                            <td class="px-4 py-4 lg:px-6 lg:py-5.5 whitespace-nowrap text-center w-1/4">
                                 <span class="text-sm font-semibold text-slate-500">{{ $job['deadline'] }}</span>
                             </td>
                         </tr>
@@ -156,9 +165,9 @@
                 
                 <!-- Load More Button -->
                 <div class="px-6 py-4.5 border-t border-[#F3EFE0] text-center bg-slate-50/20">
-                    <button class="text-sm font-extrabold text-[#113255] hover:text-[#143E72] transition-colors">
+                    <a href="{{ route('company.jobs') }}" class="inline-block text-sm font-extrabold text-[#113255] hover:text-[#143E72] transition-colors">
                         Muat Lebih Banyak
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

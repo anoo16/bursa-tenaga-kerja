@@ -65,9 +65,15 @@
                 </div>
 
                 <!-- Lokasi Kantor Pusat -->
-                <div class="space-y-2 md:col-span-2">
-                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-wider">Alamat Kantor Pusat</label>
-                    <input type="text" name="address" value="{{ old('address', $company->address) }}" class="w-full py-3 px-4 bg-slate-50/50 focus:bg-white text-sm text-slate-800 rounded-xl border border-slate-200 focus:border-[#143E72] outline-none transition-all duration-200">
+                <div class="space-y-2">
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-wider">Kantor Pusat (Kota/Negara)</label>
+                    <input type="text" name="hq" value="{{ old('hq', $company->hq) }}" placeholder="Contoh: Jakarta Selatan" class="w-full py-3 px-4 bg-slate-50/50 focus:bg-white text-sm text-slate-800 rounded-xl border border-slate-200 focus:border-[#143E72] outline-none transition-all duration-200">
+                </div>
+
+                <!-- Alamat Lengkap -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-wider">Alamat Lengkap</label>
+                    <input type="text" name="address" value="{{ old('address', $company->address) }}" placeholder="Detail jalan, gedung, dll..." class="w-full py-3 px-4 bg-slate-50/50 focus:bg-white text-sm text-slate-800 rounded-xl border border-slate-200 focus:border-[#143E72] outline-none transition-all duration-200">
                 </div>
 
                 <!-- Deskripsi Perusahaan -->
@@ -98,9 +104,9 @@
         <!-- HIRING PERKS SECTION -->
         <div class="bg-white border border-[#EBE8DF] rounded-3xl p-8 shadow-sm space-y-6">
             <div class="flex items-center justify-between border-b border-[#F3EFE0] pb-4">
-                <h3 class="text-xl font-extrabold text-[#113255]">Hiring Perks</h3>
+                <h3 class="text-xl font-extrabold text-[#113255]">Keuntungan Bekerja</h3>
                 <button type="button" onclick="addPerk()" class="bg-[#E6F2FE] text-[#143E72] hover:bg-[#143E72] hover:text-white font-extrabold text-xs py-2 px-4 rounded-xl transition-colors shadow-sm">
-                    + Tambah Perk
+                    + Tambah Poin
                 </button>
             </div>
             
@@ -223,6 +229,91 @@
 
         </div>
 
+        <!-- PILIHAN TEMPLATE PROFIL CARD -->
+        <div class="bg-white border border-[#EBE8DF] rounded-3xl p-6 lg:p-8 shadow-sm space-y-6 lg:col-span-3">
+            <div class="border-b border-[#F3EFE0] pb-4">
+                <h3 class="text-xl font-extrabold text-[#113255]">Pilihan Template Profil</h3>
+                <p class="text-sm font-medium text-slate-500 mt-1">Pilih desain tampilan profil perusahaan Anda yang akan dilihat oleh pelamar.</p>
+            </div>
+            
+            <input type="hidden" name="profile_template_id" id="selectedTemplateInput" value="{{ $company->profile_template_id ?? 'modern' }}">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Template Modern -->
+                <div id="template-card-modern" class="template-card flex flex-col h-full border-2 {{ ($company->profile_template_id ?? 'modern') === 'modern' ? 'border-[#143E72] bg-[#E6F2FE]' : 'border-[#EBE8DF] hover:border-blue-300' }} rounded-2xl p-4 transition-all duration-200">
+                    <div class="w-full h-32 bg-slate-100 rounded-xl mb-4 overflow-hidden border border-slate-200 flex flex-col">
+                        <!-- Skeleton Header -->
+                        <div class="h-8 bg-slate-200 w-full"></div>
+                        <div class="flex-1 p-3 space-y-2">
+                            <div class="flex gap-2">
+                                <div class="w-8 h-8 rounded-full bg-slate-300"></div>
+                                <div class="space-y-1 flex-1 pt-1">
+                                    <div class="h-2 bg-slate-300 rounded w-3/4"></div>
+                                    <div class="h-2 bg-slate-200 rounded w-1/2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="font-extrabold text-[#113255]">Template Modern</h4>
+                    <p class="text-xs font-medium text-slate-500 mt-1 mb-4 leading-relaxed">Desain kekinian dengan fokus pada visual dan gaya dinamis.</p>
+                    <div class="flex gap-2 mt-auto">
+                        <button type="button" class="flex-1 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors">Pratinjau</button>
+                        <button type="button" id="btn-template-modern" onclick="selectTemplate('modern')" class="flex-1 py-2 rounded-xl text-sm font-bold bg-[#143E72] text-white hover:bg-[#0c2c54] transition-colors">
+                            {{ ($company->profile_template_id ?? 'modern') === 'modern' ? 'Terpilih' : 'Pilih' }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Template Profesional -->
+                <div id="template-card-profesional" class="template-card flex flex-col h-full border-2 {{ ($company->profile_template_id) === 'profesional' ? 'border-[#143E72] bg-[#E6F2FE]' : 'border-[#EBE8DF] hover:border-blue-300' }} rounded-2xl p-4 transition-all duration-200">
+                    <div class="w-full h-32 bg-slate-100 rounded-xl mb-4 overflow-hidden border border-slate-200 flex flex-col">
+                        <!-- Skeleton Header -->
+                        <div class="flex p-3 gap-3 border-b border-slate-200 bg-white">
+                            <div class="w-8 h-8 rounded bg-slate-300"></div>
+                            <div class="space-y-1.5 flex-1 pt-1">
+                                <div class="h-2 bg-slate-300 rounded w-full"></div>
+                                <div class="h-2 bg-slate-200 rounded w-2/3"></div>
+                            </div>
+                        </div>
+                        <div class="flex-1 bg-slate-50 p-3 space-y-2 pt-4">
+                            <div class="h-2 bg-slate-200 rounded w-full"></div>
+                            <div class="h-2 bg-slate-200 rounded w-4/5"></div>
+                        </div>
+                    </div>
+                    <h4 class="font-extrabold text-[#113255]">Template Profesional</h4>
+                    <p class="text-xs font-medium text-slate-500 mt-1 mb-4 leading-relaxed">Tampilan klasik dan formal, cocok untuk korporat besar.</p>
+                    <div class="flex gap-2 mt-auto">
+                        <button type="button" class="flex-1 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors">Pratinjau</button>
+                        <button type="button" id="btn-template-profesional" onclick="selectTemplate('profesional')" class="flex-1 py-2 rounded-xl text-sm font-bold bg-[#143E72] text-white hover:bg-[#0c2c54] transition-colors">
+                            {{ ($company->profile_template_id) === 'profesional' ? 'Terpilih' : 'Pilih' }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Template Minimalis -->
+                <div id="template-card-minimalis" class="template-card flex flex-col h-full border-2 {{ ($company->profile_template_id) === 'minimalis' ? 'border-[#143E72] bg-[#E6F2FE]' : 'border-[#EBE8DF] hover:border-blue-300' }} rounded-2xl p-4 transition-all duration-200">
+                    <div class="w-full h-32 bg-slate-50 rounded-xl mb-4 overflow-hidden border border-slate-200 p-4 space-y-4">
+                        <!-- Skeleton Content -->
+                        <div class="flex justify-center mt-2">
+                            <div class="w-10 h-10 rounded-full bg-slate-200"></div>
+                        </div>
+                        <div class="space-y-2 flex flex-col items-center">
+                            <div class="h-2 bg-slate-300 rounded w-1/2"></div>
+                            <div class="h-2 bg-slate-200 rounded w-3/4"></div>
+                        </div>
+                    </div>
+                    <h4 class="font-extrabold text-[#113255]">Template Minimalis</h4>
+                    <p class="text-xs font-medium text-slate-500 mt-1 mb-4 leading-relaxed">Bersih, rapi, dan menonjolkan informasi utama tanpa gangguan.</p>
+                    <div class="flex gap-2 mt-auto">
+                        <button type="button" class="flex-1 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors">Pratinjau</button>
+                        <button type="button" id="btn-template-minimalis" onclick="selectTemplate('minimalis')" class="flex-1 py-2 rounded-xl text-sm font-bold bg-[#143E72] text-white hover:bg-[#0c2c54] transition-colors">
+                            {{ ($company->profile_template_id) === 'minimalis' ? 'Terpilih' : 'Pilih' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
 
 </div>
@@ -273,18 +364,32 @@
 
     // Multiple photos live preview
     document.getElementById('photosInput').addEventListener('change', function(e) {
-        const files = e.target.files;
+        renderNewPhotosPreview();
+    });
+
+    function renderNewPhotosPreview() {
+        const input = document.getElementById('photosInput');
+        const files = input.files;
         const container = document.getElementById('photosPreviewContainer');
         container.innerHTML = '';
         
         if (files.length > 0) {
             container.classList.remove('hidden');
-            Array.from(files).forEach(file => {
+            Array.from(files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     const div = document.createElement('div');
-                    div.className = 'aspect-square rounded-lg overflow-hidden border border-slate-200 relative';
-                    div.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover">`;
+                    const div = document.createElement('div');
+                    div.className = 'aspect-square rounded-lg overflow-hidden border border-slate-200 relative group';
+                    div.innerHTML = `
+                        <img src="${evt.target.result}" class="w-full h-full object-cover">
+                        <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-85 hover:opacity-100 transition-opacity" title="Batal Upload Foto Ini" onclick="removeNewPhoto(${index})">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    `;
                     container.appendChild(div);
                 }
                 reader.readAsDataURL(file);
@@ -292,7 +397,25 @@
         } else {
             container.classList.add('hidden');
         }
-    });
+    }
+
+    window.removeNewPhoto = function(indexToRemove) {
+        const input = document.getElementById('photosInput');
+        const dt = new DataTransfer();
+        
+        // Salin semua file ke DataTransfer baru, kecuali yang ingin dihapus
+        Array.from(input.files).forEach((file, index) => {
+            if (index !== indexToRemove) {
+                dt.items.add(file);
+            }
+        });
+        
+        // Update input file dengan isi DataTransfer yang baru
+        input.files = dt.files;
+        
+        // Render ulang tampilan preview
+        renderNewPhotosPreview();
+    }
 
     // Toggle delete indicator overlay on existing photos
     function toggleDeletePhoto(checkbox) {
@@ -375,5 +498,35 @@
             });
         }
     });
+    function selectTemplate(templateId) {
+        // Update hidden input
+        document.getElementById('selectedTemplateInput').value = templateId;
+
+        // Reset all cards
+        const allTemplates = ['modern', 'profesional', 'minimalis'];
+        allTemplates.forEach(id => {
+            const card = document.getElementById('template-card-' + id);
+            const btn = document.getElementById('btn-template-' + id);
+            
+            if(card && btn) {
+                // Reset to unselected state
+                card.classList.remove('border-[#143E72]', 'bg-[#E6F2FE]');
+                card.classList.add('border-[#EBE8DF]');
+                
+                btn.innerText = 'Pilih';
+            }
+        });
+
+        // Set active state for selected
+        const activeCard = document.getElementById('template-card-' + templateId);
+        const activeBtn = document.getElementById('btn-template-' + templateId);
+        
+        if(activeCard && activeBtn) {
+            activeCard.classList.remove('border-[#EBE8DF]');
+            activeCard.classList.add('border-[#143E72]', 'bg-[#E6F2FE]');
+            
+            activeBtn.innerText = 'Terpilih';
+        }
+    }
 </script>
 @endsection

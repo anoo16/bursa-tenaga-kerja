@@ -161,14 +161,14 @@ Route::middleware([])
 
 /*
  * |--------------------------------------------------------------------------
- * | Company / Recruiter Real Dashboard Web Routes (Your Project)
+ * | Company / Recruiter Real Dashboard Web Routes
  * |--------------------------------------------------------------------------
  */
 
-Route::get('/dashboard/company', [CompanyDashboardController::class, 'index'])->name('company.dashboard');
-Route::get('/company/profile', [CompanyDashboardController::class, 'profile'])->name('company.profile');
-Route::get('/company/profile/edit', [CompanyDashboardController::class, 'editProfile'])->name('company.profile.edit');
-Route::put('/company/profile', [CompanyDashboardController::class, 'updateProfile'])->name('company.profile.update');
+Route::get('/dashboard/perusahaan', [CompanyDashboardController::class, 'index'])->name('company.dashboard');
+Route::get('/profil/perusahaan', [CompanyDashboardController::class, 'profile'])->name('company.profile');
+Route::get('/profil/edit/perusahaan', [CompanyDashboardController::class, 'editProfile'])->name('company.profile.edit');
+Route::put('/profil/perusahaan', [CompanyDashboardController::class, 'updateProfile'])->name('company.profile.update');
 
 // RUTE KELOLA LOWONGAN
 // menampilkan halaman kelola lowongan

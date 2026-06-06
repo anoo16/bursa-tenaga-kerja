@@ -261,7 +261,7 @@ if (loginForm) {
             if (roleId === 1) {
                 window.location.href = "/dashboard/admin";
             } else if (roleId === 2) {
-                window.location.href = "/dashboard/company";
+                window.location.href = "/dashboard/perusahaan";
             } else {
                 window.location.href = "/dashboard/jobseeker";
             }
