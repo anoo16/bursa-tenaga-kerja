@@ -1,0 +1,19 @@
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in-up {
+    animation: fadeInUp 0.25s ease-out forwards;
+}
+input[type="radio"]:checked + div div {
+    background-color: #143e72 !important;
+}
+input[type="radio"]:checked + div .rounded-full {
+    border-color: #143e72 !important;
+}

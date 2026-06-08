@@ -760,7 +760,7 @@
                     </div>
                     <div>
                         <div class="dl-info-label">Estimasi Gaji</div>
-                        <div class="dl-info-value">Rp {{ $job->gaji }}</div>
+                        <div class="dl-info-value">Rp {{ $job->gaji_minimum }} - {{ $job->gaji_maksimum }}</div>
                     </div>
                 </div>
 

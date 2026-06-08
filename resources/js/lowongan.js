@@ -30,14 +30,99 @@ window.tutupModal = function () {
     }
 };
 
-/* ---- Klik luar pop-up ---- */
+/* ---- Buka Filter ---- */
+window.bukaFilter = function () {
+    const overlay = document.getElementById("filter-overlay");
+    const box = document.getElementById("filter-box");
+    if (!overlay || !box) return;
+    overlay.classList.remove("opacity-0", "pointer-events-none");
+    overlay.classList.add("opacity-100", "pointer-events-auto");
+    setTimeout(() => {
+        box.classList.remove("scale-95", "opacity-0");
+        box.classList.add("scale-100", "opacity-100");
+    }, 10);
+    document.body.style.overflow = "hidden";
+};
+
+/* ---- Tutup Filter ---- */
+window.tutupFilter = function () {
+    const overlay = document.getElementById("filter-overlay");
+    const box = document.getElementById("filter-box");
+    if (!overlay || !box) return;
+    box.classList.remove("scale-100", "opacity-100");
+    box.classList.add("scale-95", "opacity-0");
+    setTimeout(() => {
+        overlay.classList.remove("opacity-100", "pointer-events-auto");
+        overlay.classList.add("opacity-0", "pointer-events-none");
+    }, 200);
+    document.body.style.overflow = "";
+};
+
+/* ---- Shortcut 7 / 30 hari terakhir ---- */
+window.setDateRange = function (days) {
+    const today = new Date();
+    const from = new Date();
+    from.setDate(today.getDate() - days);
+    const fmt = (d) => d.toISOString().split("T")[0];
+    const inputDari = document.querySelector('input[name="dari"]');
+    const inputSampai = document.querySelector('input[name="sampai"]');
+    if (inputDari) inputDari.value = fmt(from);
+    if (inputSampai) inputSampai.value = fmt(today);
+};
+
+/* ---- DOMContentLoaded (satu blok saja) ---- */
 document.addEventListener("DOMContentLoaded", function () {
+    /* Klik luar pop-up modal utama => tutup */
     const modalOverlay = document.getElementById("modal-overlay");
     if (modalOverlay) {
         modalOverlay.addEventListener("click", function (e) {
             if (e.target === this) tutupModal();
         });
     }
+
+    /* Klik luar filter overlay => tutup */
+    const filterOverlay = document.getElementById("filter-overlay");
+    if (filterOverlay) {
+        filterOverlay.addEventListener("click", function (e) {
+            if (e.target === this) tutupFilter();
+        });
+    }
+
+    /* Tombol Filter => buka modal filter */
+    const btnFilter = document.getElementById("btn-filter");
+    if (btnFilter) {
+        btnFilter.addEventListener("click", bukaFilter);
+    }
+
+    /* Styling dinamis radio button filter */
+    document.querySelectorAll(".filter-radio").forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            document
+                .querySelectorAll(`input[name="${this.name}"].filter-radio`)
+                .forEach(function (r) {
+                    const span = r.nextElementSibling;
+                    if (!span) return;
+                    span.classList.remove(
+                        "border-[#143E72]",
+                        "bg-[#143E72]",
+                        "text-white",
+                    );
+                    span.classList.add("border-slate-200", "text-slate-600");
+                });
+            const activeSpan = this.nextElementSibling;
+            if (activeSpan) {
+                activeSpan.classList.remove(
+                    "border-slate-200",
+                    "text-slate-600",
+                );
+                activeSpan.classList.add(
+                    "border-[#143E72]",
+                    "bg-[#143E72]",
+                    "text-white",
+                );
+            }
+        });
+    });
 
     /* ---- Format Rupiah ---- */
     document.querySelectorAll(".format-rupiah").forEach((input) => {
@@ -54,10 +139,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const hiddenMax = document.getElementById("hidden-gaji-max");
                 if (hiddenMax) hiddenMax.value = angka;
             } else if (this.id === "edit-gaji-min") {
-                const hiddenEditMin = document.getElementById("hidden-edit-gaji-min");
+                const hiddenEditMin = document.getElementById(
+                    "hidden-edit-gaji-min",
+                );
                 if (hiddenEditMin) hiddenEditMin.value = angka;
             } else if (this.id === "edit-gaji-max") {
-                const hiddenEditMax = document.getElementById("hidden-edit-gaji-max");
+                const hiddenEditMax = document.getElementById(
+                    "hidden-edit-gaji-max",
+                );
                 if (hiddenEditMax) hiddenEditMax.value = angka;
             }
         });
@@ -163,7 +252,17 @@ window.lihatLowongan = function (
     kualifikasi,
     jenis_bidang,
 ) {
-    activeJob = { id, posisi, kategori, gaji_minimum, gaji_maksimum, deadline, tanggung, kualifikasi, jenis_bidang };
+    activeJob = {
+        id,
+        posisi,
+        kategori,
+        gaji_minimum,
+        gaji_maksimum,
+        deadline,
+        tanggung,
+        kualifikasi,
+        jenis_bidang,
+    };
 
     const detailPosisi = document.getElementById("detail-posisi");
     const detailKategori = document.getElementById("detail-kategori");
@@ -175,7 +274,8 @@ window.lihatLowongan = function (
     if (detailPosisi) detailPosisi.innerText = posisi;
     if (detailKategori) detailKategori.innerText = kategori;
     // Format langsung menggunakan format Rupiah
-    const formatRp = (angka) => angka ? "Rp " + new Intl.NumberFormat("id-ID").format(angka) : "-";
+    const formatRp = (angka) =>
+        angka ? "Rp " + new Intl.NumberFormat("id-ID").format(angka) : "-";
     if (detailGajiMin) detailGajiMin.innerText = formatRp(gaji_minimum);
     if (detailGajiMax) detailGajiMax.innerText = formatRp(gaji_maksimum);
 
@@ -226,7 +326,17 @@ window.editLowonganLangsung = function (
     kualifikasi,
     jenis_bidang,
 ) {
-    activeJob = { id, posisi, kategori, gaji_minimum, gaji_maksimum, deadline, tanggung, kualifikasi, jenis_bidang };
+    activeJob = {
+        id,
+        posisi,
+        kategori,
+        gaji_minimum,
+        gaji_maksimum,
+        deadline,
+        tanggung,
+        kualifikasi,
+        jenis_bidang,
+    };
     bukaEdit();
 };
 
@@ -263,17 +373,18 @@ window.bukaEdit = function () {
     const editDeadline = document.getElementById("edit-deadline");
     if (editDeadline) editDeadline.value = activeJob.deadline || "";
 
-    const formatRp = (angka) => angka ? "Rp " + new Intl.NumberFormat("id-ID").format(angka) : "";
-    
+    const formatRp = (angka) =>
+        angka ? "Rp " + new Intl.NumberFormat("id-ID").format(angka) : "";
+
     const minInput = document.getElementById("edit-gaji-min");
     const maxInput = document.getElementById("edit-gaji-max");
     const hiddenMin = document.getElementById("hidden-edit-gaji-min");
     const hiddenMax = document.getElementById("hidden-edit-gaji-max");
-    
+
     // Tampilkan format Rupiah di visual input
     if (minInput) minInput.value = formatRp(activeJob.gaji_minimum);
     if (maxInput) maxInput.value = formatRp(activeJob.gaji_maksimum);
-    
+
     // Simpan angka murni di hidden input
     if (hiddenMin) hiddenMin.value = activeJob.gaji_minimum || "";
     if (hiddenMax) hiddenMax.value = activeJob.gaji_maksimum || "";

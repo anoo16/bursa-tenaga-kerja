@@ -123,9 +123,18 @@
         </div>
         <div class="flex gap-2 w-full sm:w-auto">
             {{-- Tombol Filter Pencarian --}}
-            <button id="btn-filter" class="flex-1 sm:flex-none justify-center flex items-center gap-2 bg-gray-200 text-gray-800 hover:bg-gray-300 px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+             <button id="btn-filter" class="flex-1 sm:flex-none relative justify-center flex items-center gap-2 {{ $filterAktif ? 'bg-[#143E72] text-white hover:bg-[#0f2d54]' : 'bg-gray-200 text-gray-800 hover:bg-gray-300' }} px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
                 Filter
+                @if($filterAktif)
+                <span class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-extrabold flex items-center justify-center">
+                    {{ $filterAktif }}
+                </span>
+                @endif
             </button>
+            
             {{-- Tombol Pasang Lowongan Baru (Membuka Pop-Up) --}}
             <button
                 id="btn-buka-modal"

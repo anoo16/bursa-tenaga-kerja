@@ -242,11 +242,6 @@ Route::get(
 )->name('company.applicants');
 
 Route::get(
-    '/company/applicants/{id}',
-    [CompanyDashboardController::class, 'showApplicant']
-)->name('company.applicant.show');
-
-Route::get(
     '/company/applicants/{id}/review',
     [CompanyDashboardController::class, 'reviewApplicant']
 )->name('company.applicant.review');

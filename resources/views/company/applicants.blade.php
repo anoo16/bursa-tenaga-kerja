@@ -1,481 +1,317 @@
 @extends('layouts.recruiter')
 
+@section('title', 'Pelamar Masuk')
+
+@vite(['resources/css/filter-modal.css', 'resources/js/filter-modal.js'])
+
 @section('content')
+<div class="p-6">
 
-<style>
-/* ══ BASE ══ */
-.pm-wrap {
-    padding: 1.8rem 2.5rem 3rem;
-    background: #f4f5f0;
-    min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-/* ══ PAGE HEADER ══ */
-.pm-title {
-    font-size: 1.9rem;
-    font-weight: 800;
-    color: #1a3570;
-    font-style: italic;
-    margin-bottom: 0.3rem;
-}
-.pm-subtitle {
-    color: #7a8599;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin-bottom: 1.4rem;
-    max-width: 420px;
-}
-
-/* ══ FILTER ROW ══ */
-.filter-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.7rem;
-    margin-bottom: 1.3rem;
-    margin-top: -2.8rem;
-}
-.btn-allapps {
-    background: #e8e06a;
-    border: none;
-    border-radius: 8px;
-    padding: 0.42rem 1.1rem;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: #3a3a1a;
-    cursor: pointer;
-}
-.btn-advfilter {
-    background: #fff;
-    border: 1.5px solid #d0d5e3;
-    border-radius: 8px;
-    padding: 0.42rem 1.1rem;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #4a5568;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-/* ══ STAT CARDS ══ */
-.stat-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.6rem;
-}
-.stat-card {
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    padding: 1.3rem 1.5rem;
-}
-.stat-lbl {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: #9aa3b8;
-    margin-bottom: 0.5rem;
-}
-.stat-num-row {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-}
-.stat-num {
-    font-size: 2.1rem;
-    font-weight: 800;
-    color: #1a2b4a;
-    line-height: 1;
-}
-.stat-delta {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #2ecc71;
-}
-
-/* ══ CANDIDATE CARDS ══ */
-.cand-card {
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    padding: 1.1rem 1.5rem;
-    margin-bottom: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    border-left: 5px solid transparent;
-    position: relative;
-    overflow: hidden;
-}
-.cand-card.border-blue   { border-left-color: #1a3570; }
-.cand-card.border-yellow { border-left-color: #e8c82a; }
-.cand-card.border-grey   { border-left-color: #d0d5e3; }
-.cand-card.border-navy   { border-left-color: #1a3570; }
-
-/* photo */
-.cand-photo-wrap {
-    position: relative;
-    flex-shrink: 0;
-}
-.cand-photo {
-    width: 58px;
-    height: 58px;
-    border-radius: 12px;
-    object-fit: cover;
-    display: block;
-    background: #e8ecf5;
-}
-.verified-dot {
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 18px;
-    height: 18px;
-    background: #1a3570;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.verified-dot svg { display: block; }
-
-/* name block */
-.cand-name-block { min-width: 140px; flex-shrink: 0; }
-.cand-name {
-    font-size: 1rem;
-    font-weight: 800;
-    color: #1a2b4a;
-    margin-bottom: 0.1rem;
-    white-space: nowrap;
-}
-.cand-name.muted { color: #9aa3b8; }
-.cand-role {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #9aa3b8;
-    line-height: 1.3;
-}
-
-/* applied for */
-.applied-block { flex: 1; min-width: 0; }
-.applied-lbl {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #b0b8cb;
-    margin-bottom: 0.18rem;
-}
-.applied-pos {
-    font-size: 0.92rem;
-    font-weight: 700;
-    color: #1a2b4a;
-    margin-bottom: 0.1rem;
-}
-.applied-time {
-    font-size: 0.78rem;
-    color: #9aa3b8;
-}
-
-/* stage */
-.stage-block { min-width: 130px; flex-shrink: 0; }
-.stage-lbl {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #b0b8cb;
-    margin-bottom: 0.35rem;
-}
-.sbadge {
-    display: inline-block;
-    padding: 0.28rem 0.85rem;
-    border-radius: 999px;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-.sbadge-new          { border: 1.5px solid #0B6E69; color: #0B6E69; background: transparent; }
-.sbadge-interviewing { background: #fef3cd; color: #a07000; border: none; }
-.sbadge-rejected     { background: #fde8e8; color: #c0392b; border: none; }
-.sbadge-offer        { background: #1a3570; color: #fff; border: none; }
-
-/* action icons */
-.action-icons {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    flex-shrink: 0;
-    color: #9aa3b8;
-}
-.action-icons svg { cursor: pointer; transition: color .15s; }
-.action-icons svg:hover { color: #1a3570; }
-
-/* action button */
-.btn-review {
-    background: #1a3570;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 0.55rem 1.2rem;
-    font-size: 0.83rem;
-    font-weight: 700;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background .2s;
-    flex-shrink: 0;
-    text-decoration: none;
-    display: inline-block;
-}
-.btn-review:hover { background: #12296a; color: #fff; }
-.btn-outline-action {
-    background: #fff;
-    color: #1a2b4a;
-    border: 1.5px solid #d0d5e3;
-    border-radius: 10px;
-    padding: 0.52rem 1.1rem;
-    font-size: 0.83rem;
-    font-weight: 700;
-    white-space: nowrap;
-    cursor: pointer;
-    flex-shrink: 0;
-    text-decoration: none;
-    display: inline-block;
-    transition: border-color .15s;
-}
-.btn-outline-action:hover { border-color: #1a3570; color: #1a3570; }
-
-/* ══ PAGINATION ══ */
-.pagination-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1.2rem;
-}
-.showing-text {
-    font-size: 0.8rem;
-    color: #9aa3b8;
-}
-.pag-btns {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-.pag-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1.5px solid #d0d5e3;
-    background: #fff;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #4a5568;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-}
-.pag-btn:hover { border-color: #1a3570; color: #1a3570; }
-.pag-btn.active { background: #1a3570; color: #fff; border-color: #1a3570; }
-.pag-arrow {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1.5px solid #d0d5e3;
-    background: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #4a5568;
-    transition: all .15s;
-}
-.pag-arrow:hover { border-color: #1a3570; color: #1a3570; }
-
-/* Responsive */
-@media (max-width: 768px) {
-    .stat-row { grid-template-columns: repeat(2,1fr); }
-    .cand-card { flex-wrap: wrap; }
-    .pm-wrap { padding: 1rem; }
-    .filter-row { margin-top: 0; justify-content: flex-start; }
-}
-</style>
-
-<div class="pm-wrap">
-
-    {{-- PAGE TITLE --}}
-    <h1 class="pm-title">Pelamar Masuk</h1>
-    <p class="pm-subtitle">
-        Manage incoming talent and advance candidates through your<br>
-        recruitment dashboard.
-    </p>
-
-    {{-- FILTER ROW --}}
-    <div class="filter-row">
-        <button class="btn-allapps">All Apps</button>
-        <button class="btn-advfilter">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2.5">
-                <line x1="4" y1="6"  x2="20" y2="6"/>
-                <line x1="8" y1="12" x2="16" y2="12"/>
-                <line x1="11" y1="18" x2="13" y2="18"/>
-            </svg>
-            Advanced Filters
-        </button>
+    {{-- HEADER --}}
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-[#143E72]">Pelamar Masuk</h1>
+            <p class="text-gray-500">Kelola lamaran pekerjaan yang masuk dari calon kandidat</p>
+        </div>
+        <a href="{{ route('company.dashboard') }}"
+           class="flex items-center gap-2 bg-[#143E72] hover:bg-[#0f2d54]
+                  text-white px-5 py-3 rounded-xl font-semibold text-sm
+                  transition-all duration-200 shadow-md">
+            Kembali ke Dasbor
+        </a>
     </div>
 
-    {{-- STAT CARDS --}}
-    <div class="stat-row">
-        <div class="stat-card">
-            <div class="stat-lbl">New</div>
-            <div class="stat-num-row">
-                <span class="stat-num">{{ $newCount }}</span>
-                <span class="stat-delta"></span>
-            </div>
+    {{-- STATISTIK --}}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        @foreach([
+            ['label' => 'Pelamar Baru',    'value' => $newCount,       'color' => 'bg-blue-50 text-blue-700 border-blue-200'],
+            ['label' => 'Interview',        'value' => $interviewCount, 'color' => 'bg-amber-50 text-amber-700 border-amber-200'],
+            ['label' => 'Diterima',         'value' => $acceptedCount,  'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+            ['label' => 'Ditolak',          'value' => $rejectedCount,  'color' => 'bg-red-50 text-red-700 border-red-200'],
+        ] as $stat)
+        <div class="bg-white rounded-2xl border border-[#EBE8DF] p-5 shadow-sm">
+            <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ $stat['label'] }}</div>
+            <div class="text-3xl font-black text-[#143E72]">{{ $stat['value'] }}</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-lbl">Interviewing</div>
-            <div class="stat-num-row">
-                <span class="stat-num">{{ $interviewCount }}</span>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-lbl">Hired</div>
-            <div class="stat-num-row">
-                <span class="stat-num">{{ $acceptedCount }}</span>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-lbl">Rejected</div>
-            <div class="stat-num-row">
-                <span class="stat-num">{{ $rejectedCount }}</span>
-            </div>
-        </div>
+        @endforeach
     </div>
 
+    {{-- FORM FILTER & SEARCH --}}
+    <form action="{{ route('company.applicants') }}" method="GET" id="filterForm">
 
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
 
-    @foreach($applications as $app)
-    @php
+            {{-- Search --}}
+            <div class="relative flex-1">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Cari pelamar atau posisi lowongan..."
+                       class="w-full pl-11 pr-4 py-3 bg-white border border-[#EBE8DF] rounded-2xl
+                              focus:outline-none focus:ring-2 focus:ring-[#143E72] shadow-sm text-sm">
+            </div>
 
-$borderClass = match($app->status){
-
-    'BARU' => 'border-blue',
-
-    'INTERVIEW' => 'border-yellow',
-
-    'DITERIMA' => 'border-navy',
-
-    'DITOLAK' => 'border-grey',
-
-    default => 'border-blue'
-};
-
-@endphp
-    <div class="cand-card {{ $borderClass }}">
-
-        {{-- Photo --}}
-        <div class="cand-photo-wrap">
-            <img src="{{ $app->user->photo
-        ? asset('storage/'.$app->user->photo)
-        : 'https://ui-avatars.com/api/?name='.urlencode($app->user->name)
-        }}" alt="{{ $app->user->name }}" class="cand-photo"
-                 onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($app->user->name) }}&background=e8ecf5&color=1a3570&size=58'">
-            @if(false)
-            <div class="verified-dot">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none"
-                     stroke="#fff" stroke-width="3.5">
-                    <polyline points="20 6 9 17 4 12"/>
+            {{-- Tombol Advanced Filter --}}
+            <button type="button" id="openFilterBtn"
+                    class="flex items-center justify-center gap-2 bg-white border border-[#EBE8DF]
+                           text-[#143E72] hover:bg-gray-50 px-5 py-3 rounded-2xl font-semibold
+                           text-sm shadow-sm transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0
+                             110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
                 </svg>
+                Advanced Filters
+                @if(request()->filled('kategori') || request()->filled('jenis_bidang') || request()->filled('status') || request()->filled('gaji_min') || request()->filled('gaji_max'))
+                    <span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>
+                @endif
+            </button>
+
+            <button type="submit"
+                    class="bg-[#143E72] hover:bg-[#0f2d54] text-white px-6 py-3
+                           rounded-2xl font-semibold text-sm shadow-sm">
+                Cari
+            </button>
+        </div>
+
+        {{-- ══ MODAL ADVANCED FILTER ══ --}}
+        <div id="filterModal"
+             class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/40"></div>
+
+            <div class="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto
+                        shadow-2xl p-6 relative z-10 animate-fade-in-up">
+
+                {{-- Header Modal --}}
+                <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-5">
+                    <h2 class="text-xl font-bold text-[#143E72]">Filter Lanjutan</h2>
+                    <button type="button" id="closeFilterBtn"
+                            class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-5">
+
+                    {{-- 1. Bidang Industri (dari kolom kategori milikmu) --}}
+                    <div>
+                        <span class="block text-xs font-bold text-gray-400 tracking-wider
+                                     uppercase mb-2">Bidang Industri</span>
+                        <div class="relative">
+                            <select name="kategori"
+                                    class="w-full bg-gray-50 border border-gray-200 text-gray-800
+                                           text-sm font-semibold rounded-xl p-3.5 pr-10 appearance-none
+                                           focus:ring-2 focus:ring-[#143E72] focus:border-transparent">
+                                <option value="">Semua Industri</option>
+                                @foreach($kategoris as $k)
+                                    <option value="{{ $k }}"
+                                        {{ request('kategori') == $k ? 'selected' : '' }}>
+                                        {{ $k }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0
+                                        flex items-center px-4 text-gray-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                     stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 2. Jenis Bidang (dari kolom jenis_bidang milikmu) --}}
+                    <div>
+                        <span class="block text-xs font-bold text-gray-400 tracking-wider
+                                     uppercase mb-2">Jenis Bidang</span>
+                        <div class="relative">
+                            <select name="jenis_bidang"
+                                    class="w-full bg-gray-50 border border-gray-200 text-gray-800
+                                           text-sm font-semibold rounded-xl p-3.5 pr-10 appearance-none
+                                           focus:ring-2 focus:ring-[#143E72] focus:border-transparent">
+                                <option value="">Semua Jenis</option>
+                                @foreach($jenisBidangs as $j)
+                                    <option value="{{ $j }}"
+                                        {{ request('jenis_bidang') == $j ? 'selected' : '' }}>
+                                        {{ $j }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0
+                                        flex items-center px-4 text-gray-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                     stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 3. Status Lamaran --}}
+                    <div>
+                        <span class="block text-xs font-bold text-gray-400 tracking-wider
+                                     uppercase mb-2">Status Lamaran</span>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(['BARU' => 'Baru', 'REVIEW' => 'Review',
+                                      'INTERVIEW' => 'Interview',
+                                      'DITERIMA' => 'Diterima', 'DITOLAK' => 'Ditolak'] as $val => $label)
+                                <label class="cursor-pointer select-none">
+                                    <input type="radio" name="status" value="{{ $val }}"
+                                           {{ request('status') == $val ? 'checked' : '' }}
+                                           class="sr-only peer">
+                                    <span class="px-4 py-2 bg-white border border-gray-200 text-sm
+                                                 font-semibold text-gray-600 rounded-full inline-block
+                                                 peer-checked:bg-[#143E72] peer-checked:border-[#143E72]
+                                                 peer-checked:text-white transition-all">
+                                        {{ $label }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- 4. Rentang Gaji --}}
+                    <div>
+                        <span class="block text-xs font-bold text-gray-400 tracking-wider
+                                     uppercase mb-2">Rentang Gaji (Rp)</span>
+                        <div class="flex items-center gap-3">
+                            <input type="number" name="gaji_min"
+                                   value="{{ request('gaji_min') }}"
+                                   placeholder="Min (contoh: 5000000)"
+                                   class="flex-1 bg-gray-50 border border-gray-200 text-sm
+                                          rounded-xl p-3 focus:ring-2 focus:ring-[#143E72]
+                                          focus:border-transparent outline-none">
+                            <span class="text-gray-400 font-bold">—</span>
+                            <input type="number" name="gaji_max"
+                                   value="{{ request('gaji_max') }}"
+                                   placeholder="Maks (contoh: 15000000)"
+                                   class="flex-1 bg-gray-50 border border-gray-200 text-sm
+                                          rounded-xl p-3 focus:ring-2 focus:ring-[#143E72]
+                                          focus:border-transparent outline-none">
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- Footer Modal --}}
+                <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-6">
+                    <a href="{{ route('company.applicants') }}"
+                       class="text-sm font-bold text-red-500 hover:underline">
+                        Atur Ulang
+                    </a>
+                    <div class="flex gap-3">
+                        <button type="button" id="cancelFilterBtn"
+                                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5
+                                       rounded-xl text-sm font-bold transition-all">
+                            Batal
+                        </button>
+                        <button type="submit"
+                                class="bg-[#143E72] hover:bg-[#0f2d54] text-white px-6 py-2.5
+                                       rounded-xl text-sm font-bold shadow-md transition-all">
+                            Terapkan Filter
+                        </button>
+                    </div>
+                </div>
+
             </div>
+        </div>
+
+    </form>
+
+    {{-- DAFTAR PELAMAR --}}
+    <div class="bg-white rounded-3xl border border-[#EBE8DF] shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <span class="text-sm font-semibold text-gray-600">
+                Total: {{ $applications->total() }} pelamar
+            </span>
+            @if(request()->hasAny(['search','kategori','jenis_bidang','status','gaji_min','gaji_max']))
+                <a href="{{ route('company.applicants') }}"
+                   class="text-xs font-bold text-red-500 hover:underline">
+                    Reset Filter
+                </a>
             @endif
         </div>
 
-        {{-- Name --}}
-        <div class="cand-name-block">
-            <div class="cand-name">
-                {{ $app->user->name }}
+        @if($applications->isEmpty())
+            <div class="p-12 text-center text-gray-400">
+                <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor"
+                     stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01
+                             M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-base font-medium">Tidak ada pelamar yang sesuai filter.</p>
+                <a href="{{ route('company.applicants') }}"
+                   class="text-sm text-[#143E72] hover:underline mt-1 inline-block">
+                    Reset Pencarian
+                </a>
             </div>
-            <div class="cand-role">{{ $app->user->summary ?? 'Pelamar' }}</div>
-        </div>
+        @else
+            <div class="divide-y divide-gray-100">
+                @foreach($applications as $app)
+                <div class="p-6 hover:bg-slate-50/80 transition-all flex items-start
+                            justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-blue-100 text-[#143E72] rounded-full flex
+                                    items-center justify-center font-bold text-lg flex-shrink-0">
+                            {{ strtoupper(substr($app->user->name ?? 'A', 0, 1)) }}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-base mb-0.5">
+                                {{ $app->user->name ?? 'Kandidat' }}
+                            </h4>
+                            <p class="text-sm text-gray-500 font-medium mb-2">
+                                Melamar posisi:
+                                <span class="text-[#143E72] font-semibold">
+                                    {{ $app->job->posisi ?? '-' }}
+                                </span>
+                            </p>
+                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
+                                <span>💼 {{ $app->job->jenis_bidang ?? '-' }}</span>
+                                <span>📂 {{ $app->job->kategori ?? '-' }}</span>
+                                <span>💰 Rp {{ number_format($app->job->gaji_minimum ?? 0, 0, ',', '.') }}
+                                    – Rp {{ number_format($app->job->gaji_maksimum ?? 0, 0, ',', '.') }}
+                                </span>
+                                <span>⏱️ {{ $app->created_at?->diffForHumans() ?? '-' }}</span>
+                            </div>
+                        </div>
+                    </div>
 
-        {{-- Applied For --}}
-        <div class="applied-block">
-            <div class="applied-lbl">Applied For</div>
-            <div class="applied-pos">{{ $app->job->posisi }}</div>
-            <div class="applied-time">{{ $app->created_at->diffForHumans() }}</div>
-        </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold tracking-wide
+                                     uppercase shadow-sm
+                            @if($app->status === 'BARU')      bg-blue-50 text-blue-700 border border-blue-200
+                            @elseif($app->status === 'REVIEW')     bg-amber-50 text-amber-700 border border-amber-200
+                            @elseif($app->status === 'INTERVIEW')  bg-purple-50 text-purple-700 border border-purple-200
+                            @elseif($app->status === 'DITERIMA')   bg-emerald-50 text-emerald-700 border border-emerald-200
+                            @else bg-red-50 text-red-700 border border-red-200
+                            @endif">
+                            {{ $app->status }}
+                        </span>
+                        <a href="{{ route('company.applicant.review', $app->id) }}"
+                           class="text-xs font-semibold text-[#143E72] hover:underline">
+                            Lihat Detail →
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
 
-        @php
-
-$badgeClass = match($app->status){
-
-    'BARU' => 'sbadge-new',
-
-    'INTERVIEW' => 'sbadge-interviewing',
-
-    'DITERIMA' => 'sbadge-offer',
-
-    'DITOLAK' => 'sbadge-rejected',
-
-    default => 'sbadge-new'
-};
-
-@endphp
-        {{-- Stage --}}
-        <div class="stage-block">
-            <div class="stage-lbl">Stage</div>
-            <span class="sbadge {{ $badgeClass }}">
-    {{ $app->status }}
-</span>
-        </div>
-
-        {{-- Action Icons --}}
-        <div class="action-icons">
-
-        <svg width="18" height="18" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-
-        </div>
-
-        {{-- Action Button --}}
-        <a href="{{ route('company.applicant.review', $app->id) }}" class="btn-review">
-        Review Profile
-        </a>
-
+            <div class="p-4 border-t border-gray-100">
+                {{ $applications->appends(request()->query())->links() }}
+            </div>
+        @endif
     </div>
-    @endforeach
-
-    {{-- PAGINATION --}}
-<div class="pagination-row">
-
-    <span class="showing-text">
-        Showing
-        {{ $applications->firstItem() }}
-        -
-        {{ $applications->lastItem() }}
-        of
-        {{ $applications->total() }}
-        applicants
-    </span>
 
 </div>
-
-<div class="mt-3">
-    {{ $applications->links() }}
-</div>
-
 @endsection

@@ -58,7 +58,7 @@
 }
 .cl-searchbar input::placeholder { color: #c0c8d8; }
 .cl-searchbar button {
-    background: #1a2235;
+    background: #031c7e;
     color: #fff;
     border: none;
     padding: 0 2rem;
@@ -70,7 +70,7 @@
     letter-spacing: 0.02em;
     transition: background 0.18s;
 }
-.cl-searchbar button:hover { background: #2563EB; }
+.cl-searchbar button:hover { background: #052cca; }
 
 /* ══ LAYOUT ══ */
 .cl-body {
@@ -358,14 +358,14 @@
 }
 .jc:hover {
     box-shadow: 0 6px 24px rgba(0,0,0,0.09);
-    border-color: #d0d5e3;
+    border-color: #193481;
     transform: translateY(-2px);
 }
 
 /* Featured Card */
 .jc.featured {
     grid-column: 1 / -1;
-    background: #1a2235;
+    background: #081f56;
     border-color: #1a2235;
     color: #fff;
     flex-direction: row;
@@ -387,7 +387,7 @@
     justify-content: center;
     font-size: 1rem;
     font-weight: 800;
-    color: #1a2235;
+    color: #081f56;
     flex-shrink: 0;
     overflow: hidden;
     margin-bottom: 0.9rem;
@@ -477,8 +477,8 @@
     margin-bottom: 0.12rem;
 }
 .jc.featured .jc-salary-label { color: rgba(255,255,255,0.5); }
-.jc-salary { font-size: 1.05rem; font-weight: 800; color: #1a2235; }
-.jc.featured .jc-salary { color: #fff; font-size: 1.15rem; }
+.jc-salary { font-size: 0.92rem; font-weight: 600; color: #1a2235; }
+.jc.featured .jc-salary { color: #fff; font-size: 1rem; }
 
 .jc-location {
     font-size: 0.75rem;
@@ -512,7 +512,7 @@
 .btn-apply-featured:hover { opacity: 0.9; color: #1a2235; transform: scale(1.02); }
 
 .btn-apply {
-    background: #1a2235;
+    background: #031c7e;
     color: #fff;
     border: none;
     border-radius: 9px;
@@ -527,7 +527,7 @@
     display: inline-block;
     letter-spacing: 0.01em;
 }
-.btn-apply:hover { background: #2563EB; color: #fff; }
+.btn-apply:hover { background: #031c7e; color: #fff; }
 .btn-apply.sudah-lamar { background: #e8f5e9; color: #1a8040; cursor: default; }
 
 .applied-badge {
@@ -563,7 +563,88 @@
 .cl-empty p { font-size: 0.95rem; margin-top: 1rem; }
 
 /* ══ PAGINATION ══ */
+/* ══ PAGINATION ══ */
 .cl-pagination { display: flex; justify-content: center; margin-top: 0.8rem; }
+
+/* ── Override Laravel Tailwind Pagination ── */
+.cl-pagination nav { width: 100%; }
+.cl-pagination nav > div:first-child { display: none !important; }
+.cl-pagination nav > div:last-child > div:first-child { display: none !important; }
+.cl-pagination nav > div:last-child {
+    display: flex !important;
+    justify-content: center !important;
+    flex-direction: row !important;
+}
+.cl-pagination nav > div:last-child > div:last-child {
+    display: flex !important;
+    flex-direction: row !important;
+}
+.cl-pagination .shadow-sm {
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.3rem !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+}
+.cl-pagination [class*="sm:flex"] { display: flex !important; flex-direction: row !important; }
+.cl-pagination [class*="sm:flex-1"] { display: none !important; }
+.cl-pagination [class*="sm:items-center"] { align-items: center !important; }
+.cl-pagination [class*="sm:justify-between"] { justify-content: center !important; }
+.cl-pagination span.inline-flex.rtl\:flex-row-reverse {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.3rem !important;
+}
+.cl-pagination [class*="inline-flex"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    font-family: 'Sora', sans-serif !important;
+    color: #4b5563 !important;
+    background: #fff !important;
+    border: 1.5px solid #e5e7eb !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    line-height: 1 !important;
+    transition: background 0.15s, border-color 0.15s, color 0.15s !important;
+}
+.cl-pagination a[class*="inline-flex"]:hover {
+    background: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+    color: #111827 !important;
+}
+.cl-pagination span[aria-current="page"] > span {
+    background: #0D1B4B !important;
+    border-color: #0D1B4B !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    font-size: 0.82rem !important;
+    border: 1.5px solid #0D1B4B !important;
+    cursor: default !important;
+}
+.cl-pagination [class*="inline-flex"] svg {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0 !important;
+}
 
 @media (max-width: 900px) {
     .cl-body { grid-template-columns: 1fr; }
@@ -701,11 +782,11 @@
                 {{-- BIDANG INDUSTRI --}}
                 <div class="cl-filter-section">
                     <div class="cl-filter-label">Bidang Industri</div>
-                    <select name="kategori" onchange="document.getElementById('filterForm').submit()">
+                    <select name="jenis_bidang" onchange="document.getElementById('filterForm').submit()">
                         <option value="">Semua Industri</option>
-                        @foreach($kategoris as $kat)
-                            <option value="{{ $kat }}" {{ request('kategori') === $kat ? 'selected' : '' }}>
-                                {{ $kat }}
+                        @foreach($jenis_bidangs as $bidang)
+                            <option value="{{ $bidang }}" {{ request('jenis_bidang') === $bidang ? 'selected' : '' }}>
+                                {{ $bidang }}
                             </option>
                         @endforeach
                     </select>
@@ -749,47 +830,7 @@
                     $isExpiring  = $job->deadline && \Carbon\Carbon::parse($job->deadline)->diffInDays(now()) <= 7;
                 @endphp
 
-                @if($isFeatured)
-                {{-- FEATURED --}}
-                <div class="jc featured">
-                    <div class="jc-logo">{{ $initials }}</div>
-                    <div class="jc-body">
-                        <div class="jc-label">Lowongan Unggulan</div>
-                        <div class="jc-title">{{ $job->posisi }}</div>
-                        <div class="jc-company">{{ $company->name ?? 'Perusahaan' }}</div>
-                        <div class="jc-tags">
-                            <span class="jc-tag">{{ $job->kategori }}</span>
-                            <span class="jc-tag">ujir</span>
-                            <span class="jc-tag">Eksekutif</span>
-                        </div>
-                    </div>
-                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.8rem; flex-shrink:0;">
-                        <div>
-                            <div class="jc-salary-label">Paket Gaji</div>
-                            <div class="jc-salary">Rp {{ $job->gaji }}</div>
-                        </div>
-                        @if($sudahLamar)
-                            <span class="applied-badge">
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                Sudah Dilamar
-                            </span>
-                        @else
-                            <a href="{{ route('jobs.show', $job->id) }}" class="btn-apply-featured">Lamar Sekarang</a>
-                        @endif
-                    </div>
-                    <button class="jc-bookmark {{ $sudahSimpan ? 'saved' : '' }}"
-                            data-job-id="{{ $job->id }}"
-                            title="{{ $sudahSimpan ? 'Hapus dari simpanan' : 'Simpan lowongan' }}"
-                            onclick="toggleSimpan(this, {{ $job->id }})">
-                        <svg width="17" height="19" viewBox="0 0 24 24"
-                             fill="{{ $sudahSimpan ? 'currentColor' : 'none' }}"
-                             stroke="currentColor" stroke-width="2">
-                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-                        </svg>
-                    </button>
-                </div>
-
-                @else
+            
                 {{-- REGULAR CARD --}}
                 <div class="jc" onclick="window.location='{{ route('jobs.show', $job->id) }}'">
                     <button class="jc-bookmark {{ $sudahSimpan ? 'saved' : '' }}"
@@ -809,17 +850,17 @@
                     <div class="jc-company">{{ $company->name ?? 'Perusahaan' }}</div>
 
                     <div class="jc-tags">
-                        <span class="jc-tag">Kantor</span>
+                        <span class="jc-tag">{{ Str::limit($job->jenis_bidang) }}</span>
                         <span class="jc-tag">{{ Str::limit($job->kategori, 12) }}</span>
                         @if($isExpiring)
                             <span class="jc-tag" style="border-color:#fca5a5; color:#e74c3c; background:#fff5f5;">Segera Tutup</span>
-                        @endif
+
                     </div>
 
                     <div class="jc-footer">
                         <div>
                             <div class="jc-salary-label">Gaji Pokok</div>
-                            <div class="jc-salary" style="font-size:0.95rem;">Rp {{ $job->gaji }}</div>
+                            <div class="jc-salary">Rp {{ number_format($job->gaji_minimum, 0, ',', '.') }} – {{ number_format($job->gaji_maksimum, 0, ',', '.') }}</div>
                             <div class="jc-location">
                                 <svg width="10" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>

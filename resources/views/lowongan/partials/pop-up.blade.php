@@ -126,10 +126,15 @@ yang dikirimkan ke route 'company.jobs.store'.
                                        focus:outline-none focus:border-[#143E72] focus:bg-white
                                        transition-all duration-200">
                             <option value="" disabled selected>Pilih jenis bidang</option>
-                            <option value="IT">IT</option>
-                            <option value="Finance">Finance</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="HR">HR</option>
+                            <option value="IT & Software">IT & Software</option>
+                            <option value="Data Science & AI">Data Science & AI</option>
+                            <option value="Cyber Security">Cyber Security</option>
+                            <option value="Business & Management">Business & Management</option>
+                            <option value="Finance & Accounting">Finance & Accounting</option>
+                            <option value="Human Resources">Human Resources</option>
+                            <option value="Education">Education</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Engineering">Engineering</option>
                         </select>
                     </div>
 
@@ -424,10 +429,15 @@ melalui metode PUT ke URL action '/company/jobs/{id}' secara dinamis via JS.
                     <select name="jenis_bidang" id="edit-jenis-bidang-select" required
                         class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:border-[#143E72] focus:bg-white transition-all duration-200">
                         <option value="" disabled>Pilih jenis bidang</option>
-                        <option value="IT">IT</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="HR">HR</option>
+                        <option value="IT & Software">IT & Software</option>
+                        <option value="Data Science & AI">Data Science & AI</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                        <option value="Business & Management">Business & Management</option>
+                        <option value="Finance & Accounting">Finance & Accounting</option>
+                        <option value="Human Resources">Human Resources</option>
+                        <option value="Education">Education</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Engineering">Engineering</option>
                     </select>
                 </div>
 
@@ -541,5 +551,121 @@ Membantu mencegah terhapusnya data secara tidak sengaja.
                 Hapus
             </button>
         </div>
+    </div>
+</div>
+
+<!-- ================= MODAL FILTER ================= -->
+<div id="filter-overlay"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50
+            opacity-0 pointer-events-none transition duration-300">
+
+    <div id="filter-box"
+         class="bg-white w-full max-w-lg rounded-3xl shadow-xl p-6 relative
+                scale-95 opacity-0 transition duration-300">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-bold text-[#143E72]">
+                Filter Lowongan
+            </h2>
+
+            <button type="button"
+                    onclick="tutupFilter()"
+                    class="text-gray-500 hover:text-gray-700">
+                ✕
+            </button>
+        </div>
+
+        <!-- Form Filter -->
+        <form method="GET" action="{{ route('company.jobs') }}" class="space-y-4">
+
+            <!-- Status -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">
+                    Status
+                </label>
+
+                <select name="status"
+                        class="w-full border rounded-xl px-3 py-2">
+                    <option value="">Semua Status</option>
+                    <option value="aktif">Aktif</option>
+                    <option value="draft">Draft</option>
+                    <option value="ditutup">Ditutup</option>
+                </select>
+            </div>
+
+            <!-- Kategori -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">
+                    Kategori
+                </label>
+
+                <input type="text"
+                       name="kategori"
+                       placeholder="Masukkan kategori"
+                       class="w-full border rounded-xl px-3 py-2">
+            </div>
+
+            <!-- Gaji Minimum -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">
+                    Gaji Minimum
+                </label>
+
+                <input type="number"
+                       name="gaji_minimum"
+                       class="w-full border rounded-xl px-3 py-2">
+            </div>
+
+            <!-- Gaji Maksimum -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">
+                    Gaji Maksimum
+                </label>
+
+                <input type="number"
+                       name="gaji_maksimum"
+                       class="w-full border rounded-xl px-3 py-2">
+            </div>
+
+            <!-- Tanggal -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">
+                        Dari
+                    </label>
+
+                    <input type="date"
+                           name="dari"
+                           class="w-full border rounded-xl px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-1">
+                        Sampai
+                    </label>
+
+                    <input type="date"
+                           name="sampai"
+                           class="w-full border rounded-xl px-3 py-2">
+                </div>
+            </div>
+
+            <!-- Tombol -->
+            <div class="flex justify-end gap-3 pt-4">
+
+                <a href="{{ route('company.jobs') }}"
+                   class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300">
+                    Reset
+                </a>
+
+                <button type="submit"
+                        class="px-4 py-2 rounded-xl bg-[#143E72] text-white hover:bg-[#0f2d54]">
+                    Terapkan Filter
+                </button>
+
+            </div>
+
+        </form>
     </div>
 </div>

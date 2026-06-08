@@ -302,45 +302,67 @@ class CompanyDashboardController extends Controller
     /**
      * Show the incoming applicants page.
      */
-    public function applicants()
+    public function applicants(Request $request)
 {
-    $applications = JobApplication::with([
-        'user',
-        'job'
-    ])
-    ->latest()
-    ->paginate(10);
+    $query = JobApplication::with(['user', 'job'])->latest();
 
-    $newCount = JobApplication::where(
-        'status',
-        'BARU'
-    )->count();
+    // Filter pencarian nama / posisi
+    if ($request->filled('search')) {
+        $keyword = $request->search;
+        $query->where(function ($q) use ($keyword) {
+            $q->whereHas('user', fn($u) => $u->where('name', 'like', "%{$keyword}%"))
+              ->orWhereHas('job',  fn($j) => $j->where('posisi', 'like', "%{$keyword}%"));
+        });
+    }
 
-    $interviewCount = JobApplication::where(
-        'status',
-        'INTERVIEW'
-    )->count();
+    // Filter kategori (bidang industri)
+    if ($request->filled('kategori')) {
+        $query->whereHas('job', fn($j) =>
+            $j->where('kategori', $request->kategori)
+        );
+    }
 
-    $acceptedCount = JobApplication::where(
-        'status',
-        'DITERIMA'
-    )->count();
+    // Filter jenis bidang
+    if ($request->filled('jenis_bidang')) {
+        $query->whereHas('job', fn($j) =>
+            $j->where('jenis_bidang', $request->jenis_bidang)
+        );
+    }
 
-    $rejectedCount = JobApplication::where(
-        'status',
-        'DITOLAK'
-    )->count();
+    // Filter status lamaran
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
 
-    return view(
-        'company.applicants',
-        compact(
-            'applications',
-            'newCount',
-            'interviewCount',
-            'acceptedCount',
-            'rejectedCount'
-        )
-    );
+    // Filter rentang gaji
+    if ($request->filled('gaji_min')) {
+        $query->whereHas('job', fn($j) =>
+            $j->where('gaji_minimum', '>=', (int) $request->gaji_min)
+        );
+    }
+    if ($request->filled('gaji_max')) {
+        $query->whereHas('job', fn($j) =>
+            $j->where('gaji_maksimum', '<=', (int) $request->gaji_max)
+        );
+    }
+
+    $applications = $query->paginate(10)->withQueryString();
+
+    // Hitung statistik
+    $newCount       = JobApplication::where('status', 'BARU')->count();
+    $interviewCount = JobApplication::where('status', 'INTERVIEW')->count();
+    $acceptedCount  = JobApplication::where('status', 'DITERIMA')->count();
+    $rejectedCount  = JobApplication::where('status', 'DITOLAK')->count();
+
+    // Opsi dropdown filter — diambil dari data real di DB
+    $kategoris    = \App\Models\Job::distinct()->pluck('kategori')->filter()->values();
+    $jenisBidangs = \App\Models\Job::distinct()->pluck('jenis_bidang')->filter()->values();
+
+    return view('company.applicants', compact(
+        'applications',
+        'newCount', 'interviewCount', 'acceptedCount', 'rejectedCount',
+        'kategoris', 'jenisBidangs'
+    ));
 }
 
 public function reviewApplicant($id)

@@ -27,9 +27,11 @@ class JobSearchController extends Controller
             $query->where('posisi', 'like', '%' . $request->search . '%');
         }
 
-        // Filter lokasi
+        // Filter lokasi (dari tabel companies)
         if ($request->filled('lokasi')) {
-            $query->where('lokasi', 'like', '%' . $request->lokasi . '%');
+        $query->whereHas('company', function($q) use ($request) {
+        $q->where('hq', 'like', '%' . $request->lokasi . '%');
+        });
         }
 
         // Filter kategori / bidang industri
@@ -38,16 +40,21 @@ class JobSearchController extends Controller
         }
 
         // Filter tipe pekerjaan
-        if ($request->filled('jenis')) {
-            $query->where('kategori', $request->jenis);
+        if ($request->filled('jenis_bidang')) {
+            $query->where('jenis_bidang', $request->jenis_bidang);
         }
 
-        // Filter gaji (string match — sesuai kolom 'gaji' milikmu)
+        // Filter gaji
         if ($request->filled('gaji_min') || $request->filled('gaji_max')) {
             if ($request->filled('gaji_min')) {
-                $query->where('gaji', 'like', '%' . $request->gaji_min . '%');
-            }
+                $min = (int) $request->gaji_min * 1000000;
+                $query->where('gaji_minimum', '>=', $min);
         }
+        if ($request->filled('gaji_max')) {
+            $max = (int) $request->gaji_max * 1000000;
+            $query->where('gaji_maksimum', '<=', $max);
+        }
+}
 
         // Urutkan
         $sort = $request->get('sort', 'terbaru');
@@ -60,7 +67,17 @@ class JobSearchController extends Controller
         $jobs = $query->withCount('applications')->paginate(6)->withQueryString();
 
         // Kategori unik untuk dropdown
-        $kategoris = Job::where('status', 'buka')->distinct()->pluck('kategori');
+        $jenis_bidangs = [
+            'IT & Software',
+            'Data Science & AI',
+            'Cyber Security',
+            'Business & Management',
+            'Finance & Accounting',
+            'Human Resources',
+            'Education',
+            'Healthcare',
+            'Engineering'
+        ];
 
         // user_id dari JWT atau query string
         $appliedJobIds = collect();
@@ -83,7 +100,7 @@ class JobSearchController extends Controller
 
         return view('jobseeker.cari-lowongan', compact(
             'jobs',
-            'kategoris',
+            'jenis_bidangs',
             'appliedJobIds',
             'savedJobIds',
             'totalJobs',

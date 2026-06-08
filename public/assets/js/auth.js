@@ -449,10 +449,8 @@ if (loginForm) {
             sessionStorage.removeItem("token");
             sessionStorage.removeItem("user");
 
-            const storage = rememberMe ? localStorage : sessionStorage;
-
-            storage.setItem("token", result.data.token);
-            storage.setItem("user", JSON.stringify(result.data.user));
+            localStorage.setItem("token", result.data.token);
+            localStorage.setItem("user", JSON.stringify(result.data.user));
 
             if (roleId === 1) {
                 window.location.href = "/dashboard/admin";

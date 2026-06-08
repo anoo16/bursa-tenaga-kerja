@@ -11,7 +11,7 @@ class JobController extends Controller
      * Menampilkan halaman kelola lowongan
      */
 
-    public function index()
+    public function index(Request $request)
     {
         // Auto-close expired jobs first (Hybrid Option)
         Job::where('status', 'buka')
@@ -27,6 +27,69 @@ class JobController extends Controller
             return redirect()->to($jobs->url($jobs->lastPage()));
         }
 
+        // Query builder dengan filter
+        $query = Job::withCount('applications');
+
+        // Filter: Status Pekerjaan
+        if ($request->filled('status')) {
+            $statusMap = [
+                'aktif'   => 'buka',
+                'draft'   => 'draft',
+                'ditutup' => 'tutup',
+            ];
+            $statusVal = $statusMap[$request->status] ?? $request->status;
+            $query->where('status', $statusVal);
+        }
+
+        // Filter: Kata Kunci
+        if ($request->filled('kata_kunci')) {
+            $kw = $request->kata_kunci;
+            $query->where(function ($q) use ($kw) {
+                $q->where('posisi', 'like', "%{$kw}%")
+                ->orWhere('kategori', 'like', "%{$kw}%");
+            });
+        }
+
+        // Filter: Kategori
+        if ($request->filled('kategori') && $request->kategori !== 'semua') {
+            $query->where('kategori', $request->kategori);
+        }
+
+        // Filter: Rentang Gaji
+        if ($request->filled('gaji_minimum')) {
+            $gMin = preg_replace('/\D/', '', $request->gaji_minimum);
+            if ($gMin) {
+                $query->whereRaw("CAST(REGEXP_REPLACE(gaji_minimum, '[^0-9]', '') AS UNSIGNED) >= ?", [$gMin]);
+            }
+        }
+        if ($request->filled('gaji_maksimum')) {
+            $gMax = preg_replace('/\D/', '', $request->gaji_maksimum);
+            if ($gMax) {
+                $query->whereRaw("CAST(REGEXP_REPLACE(gaji_maksimum, '[^0-9]', '') AS UNSIGNED) <= ?", [$gMax]);
+            }
+        }
+
+        // Filter: Tanggal Posting
+        if ($request->filled('dari')) {
+            $query->whereDate('created_at', '>=', $request->dari);
+        }
+        if ($request->filled('sampai')) {
+            $query->whereDate('created_at', '<=', $request->sampai);
+        }
+
+        // Urutan
+        $urut = $request->input('urut', 'terbaru');
+        if ($urut === 'a-z') {
+            $query->orderBy('posisi', 'asc');
+        } elseif ($urut === 'z-a') {
+            $query->orderBy('posisi', 'desc');
+        } elseif ($urut === 'terlama') {
+            $query->oldest();
+        } else {
+            $query->latest();
+        }
+
+        $jobs = $query->paginate(5)->withQueryString();
         // Ambil ID semua lowongan
         $jobIds = Job::pluck('id');
 
@@ -49,11 +112,22 @@ class JobController extends Controller
             'sukses' => $persentaseSukses
         ];
 
+        //hitung filter aktif
+        $filterAktif = 0;
+        if ($request->filled('status')) $filterAktif++;
+        if ($request->filled('kata_kunci')) $filterAktif++;
+        if ($request->filled('kategori') && $request->kategori !== 'semua') $filterAktif++;
+        if ($request->filled('gaji_minimum')) $filterAktif++;
+        if ($request->filled('gaji_maksimum')) $filterAktif++;
+        if ($request->filled('dari')) $filterAktif++;
+        if ($request->filled('sampai')) $filterAktif++;
+
         return view(
             'lowongan.kelola-lowongan',
             compact(
                 'jobs',
-                'stats'
+                'stats',
+                'filterAktif'
             )
         );
     }
