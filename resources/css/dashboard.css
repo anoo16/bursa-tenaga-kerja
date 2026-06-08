@@ -1,77 +1,77 @@
-body{
+body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #FEF9F2;
+    font-family: "Poppins", sans-serif;
+    background: #fef9f2;
 }
 
 /* WRAPPER */
 
-.dashboard-wrapper{
+.dashboard-wrapper {
     display: flex;
     min-height: 100vh;
 }
 
 /* SIDEBAR */
 
-.sidebar{
+.sidebar {
     width: 230px;
     min-height: 100vh;
-    background: #FFFBDE;
+    background: #fffbde;
     padding: 28px 20px;
     box-sizing: border-box;
     position: sticky;
     top: 0;
 }
 
-.logo-area h2{
-    color: #1E4D8F;
+.logo-area h2 {
+    color: #1e4d8f;
     font-weight: 800;
     line-height: 1.2;
     font-size: 28px;
     margin: 0;
 }
 
-.logo-area span{
+.logo-area span {
     color: #111827;
 }
 
-.logo-area img{
+.logo-area img {
     width: 200px !important;
     height: auto;
 }
 
-.menu-list{
+.menu-list {
     list-style: none;
     padding: 0;
     margin-top: 45px;
     color: #667085;
 }
 
-.menu-list li{
+.menu-list li {
     position: relative;
     padding: 10px 5px;
 }
 
-.menu-list li:hover{
-    background: #F3F4F6;
-    color: #1E4D8F;
+.menu-list li:hover {
+    background: #f3f4f6;
+    color: #1e4d8f;
 }
 
-.menu-list li.active{
-    background: #E5E7EB;
-    color: #1E4D8F;
+.menu-list li.active {
+    background: #e5e7eb;
+    color: #1e4d8f;
     font-weight: 700;
-    border-right: 6px solid #1E4D8F;
+    border-right: 6px solid #1e4d8f;
     border-radius: 0;
 }
 
-.menu-list li i{
+.menu-list li i {
     font-size: 22px;
     min-width: 22px;
     color: #667085;
 }
 
-.menu-list li a{
+.menu-list li a {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -82,7 +82,7 @@ body{
 
 /* MAIN */
 
-.main-content{
+.main-content {
     flex: 1;
     padding: 28px;
     box-sizing: border-box;
@@ -90,60 +90,60 @@ body{
 
 /* TOPBAR */
 
-.topbar{
+.topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 35px;
 }
 
-.topbar h1{
+.topbar h1 {
     font-size: 34px;
-    color: #1E4D8F;
+    color: #1e4d8f;
     font-weight: 800;
     margin: 0;
 }
 
-.topbar-right{
+.topbar-right {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.topbar-right i{
+.topbar-right i {
     font-size: 24px;
     color: #667085;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.topbar-right i:hover{
-    color: #1E4D8F;
+.topbar-right i:hover {
+    color: #1e4d8f;
 }
 
-.topbar-actions{
-    display:flex;
-    align-items:center;
-    gap:12px; /* atur jarak icon dan profile */
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* atur jarak icon dan profile */
 }
 
 /* STAT */
 
-.stats-grid{
+.stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
     margin-bottom: 32px;
 }
 
-.stat-card{
+.stat-card {
     background: white;
     padding: 20px;
     border-radius: 24px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
-.stat-card p{
+.stat-card p {
     color: #667085;
     font-size: 11px;
     letter-spacing: 1px;
@@ -151,22 +151,22 @@ body{
     font-weight: 600;
 }
 
-.stat-card h1{
+.stat-card h1 {
     font-size: 32px;
-    color: #1E4D8F;
+    color: #1e4d8f;
     margin-top: 5px;
     margin-bottom: 0;
     font-weight: 700;
 }
 
-.stat-card:hover{
+.stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* ICON */
 
-.icon-box{
+.icon-box {
     width: 50px;
     height: 50px;
     border-radius: 16px;
@@ -176,33 +176,33 @@ body{
     margin-bottom: 18px;
 }
 
-.icon-box i{
+.icon-box i {
     font-size: 22px;
 }
 
-.green{
-    background: #DCFCE7;
-    color: #16A34A;
+.green {
+    background: #dcfce7;
+    color: #16a34a;
 }
 
-.teal{
-    background: #CCFBF1;
-    color: #0F766E;
+.teal {
+    background: #ccfbf1;
+    color: #0f766e;
 }
 
-.light-green{
-    background: #DCFCE7;
-    color: #16A34A;
+.light-green {
+    background: #dcfce7;
+    color: #16a34a;
 }
 
-.red{
-    background: #FEE2E2;
-    color: #DC2626;
+.red {
+    background: #fee2e2;
+    color: #dc2626;
 }
 
 /* CONTENT */
 
-.dashboard-content{
+.dashboard-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 24px;
@@ -210,72 +210,72 @@ body{
 
 /* SECTION */
 
-.section-header{
+.section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 18px;
 }
 
-.section-header h2{
-    color: #1E4D8F;
+.section-header h2 {
+    color: #1e4d8f;
     font-size: 24px;
     margin: 0;
     font-weight: 700;
 }
 
-.section-header a{
+.section-header a {
     text-decoration: none;
-    color: #0F766E;
+    color: #0f766e;
     font-weight: 600;
     font-size: 14px;
 }
 
 /* TABLE */
 
-.application-table{
+.application-table {
     background: white;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .table-head,
-.table-row{
+.table-row {
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(4, 1fr);
     padding: 22px 26px;
     align-items: center;
 }
 
-.table-head{
+.table-head {
     border-bottom: 1px solid #eee;
     color: #667085;
     font-size: 12px;
     font-weight: 600;
 }
 
-.table-row{
+.table-row {
     border-bottom: 1px solid #f3f3f3;
 }
 
-.table-row:last-child{
+.table-row:last-child {
     border-bottom: none;
 }
 
-.table-row h4{
+.table-row h4 {
     font-size: 15px;
     margin: 0;
     color: #111827;
 }
 
 .table-row p,
-.table-row small{
+.table-row small {
     color: #667085;
     margin: 0;
 }
 
-.status{
+.status {
     width: fit-content;
     padding: 7px 14px;
     border-radius: 30px;
@@ -283,70 +283,70 @@ body{
     font-weight: 600;
 }
 
-.review{
-    background: #CCFBF1;
-    color: #0F766E;
+.review {
+    background: #ccfbf1;
+    color: #0f766e;
 }
 
-.waiting{
-    background: #DBEAFE;
-    color: #1D4ED8;
+.waiting {
+    background: #dbeafe;
+    color: #1d4ed8;
 }
 
-.accepted{
-    background: #DCFCE7;
-    color: #16A34A;
+.accepted {
+    background: #dcfce7;
+    color: #16a34a;
 }
 
-.rejected{
-    background: #FEE2E2;
-    color: #DC2626;
+.rejected {
+    background: #fee2e2;
+    color: #dc2626;
 }
 
 /* JOB CARD */
 
-.job-card{
+.job-card {
     background: white;
     border-radius: 24px;
     padding: 22px;
     margin-bottom: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
-.job-top{
+.job-top {
     display: flex;
     justify-content: space-between;
     gap: 10px;
 }
 
-.job-top h3{
-    color: #1E4D8F;
+.job-top h3 {
+    color: #1e4d8f;
     font-size: 18px;
     margin: 0 0 5px;
     font-weight: 700;
 }
 
-.job-top p{
+.job-top p {
     color: #667085;
     margin: 0;
     font-size: 14px;
 }
 
-.job-top i{
+.job-top i {
     font-size: 22px;
-    color: #98A2B3;
+    color: #98a2b3;
     cursor: pointer;
 }
 
-.job-tags{
+.job-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 18px;
 }
 
-.job-tags span{
-    background: #F2EDE6;
+.job-tags span {
+    background: #f2ede6;
     padding: 8px 12px;
     border-radius: 10px;
     font-size: 11px;
@@ -355,20 +355,20 @@ body{
 
 /* PROFILE */
 
-.profile-wrapper{
+.profile-wrapper {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.vertical-line{
+.vertical-line {
     width: 1px;
     height: 28px;
-    background: #D1D5DB;
-    margin:0 4px;
+    background: #d1d5db;
+    margin: 0 4px;
 }
 
-.profile-box{
+.profile-box {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -376,97 +376,153 @@ body{
     transition: 0.3s;
 }
 
-.profile-img{
+.profile-img {
     width: 45px;
     height: 45px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.profile-box i{
+.profile-box i {
     font-size: 38px;
-    color: #94A3B8;
+    color: #94a3b8;
 }
 
-.profile-box:hover{
+.profile-box:hover {
     transform: scale(1.03);
 }
 
 /* TABLET */
 
-@media(max-width: 992px){
-
-    .sidebar{
+@media (max-width: 992px) {
+    .sidebar {
         width: 90px;
         padding: 25px 12px;
     }
 
-    .logo-area h2{
+    .logo-area h2 {
         font-size: 0;
     }
 
-    .menu-list li{
+    .menu-list li {
         font-size: 0;
         justify-content: center;
         padding: 16px;
     }
 
-    .menu-list li i{
+    .menu-list li i {
         margin: 0;
         font-size: 24px;
     }
 
-    .dashboard-content{
+    .dashboard-content {
         grid-template-columns: 1fr;
     }
 
-    .stats-grid{
-        grid-template-columns: repeat(2,1fr);
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .topbar h1{
+    .topbar h1 {
         font-size: 28px;
     }
+}
 
+.profile-box {
+    position: relative;
+    cursor: pointer;
+}
+
+.logout-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 0;
+
+    min-width: 160px;
+
+    background: #fff;
+
+    border-radius: 12px;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    display: none;
+
+    overflow: hidden;
+
+    z-index: 999;
+}
+
+.logout-dropdown.show {
+    display: block;
+}
+
+.logout-dropdown button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px 16px;
+
+    border: none;
+    background: transparent;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    color: #ef4444;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.logout-dropdown button:hover {
+    background: #fef2f2;
+}
+
+.logout-dropdown button i {
+    font-size: 20px;
+    color: #94a3b8;
 }
 
 /* MOBILE */
 
-@media(max-width: 576px){
-
-    .main-content{
+@media (max-width: 576px) {
+    .main-content {
         padding: 18px;
     }
 
-    .stats-grid{
+    .stats-grid {
         grid-template-columns: 1fr;
     }
 
-    .table-head{
+    .table-head {
         display: none;
     }
 
-    .table-row{
+    .table-row {
         grid-template-columns: 1fr;
         gap: 10px;
     }
 
-    .topbar{
+    .topbar {
         flex-direction: column;
         align-items: flex-start;
         gap: 18px;
     }
 
-    .topbar h1{
+    .topbar h1 {
         font-size: 24px;
     }
-
 }
 
-.saved{
-    color: #0F2854 !important;
+.saved {
+    color: #0f2854 !important;
 }
 
-.topbar-right i{
+.topbar-right i {
     transition: 0.3s ease;
 }

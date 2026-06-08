@@ -354,7 +354,13 @@
     const url = new URL(window.location.href);
     if (!url.searchParams.get('user_id')) {
         try {
-            const u = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+            const u = JSON.parse(
+                localStorage.getItem('jobseeker_user') ||
+                localStorage.getItem('user') ||
+                sessionStorage.getItem('user') ||
+                '{}'
+            );
+            
             if (u && u.id) {
                 url.searchParams.set('user_id', u.id);
                 window.location.replace(url.toString());

@@ -1,74 +1,69 @@
 /* =========================================
    PROFILE PAGE
-   MATCH WITH DASHBOARD STYLE
 ========================================= */
 
-.profile-page{
+.profile-page {
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 /* HEADER */
 
-.profile-page .profile-header-card{
+.profile-page .profile-header-card {
     background: white;
     border-radius: 24px;
-    padding: 18px 24px;
+    padding: 24px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
-.profile-page .profile-header-left{
+.profile-page .profile-header-left {
     display: flex;
     align-items: center;
     gap: 18px;
 }
 
-.profile-page .profile-avatar-wrapper{
+.profile-page .profile-avatar-wrapper {
     position: relative;
 }
 
-.profile-page .profile-avatar{
-    width: 60px;
-    height: 60px;
-    border-radius: 18px;
+.profile-page .profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
     object-fit: cover;
 }
 
-.profile-page .avatar-badge{
+.profile-page .avatar-badge {
     position: absolute;
     right: -3px;
     bottom: -3px;
-    width: 20px;
-    height: 20px;
-    background: #1E4D8F;
+    width: 22px;
+    height: 22px;
+    background: #1e4d8f;
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 11px;
 }
 
-.profile-page .profile-name{
-    color: #1E4D8F;
-    font-size: 28px;
+.profile-page .profile-name {
+    color: #1e4d8f;
+    font-size: 32px;
     font-weight: 800;
-    margin-bottom: 5px;
+    margin: 0;
 }
 
-.profile-page .completion-number{
-    color: #98A2B3;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.profile-page .btn-edit-profile{
-    border: 2px solid #D0D5DD;
+.profile-page .btn-edit-profile {
+    border: 2px solid #d0d5dd;
     background: white;
-    padding: 10px 16px;
+    padding: 12px 18px;
     border-radius: 14px;
     color: #344054;
     font-weight: 600;
@@ -76,383 +71,284 @@
     transition: 0.3s;
 }
 
-.profile-page .btn-edit-profile:hover{
-    border-color: #1E4D8F;
-    color: #1E4D8F;
+.profile-page .btn-edit-profile:hover {
+    border-color: #1e4d8f;
+    color: #1e4d8f;
 }
 
 /* GRID */
 
-.profile-page .profile-grid{
+.profile-page .profile-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2fr 1.2fr;
     gap: 24px;
+    align-items: start;
 }
 
 /* CARD */
 
-.profile-page .card{
+.profile-page .card {
     background: white;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    margin-bottom: 18px;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    margin-bottom: 20px;
 }
 
-/* SUMMARY */
+/* LEFT */
+
+.profile-page .profile-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* RIGHT */
+
+.profile-page .profile-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profile-page .profile-right .card {
+    margin-bottom: 0;
+}
+
+/* YELLOW CARD */
 
 .profile-page .summary-card,
 .profile-page .identity-card,
 .profile-page .sertifikasi-card,
-.profile-page .credentials-card{
-    background: #FFFDE7;
+.profile-page .credentials-card {
+    background: #fffde7;
 }
 
-.profile-page .summary-text{
-    width:fit-content;
-    max-width:100%;
-    color:#475467;
-    line-height:1.7;
-    font-size:14px;
-    margin-bottom:12px;
+/* SUMMARY */
+
+.profile-page .summary-card {
+    min-height: 110px;
+    display: flex;
+    align-items: center;
 }
 
-.profile-page .summary-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:flex-start;
-}
-
-/* BUTTON */
-
-.profile-page .btn-primary{
-    background: #1E4D8F;
-    color: white;
-    border: none;
-    border-radius: 14px;
-    padding: 12px 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.profile-page .btn-primary:hover{
-    background: #16396B;
-}
-
-.profile-page .btn-secondary,
-.profile-page .btn-outline{
-    border: 2px solid #D0D5DD;
-    background: white;
-    border-radius: 14px;
-    padding: 12px 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.profile-page .btn-secondary:hover,
-.profile-page .btn-outline:hover{
-    border-color: #1E4D8F;
-    color: #1E4D8F;
-}
-
-.profile-page .btn-sm{
-    padding: 10px 16px;
-    font-size: 14px;
+.profile-page .summary-text {
+    margin: 0;
+    color: #475467;
+    line-height: 1.8;
+    font-size: 16px;
 }
 
 /* SECTION */
 
-.profile-page .section-header{
+.profile-page .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-.profile-page .section-title{
+.profile-page .section-title {
     font-size: 22px;
     font-weight: 700;
-    color: #1E4D8F;
+    color: #1e4d8f;
     margin: 0;
-}
-
-.profile-page .btn-add{
-    background: transparent;
-    border: none;
-    color: #667085;
-    cursor: pointer;
-    font-weight: 600;
 }
 
 /* EXPERIENCE */
 
-.profile-page .experience-item{
+.profile-page .experience-item {
     position: relative;
-    padding-left: 21px;
-    margin-bottom: 15px;
+    padding-left: 28px;
 }
 
-.profile-page .experience-item::before{
-    content: '';
+.profile-page .experience-item::before {
+    content: "";
     position: absolute;
     left: 0;
-    top: 10px;
-    width: 10px;
-    height: 10px;
+    top: 12px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #1E4D8F;
+    background: #1e4d8f;
 }
 
-.profile-page .exp-header{
+.profile-page .exp-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
 }
 
-.profile-page .exp-org{
+.profile-page .exp-org {
     font-size: 20px;
     font-weight: 700;
     color: #111827;
+    margin: 0;
 }
 
-.profile-page .exp-period{
-    background: #DBF4FF;
-    color: #1D4ED8;
-    padding: 8px 16px;
+.profile-page .exp-period {
+    background: #dbf4ff;
+    color: #1d4ed8;
+    padding: 10px 18px;
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
+    white-space: nowrap;
 }
 
-.profile-page .exp-role{
-    color: #1E4D8F;
+.profile-page .exp-role {
+    color: #1e4d8f;
     font-weight: 600;
-    margin-bottom: 10px;
-    font-size: 14px;
+    margin-bottom: 12px;
 }
 
-.profile-page .exp-desc{
+.profile-page .exp-desc {
+    color: #667085;
+    line-height: 1.8;
+}
+
+/* EDUCATION */
+
+.profile-page .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.profile-page .bottom-row .card {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.profile-page .edu-level {
+    text-transform: uppercase;
     color: #667085;
     font-size: 14px;
-    line-height: 1.6;
+    margin-bottom: 10px;
 }
 
-/* RIGHT SIDE */
-
-.profile-page .identity-label{
-    font-size: 12px;
-    letter-spacing: 2px;
-    color: #98A2B3;
+.profile-page .edu-major {
+    font-size: 24px;
     font-weight: 700;
-    margin-bottom: 20px;
+    line-height: 1.3;
+    margin-bottom: 12px;
 }
 
-.profile-page .identity-item{
+.profile-page .edu-school {
+    color: #667085;
+    font-size: 15px;
+}
+
+/* IDENTITAS */
+
+.profile-page .identity-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #98a2b3;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.profile-page .identity-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     color: #475467;
 }
 
-.profile-page .identity-item i{
-    color: #1E4D8F;
+.profile-page .identity-item i {
+    color: #1e4d8f;
+    font-size: 18px;
 }
 
 /* CERTIFICATION */
 
-.profile-page .sertifikasi-list{
-    padding-left: 18px;
+.profile-page .sertifikasi-list {
+    padding-left: 20px;
+    margin: 0;
 }
 
-.profile-page .sertifikasi-item{
-    color: #475467;
+.profile-page .sertifikasi-item {
     line-height: 1.8;
-    margin-bottom: 12px;
+    color: #475467;
 }
 
 /* SKILLS */
 
-.profile-page .skills-grid{
+.profile-page .skills-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
 }
 
-.profile-page .skill-tag{
-    background: #F9FAFB;
-    padding: 8px 14px;
+.profile-page .skill-tag {
+    background: #fff;
+    border: 1px solid #eaecf0;
+    padding: 10px 18px;
     border-radius: 999px;
-    font-size: 13px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    font-size: 14px;
+    font-weight: 500;
 }
 
-/* PORTFOLIO */
+/* CV */
 
-.profile-page .portfolio-link-box{
-    margin-top: 24px;
-    background: #DCEBFF;
-    border-radius: 18px;
-    padding: 18px;
+.profile-page .credentials-hint {
+    color: #667085;
+    line-height: 1.7;
+    margin-bottom: 20px;
 }
 
-.profile-page .portfolio-link-label{
-    display: block;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: #98A2B3;
-    margin-bottom: 10px;
-    font-weight: 700;
+.profile-page .credentials-actions {
+    display: flex;
+    gap: 12px;
 }
 
-.profile-page .portfolio-link-url{
-    color: #1E4D8F;
+.profile-page .btn-outline {
     text-decoration: none;
-    font-weight: 700;
+    color: #1e4d8f;
+    border: 2px solid #d0d5dd;
+    border-radius: 14px;
+    padding: 12px 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
 }
 
-/* EDUCATION */
-
-.profile-page .bottom-row{
-    display:grid;
-    grid-template-columns:auto auto;
-    gap:16px;
-    align-items:start;
+.profile-page .btn-outline:hover {
+    border-color: #1e4d8f;
 }
 
-.profile-page .bottom-row > .card{
-    width:fit-content;
-    min-width:0;
-}
-
-.profile-page .edu-item{
-    margin-bottom:18px;
-}
-
-.profile-page .edu-major{
-    font-size:22px;
-    font-weight:700;
-    margin:6px 0;
-    line-height:1.3;
-}
-
-.profile-page .edu-school{
-    color:#667085;
-    font-size:14px;
-}
-
-/* CV */
-
-/* CV */
-
-.profile-page .credentials-hint{
-    color:#667085;
-    line-height:1.6;
-    margin-bottom:18px;
-    font-size:14px;
-}
-
-.profile-page .credentials-actions{
-    display:flex;
-    gap:10px;
-    margin-bottom:18px;
-}
-
-.profile-page .cv-file-item{
-    background:white;
-    border-radius:16px;
-    padding:12px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.profile-page .cv-file-icon{
-    width:42px;
-    height:42px;
-    border-radius:14px;
-    background:#EEF4FF;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#1E4D8F;
-    font-size:18px;
-}
-
-.profile-page .cv-file-name{
-    font-weight:700;
-    display:block;
-    font-size:14px;
-}
-
-.profile-page .cv-file-meta,
-.profile-page .cv-file-date{
-    color:#98A2B3;
-    font-size:12px;
-}
-
-.profile-page .cv-file-actions{
-    margin-left:auto;
-    display:flex;
-    gap:8px;
-}
-
-.profile-page .icon-btn-sm{
-    width:30px;
-    height:30px;
-    border:none;
-    border-radius:10px;
-    background:#F3F4F6;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.profile-page .icon-btn-sm i{
-    font-size:14px;
-}
-
-.profile-page .icon-btn-sm:hover{
-    background:#E5E7EB;
-}
 /* RESPONSIVE */
 
-@media(max-width: 992px){
-
-    .profile-page .profile-grid{
+@media (max-width: 992px) {
+    .profile-page .profile-grid {
         grid-template-columns: 1fr;
     }
 
-    .profile-page .bottom-row{
+    .profile-page .bottom-row {
         grid-template-columns: 1fr;
-    }
-
-    .profile-page .profile-name{
-        font-size: 26px;
-    }
-
-    .profile-page .exp-org{
-        font-size: 22px;
     }
 }
 
-@media(max-width: 576px){
-
-    .profile-page .profile-header-card{
+@media (max-width: 768px) {
+    .profile-page .exp-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 18px;
     }
+}
 
-    .profile-page .summary-actions,
-    .profile-page .credentials-actions{
+@media (max-width: 576px) {
+    .profile-page .profile-header-card {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
     }
 
-    .profile-page .section-title{
-        font-size: 24px;
+    .profile-page .profile-name {
+        font-size: 26px;
     }
 }

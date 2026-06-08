@@ -19,7 +19,19 @@ class ProfileController extends Controller
             ??
             Auth::guard('api')->user();
 
-        return view('jobseeker.profile', compact('user'));
+        if($user){
+            $user->load([
+                'educations',
+                'experiences',
+                'skills',
+                'certifications'
+            ]);
+        }
+
+        return view(
+            'jobseeker.profile',
+            compact('user')
+        );
     }
 
     public function edit()
@@ -33,11 +45,11 @@ class ProfileController extends Controller
     }
     
     public function update(Request $request)
-    {
-
-        dd($request->all());   
-
-        $user = Auth::guard('api')->user();
+    {  
+        $user =
+            Auth::guard('web')->user()
+            ??
+            Auth::guard('api')->user();
 
         if (!$user) {
             return response()->json([
@@ -59,6 +71,9 @@ class ProfileController extends Controller
         $user->summary = $request->summary;
         $user->location = $request->location;
         $user->headline = $request->headline;
+        $user->phone = $request->phone;
+        $user->linkedin = $request->linkedin;
+        $user->github = $request->github;
 
         $user->save();
 

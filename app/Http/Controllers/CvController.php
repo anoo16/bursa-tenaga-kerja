@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\CvProfile;
 use App\Models\CvExperience;
 use App\Models\CvEducation;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log; 
 
 class CvController extends Controller
 {
@@ -496,85 +498,122 @@ class CvController extends Controller
     // ===============================
     // Tampilkan preview draft
     // ===============================
-    public function showPreview()
-    {
-        $profile = session('cv_preview_data');
+   public function showPreview()
+{
+    $data = session('cv_preview_data');
 
-        $templateView = match ($profile['template_id'] ?? 'modern-blue') {
-
-            'modern-blue'
-                => 'cv.templates.modern-blue',
-
-            'professional-white'
-                => 'cv.templates.professional-white',
-
-            'corporate-elegant'
-                => 'cv.templates.corporate-elegant',
-
-            default
-                => 'cv.templates.modern-blue'
-        };
-
-        return view(
-            'cv.preview-cv',
-            compact(
-                'profile',
-                'templateView'
-            )
-        );
+    if (!$data) {
+        return redirect()->route('cv.edit')
+            ->with('error', 'Data CV tidak ditemukan.');
     }
 
-    // ===============================
-    // Hapus item section
-    // ===============================
+    $templateView = match ($data['template_id'] ?? 'modern-blue') {
+        'modern-blue'        => 'cv.templates.modern-blue',
+        'professional-white' => 'cv.templates.professional-white',
+        'corporate-elegant'  => 'cv.templates.corporate-elegant',
+        default              => 'cv.templates.modern-blue',
+    };
 
-    public function deleteSection(
-        string $section,
-        int $id
-    )
-    {
-        $map=[
+    // Pastikan semua bagian adalah array murni
+    $profile = [
+        'full_name'     => $data['full_name']     ?? '',
+        'email'         => $data['email']          ?? '',
+        'phone'         => $data['phone']          ?? '',
+        'location'      => $data['location']       ?? '',
+        'job_title'     => $data['job_title']      ?? '',
+        'website'       => $data['website']        ?? '',
+        'linkedin'      => $data['linkedin']       ?? '',
+        'summary'       => $data['summary']        ?? '',
+        'photo'         => $data['photo']          ?? null,
+        'template_id'   => $data['template_id']    ?? 'modern-blue',
+        'primary_color' => $data['primary_color']  ?? '#1a3c8f',
+        'experiences'   => array_values(array_filter(
+                               $data['experiences'] ?? [],
+                               fn($e) => !empty($e['company'])
+                           )),
+        'educations'    => array_values(array_filter(
+                               $data['educations'] ?? [],
+                               fn($e) => !empty($e['school'])
+                           )),
+        'skills'        => array_values(array_filter(
+                               $data['skills'] ?? [],
+                               fn($s) => !empty($s['name'])
+                           )),
+        'certifications' => array_values($data['certifications'] ?? []),
+    ];
 
-            'experience'=>
-                CvExperience::class,
+    return view('cv.preview-cv', [
+        'profile'      => $profile,
+        'templateView' => $templateView,
+        'cvRawData'    => $profile, // kirim yang sudah bersih
+    ]);
+  }
+  public function downloadDraftPDF(Request $request)
+{
+    $user = Auth::guard('api')->user();
 
-            'education'=>
-                CvEducation::class,
-
-            'skill'=>
-                CvSkill::class,
-
-            'certification'=>
-                CvCertification::class
-        ];
-
-
-        abort_unless(
-            isset(
-                $map[$section]
-            ),
-            404
-        );
-
-
-        $record = $map[$section]::findOrFail($id);
-
-        $user =
-            Auth::guard('web')->user()
-            ??
-            Auth::guard('api')->user();
-
-
-        abort_unless(
-            $record->profile->user_id === Auth::guard('api')->id(),
-            403
-        );
-
-        $record->delete();
-
+    if (!$user) {
         return response()->json([
-            'success'=>true
-        ]);
+            'success' => false,
+            'message' => 'Silakan login terlebih dahulu',
+        ], 401);
     }
 
+    $data = $request->input('cv_data');
+
+    if (!$data) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Data CV tidak ditemukan.',
+        ], 404);
+    }
+
+    // Sama persis dengan format yang dipakai template (array)
+    $profile = [
+        'full_name'     => $data['full_name']     ?? $user->name,
+        'email'         => $data['email']          ?? $user->email,
+        'phone'         => $data['phone']          ?? '',
+        'location'      => $data['location']       ?? '',
+        'job_title'     => $data['job_title']      ?? '',
+        'website'       => $data['website']        ?? '',
+        'linkedin'      => $data['linkedin']       ?? '',
+        'summary'       => $data['summary']        ?? '',
+        'photo'         => $data['photo']          ?? null,
+        'template_id'   => $data['template_id']    ?? 'modern-blue',
+        'primary_color' => $data['primary_color']  ?? '#1a3c8f',
+        'experiences'   => array_values(array_filter(
+                               $data['experiences'] ?? [],
+                               fn($e) => !empty($e['company'])
+                           )),
+        'educations'    => array_values(array_filter(
+                               $data['educations'] ?? [],
+                               fn($e) => !empty($e['school'])
+                           )),
+        'skills'        => array_values(array_filter(
+                               $data['skills'] ?? [],
+                               fn($s) => !empty($s['name'])
+                           )),
+        'certifications' => array_values($data['certifications'] ?? []),
+    ];
+
+    $templateView = match ($profile['template_id']) {
+        'professional-white' => 'cv.templates.professional-white',
+        'corporate-elegant'  => 'cv.templates.corporate-elegant',
+        default              => 'cv.templates.modern-blue',
+    };
+
+    if (!view()->exists($templateView)) {
+        $templateView = 'cv.templates.modern-blue';
+    }
+
+    $pdf = Pdf::loadView($templateView, [
+        'profile' => $profile,  // kirim sebagai array
+    ]);
+
+    $pdf->setPaper('a4', 'portrait');
+
+    $filename = 'CV_' . str_replace(' ', '_', $profile['full_name']) . '.pdf';
+
+    return $pdf->download($filename);
+ }
 }

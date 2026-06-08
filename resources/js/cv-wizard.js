@@ -1,17 +1,13 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     /* ==========================
     EDUCATION
     ========================== */
 
-    document
-    .getElementById('addEducation')
-    ?.addEventListener('click', () => {
-
-        const container =
-            document.getElementById('educationContainer');
+    document.getElementById("addEducation")?.addEventListener("click", () => {
+        const container = document.getElementById("educationContainer");
 
         container.insertAdjacentHTML(
-            'beforeend',
+            "beforeend",
 
             `
             <div class="education-item">
@@ -54,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
             </div>
-            `
+            `,
         );
 
         educationIndex++;
@@ -64,15 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
     SKILL
     ========================== */
 
-    document
-    .getElementById('addSkill')
-    ?.addEventListener('click', () => {
-
-        const container =
-            document.getElementById('skillContainer');
+    document.getElementById("addSkill")?.addEventListener("click", () => {
+        const container = document.getElementById("skillContainer");
 
         container.insertAdjacentHTML(
-            'beforeend',
+            "beforeend",
 
             `
             <div class="skill-item">
@@ -90,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
 
             </div>
-            `
+            `,
         );
 
         skillIndex++;
@@ -100,15 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
     EXPERIENCE
     ========================== */
 
-    document
-    .getElementById('addExperience')
-    ?.addEventListener('click', () => {
-
-        const container =
-            document.getElementById('experienceContainer');
+    document.getElementById("addExperience")?.addEventListener("click", () => {
+        const container = document.getElementById("experienceContainer");
 
         container.insertAdjacentHTML(
-            'beforeend',
+            "beforeend",
 
             `
             <div class="experience-item">
@@ -152,238 +140,152 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
 
             </div>
-            `
+            `,
         );
-        
+
         experienceIndex++;
     });
 });
 
-document.addEventListener('click', function(e){
-
-    if(
-        e.target.classList.contains('remove-item')
-    ){
-
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("remove-item")) {
         e.target
-            .closest(
-                '.education-item, .experience-item, .skill-item'
-            )
+            .closest(".education-item, .experience-item, .skill-item")
             ?.remove();
-
     }
-
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener("DOMContentLoaded", () => {
     /* ==========================
        WIZARD STEP
     ========================== */
 
     let currentStep = 0;
 
-    const steps =
-        document.querySelectorAll('.step-content');
+    const steps = document.querySelectorAll(".step-content");
 
-    const menu =
-        document.querySelectorAll('.wizard-step');
+    const menu = document.querySelectorAll(".wizard-step");
 
-    const nextBtn =
-        document.getElementById('nextBtn');
+    const nextBtn = document.getElementById("nextBtn");
 
-    const prevBtn =
-        document.getElementById('prevBtn');
+    const prevBtn = document.getElementById("prevBtn");
 
-    const submitBtn =
-        document.getElementById('submitBtn');
+    const submitBtn = document.getElementById("submitBtn");
 
     const titles = [
         "Personal Biodata",
         "Riwayat Pendidikan",
         "Keahlian",
         "Summary & Organisasi",
-        "Pengalaman Kerja"
+        "Pengalaman Kerja",
     ];
 
     function updateProgress() {
-
         let completed = 0;
 
-        steps.forEach(step => {
-
-            const inputs =
-                step.querySelectorAll(
-                    'input, textarea, select'
-                );
+        steps.forEach((step) => {
+            const inputs = step.querySelectorAll("input, textarea, select");
 
             let filled = true;
 
-            inputs.forEach(input => {
-
+            inputs.forEach((input) => {
                 if (
-                    input.type !== 'button' &&
-                    input.type !== 'hidden' &&
-                    input.value.trim() === ''
+                    input.type !== "button" &&
+                    input.type !== "hidden" &&
+                    input.value.trim() === ""
                 ) {
                     filled = false;
                 }
-
             });
 
             if (filled && inputs.length > 0) {
                 completed++;
             }
-
         });
 
-        const percent =
-            Math.round(
-                (completed / steps.length) * 100
-            );
+        const percent = Math.round((completed / steps.length) * 100);
 
-        document.getElementById(
-            'progressText'
-        ).innerText =
+        document.getElementById("progressText").innerText =
             `Progress: ${percent}%`;
 
-        document.getElementById(
-            'progressFill'
-        ).style.width =
-            `${percent}%`;
-
+        document.getElementById("progressFill").style.width = `${percent}%`;
     }
 
     function showStep() {
-
         steps.forEach((step, index) => {
-
-            step.classList.remove('active');
+            step.classList.remove("active");
 
             if (index === currentStep) {
-                step.classList.add('active');
+                step.classList.add("active");
             }
-
         });
 
         menu.forEach((item, index) => {
+            item.classList.remove("active");
+            item.classList.remove("done");
 
-            item.classList.remove('active');
-            item.classList.remove('done');
-
-            const circle =
-                item.querySelector('.step-circle');
+            const circle = item.querySelector(".step-circle");
 
             if (index < currentStep) {
+                item.classList.add("done");
 
-                item.classList.add('done');
+                circle.innerHTML = "✓";
+            } else if (index === currentStep) {
+                item.classList.add("active");
 
-                circle.innerHTML = '✓';
-
+                circle.innerHTML = index + 1;
+            } else {
+                circle.innerHTML = index + 1;
             }
-
-            else if (index === currentStep) {
-
-                item.classList.add('active');
-
-                circle.innerHTML =
-                    index + 1;
-
-            }
-
-            else {
-
-                circle.innerHTML =
-                    index + 1;
-
-            }
-
         });
 
-        document.getElementById(
-            'stepTitle'
-        ).innerText =
-            titles[currentStep];
+        document.getElementById("stepTitle").innerText = titles[currentStep];
 
-        document.getElementById(
-            'stepCounter'
-        ).innerText =
-            String(currentStep + 1)
-                .padStart(2, '0')
-            + ' / 05';
+        document.getElementById("stepCounter").innerText =
+            String(currentStep + 1).padStart(2, "0") + " / 05";
 
-        prevBtn.style.display =
-            currentStep === 0
-                ? 'none'
-                : 'inline-flex';
+        prevBtn.style.display = currentStep === 0 ? "none" : "inline-flex";
 
         nextBtn.style.display =
-            currentStep === steps.length - 1
-                ? 'none'
-                : 'inline-flex';
+            currentStep === steps.length - 1 ? "none" : "inline-flex";
 
-        const previewBtn =
-            document.getElementById('previewBtn');
+        const previewBtn = document.getElementById("previewBtn");
 
         previewBtn.style.display =
-            currentStep === steps.length - 1
-                ? 'inline-flex'
-                : 'none';
+            currentStep === steps.length - 1 ? "inline-flex" : "none";
 
-        submitBtn.style.display = 'none';
+        submitBtn.style.display = "none";
 
         updateProgress();
-
     }
 
-    nextBtn?.addEventListener('click', () => {
-
+    nextBtn?.addEventListener("click", () => {
         if (currentStep < steps.length - 1) {
-
             currentStep++;
 
             showStep();
-
         }
-
     });
 
-    prevBtn?.addEventListener('click', () => {
-
+    prevBtn?.addEventListener("click", () => {
         if (currentStep > 0) {
-
             currentStep--;
 
             showStep();
-
         }
-
     });
 
     menu.forEach((item, index) => {
-
-        item.addEventListener('click', () => {
-
+        item.addEventListener("click", () => {
             currentStep = index;
 
             showStep();
-
         });
-
     });
 
-    document
-        .querySelectorAll(
-            'input, textarea'
-        )
-        .forEach(input => {
-
-            input.addEventListener(
-                'input',
-                updateProgress
-            );
-
-        });
+    document.querySelectorAll("input, textarea").forEach((input) => {
+        input.addEventListener("input", updateProgress);
+    });
 
     showStep();
 
@@ -393,19 +295,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let educationIndex = 1;
 
-    document
-        .getElementById('addEducation')
-        ?.addEventListener('click', () => {
+    document.getElementById("addEducation")?.addEventListener("click", () => {
+        const container = document.getElementById("educationContainer");
 
-            const container =
-                document.getElementById(
-                    'educationContainer'
-                );
+        container.insertAdjacentHTML(
+            "beforeend",
 
-            container.insertAdjacentHTML(
-                'beforeend',
-
-                `
+            `
                 <div class="education-item">
 
                     <button
@@ -449,12 +345,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                 </div>
-                `
-            );
+                `,
+        );
 
-            educationIndex++;
-
-        });
+        educationIndex++;
+    });
 
     /* ==========================
        ADD SKILL
@@ -462,19 +357,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let skillIndex = 1;
 
-    document
-        .getElementById('addSkill')
-        ?.addEventListener('click', () => {
+    document.getElementById("addSkill")?.addEventListener("click", () => {
+        const container = document.getElementById("skillContainer");
 
-            const container =
-                document.getElementById(
-                    'skillContainer'
-                );
+        container.insertAdjacentHTML(
+            "beforeend",
 
-            container.insertAdjacentHTML(
-                'beforeend',
-
-                `
+            `
                 <div class="skill-item">
 
                     <input
@@ -490,12 +379,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
 
                 </div>
-                `
-            );
+                `,
+        );
 
-            skillIndex++;
-
-        });
+        skillIndex++;
+    });
 
     /* ==========================
        ADD EXPERIENCE
@@ -503,19 +391,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let experienceIndex = 1;
 
-    document
-        .getElementById('addExperience')
-        ?.addEventListener('click', () => {
+    document.getElementById("addExperience")?.addEventListener("click", () => {
+        const container = document.getElementById("experienceContainer");
 
-            const container =
-                document.getElementById(
-                    'experienceContainer'
-                );
+        container.insertAdjacentHTML(
+            "beforeend",
 
-            container.insertAdjacentHTML(
-                'beforeend',
-
-                `
+            `
                 <div class="experience-item">
 
                     <button
@@ -557,56 +439,34 @@ document.addEventListener('DOMContentLoaded', () => {
                         placeholder="Deskripsi pekerjaan"></textarea>
 
                 </div>
-                `
-            );
+                `,
+        );
 
-            experienceIndex++;
-
-        });
+        experienceIndex++;
+    });
 
     /* ==========================
        DELETE ITEM
     ========================== */
 
-    document.addEventListener(
-        'click',
-        function(e) {
+    document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-item")) {
+            e.target
+                .closest(".education-item, .skill-item, .experience-item")
+                ?.remove();
 
-            if (
-                e.target.classList.contains(
-                    'remove-item'
-                )
-            ) {
-
-                e.target
-                    .closest(
-                        '.education-item, .skill-item, .experience-item'
-                    )
-                    ?.remove();
-
-                updateProgress();
-
-            }
-
+            updateProgress();
         }
-    );
+    });
 
-    document.getElementById('previewBtn')
-    ?.addEventListener('click', () => {
+    document.getElementById("previewBtn")?.addEventListener("click", () => {
+        const form = document.getElementById("cvForm");
 
-        const form =
-            document.getElementById('cvForm');
+        form.action = "/cv/preview-draft";
 
-        form.action =
-            '/cv/preview-draft';
+        form.method = "POST";
 
-        form.method =
-            'POST';
-
-        const methodInput =
-            form.querySelector(
-                'input[name="_method"]'
-            );
+        const methodInput = form.querySelector('input[name="_method"]');
 
         if (methodInput) {
             methodInput.remove();
@@ -614,5 +474,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
         form.submit();
     });
-
 });

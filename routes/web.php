@@ -126,6 +126,8 @@ Route::prefix('cv')
             '/section/{section}/{id}',
             [CvController::class, 'deleteSection']
         )->name('section.delete');
+
+        Route::get('/download-pdf', [CvController::class,'downloadPDF'])->name('download.pdf');
     });
 
 // Application job

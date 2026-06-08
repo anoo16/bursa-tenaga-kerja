@@ -148,10 +148,36 @@ document.addEventListener("DOMContentLoaded", function () {
                     "hidden-edit-gaji-max",
                 );
                 if (hiddenEditMax) hiddenEditMax.value = angka;
+            } else if (this.id === "filter-gaji-min") {
+                const hiddenMin = document.getElementById("hidden-filter-min");
+                if (hiddenMin) hiddenMin.value = angka;
+            } else if (this.id === "filter-gaji-max") {
+                const hiddenMax = document.getElementById("hidden-filter-max");
+                if (hiddenMax) hiddenMax.value = angka;
             }
         });
     });
 
+    /* ---- Format Rupiah untuk Filter Gaji (Inisialisasi Awal) ---- */
+    const formatRp = (angka) =>
+        angka ? "Rp " + new Intl.NumberFormat("id-ID").format(angka) : "";
+
+    const filterGajiMin = document.getElementById("filter-gaji-min");
+    const filterGajiMax = document.getElementById("filter-gaji-max");
+    const hiddenFilterMin = document.getElementById("hidden-filter-min");
+    const hiddenFilterMax = document.getElementById("hidden-filter-max");
+
+    if (filterGajiMin && filterGajiMin.value.trim()) {
+        const angka = filterGajiMin.value.replace(/\D/g, "");
+        filterGajiMin.value = formatRp(angka);
+        if (hiddenFilterMin) hiddenFilterMin.value = angka;
+    }
+
+    if (filterGajiMax && filterGajiMax.value.trim()) {
+        const angka = filterGajiMax.value.replace(/\D/g, "");
+        filterGajiMax.value = formatRp(angka);
+        if (hiddenFilterMax) hiddenFilterMax.value = angka;
+    }
     const btnKonfirmasiHapus = document.getElementById("btn-konfirmasi-hapus");
     if (btnKonfirmasiHapus) {
         btnKonfirmasiHapus.addEventListener("click", function () {
@@ -194,6 +220,7 @@ document.addEventListener("keydown", function (e) {
         tutupModal();
         tutupDetail();
         tutupEdit();
+        tutupFilter();
     }
 });
 

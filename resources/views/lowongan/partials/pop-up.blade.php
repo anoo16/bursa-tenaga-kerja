@@ -554,118 +554,149 @@ Membantu mencegah terhapusnya data secara tidak sengaja.
     </div>
 </div>
 
+
 <!-- ================= MODAL FILTER ================= -->
 <div id="filter-overlay"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50
-            opacity-0 pointer-events-none transition duration-300">
+    class="fixed inset-0 z-[6000] flex items-center justify-center
+           bg-black/50 backdrop-blur-sm
+           opacity-0 pointer-events-none transition-all duration-300">
 
     <div id="filter-box"
-         class="bg-white w-full max-w-lg rounded-3xl shadow-xl p-6 relative
-                scale-95 opacity-0 transition duration-300">
+        class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden
+               scale-95 opacity-0 transition-all duration-300">
 
         <!-- Header -->
-        <div class="flex items-center justify-between mb-5">
-            <h2 class="text-xl font-bold text-[#143E72]">
-                Filter Lowongan
-            </h2>
+        <div class="bg-[#143E72] px-8 py-6 flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-white">
+                    Filter Lowongan
+                </h2>
+                <p class="text-blue-100 text-sm mt-1">
+                    Sesuaikan hasil pencarian lowongan
+                </p>
+            </div>
 
             <button type="button"
-                    onclick="tutupFilter()"
-                    class="text-gray-500 hover:text-gray-700">
-                ✕
+                onclick="tutupFilter()"
+                class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20
+                       flex items-center justify-center">
+
+                <svg class="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24">
+
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+
+                </svg>
             </button>
         </div>
 
-        <!-- Form Filter -->
-        <form method="GET" action="{{ route('company.jobs') }}" class="space-y-4">
+        <!-- Form -->
+        <form method="GET"
+            action="{{ route('company.jobs') }}"
+            class="p-8 space-y-6">
 
             <!-- Status -->
             <div>
-                <label class="block text-sm font-semibold mb-1">
-                    Status
+                <label class="block text-sm font-semibold text-slate-600 mb-2">
+                    Status Lowongan
                 </label>
 
                 <select name="status"
-                        class="w-full border rounded-xl px-3 py-2">
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200
+                           bg-slate-50 focus:border-[#143E72] focus:bg-white">
+
                     <option value="">Semua Status</option>
                     <option value="aktif">Aktif</option>
-                    <option value="draft">Draft</option>
                     <option value="ditutup">Ditutup</option>
+
                 </select>
             </div>
 
             <!-- Kategori -->
             <div>
-                <label class="block text-sm font-semibold mb-1">
+                <label class="block text-sm font-semibold text-slate-600 mb-2">
                     Kategori
                 </label>
 
                 <input type="text"
-                       name="kategori"
-                       placeholder="Masukkan kategori"
-                       class="w-full border rounded-xl px-3 py-2">
+                    name="kategori"
+                    placeholder="Contoh: MAGANG"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200
+                           bg-slate-50 focus:border-[#143E72] focus:bg-white">
             </div>
 
-            <!-- Gaji Minimum -->
+            <!-- Rentang Gaji -->
             <div>
-                <label class="block text-sm font-semibold mb-1">
-                    Gaji Minimum
+                <label class="block text-sm font-semibold text-slate-600 mb-2">
+                    Rentang Gaji
                 </label>
 
-                <input type="number"
-                       name="gaji_minimum"
-                       class="w-full border rounded-xl px-3 py-2">
-            </div>
+                <div class="grid grid-cols-2 gap-4">
 
-            <!-- Gaji Maksimum -->
-            <div>
-                <label class="block text-sm font-semibold mb-1">
-                    Gaji Maksimum
-                </label>
+                    <input type="text"
+                        id="filter-gaji-min"
+                        placeholder="Minimum"
+                        class="format-rupiah w-full px-4 py-3 rounded-xl
+                               border border-slate-200 bg-slate-50">
 
-                <input type="number"
-                       name="gaji_maksimum"
-                       class="w-full border rounded-xl px-3 py-2">
-            </div>
+                    <input type="text"
+                        id="filter-gaji-max"
+                        placeholder="Maksimum"
+                        class="format-rupiah w-full px-4 py-3 rounded-xl
+                               border border-slate-200 bg-slate-50">
 
-            <!-- Tanggal -->
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-sm font-semibold mb-1">
-                        Dari
-                    </label>
-
-                    <input type="date"
-                           name="dari"
-                           class="w-full border rounded-xl px-3 py-2">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold mb-1">
-                        Sampai
-                    </label>
+                <input type="hidden" name="gaji_minimum" id="hidden-filter-min">
+                <input type="hidden" name="gaji_maksimum" id="hidden-filter-max">
+            </div>
+
+            <!-- Rentang Tanggal -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-600 mb-2">
+                    Rentang Waktu Posting
+                </label>
+
+                <div class="grid grid-cols-2 gap-4">
 
                     <input type="date"
-                           name="sampai"
-                           class="w-full border rounded-xl px-3 py-2">
+                        name="dari"
+                        class="px-4 py-3 rounded-xl border border-slate-200 bg-slate-50">
+
+                    <input type="date"
+                        name="sampai"
+                        class="px-4 py-3 rounded-xl border border-slate-200 bg-slate-50">
+
                 </div>
             </div>
 
             <!-- Tombol -->
-            <div class="flex justify-end gap-3 pt-4">
+            <div class="flex justify-end gap-3 pt-4 border-t">
 
                 <a href="{{ route('company.jobs') }}"
-                   class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300">
+                    class="px-5 py-3 rounded-xl border border-slate-300
+                           text-slate-600 hover:bg-slate-100">
+
                     Reset
+
                 </a>
 
                 <button type="submit"
-                        class="px-4 py-2 rounded-xl bg-[#143E72] text-white hover:bg-[#0f2d54]">
+                    class="px-6 py-3 rounded-xl bg-[#143E72]
+                           hover:bg-[#0F2F57]
+                           text-white font-semibold">
+
                     Terapkan Filter
+
                 </button>
 
             </div>
 
         </form>
+
     </div>
 </div>

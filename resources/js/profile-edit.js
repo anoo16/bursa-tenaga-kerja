@@ -526,8 +526,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         method: "POST",
 
                         headers: {
-                            Authorization: "Bearer " + token,
                             Accept: "application/json",
+                            Authorization: `Bearer ${token}`,
                         },
 
                         body: formData,
@@ -544,16 +544,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     if (response.ok && result?.user) {
-                        user = {
-                            ...user,
-                            ...result.user,
-                            experiences: user.experiences,
-                            educations: user.educations,
-                            skills: user.skills,
-                            certifications: user.certifications,
-                        };
-
-                        localStorage.setItem("user", JSON.stringify(user));
+                        localStorage.setItem(
+                            "user",
+                            JSON.stringify(result.user),
+                        );
                     }
                 } catch (error) {
                     console.warn(

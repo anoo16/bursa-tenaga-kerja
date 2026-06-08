@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\CvController;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,3 +139,9 @@ Route::middleware('auth:api')->post(
     '/profile/update',
     [ProfileController::class, 'update']
 );
+
+// routes/api.php
+Route::middleware('auth:api')->group(function () {
+    Route::get('/cv/download-pdf', [CvController::class, 'downloadPDF']);
+    Route::post('/cv/download-draft-pdf', [CvController::class, 'downloadDraftPDF']); // ← POST
+});

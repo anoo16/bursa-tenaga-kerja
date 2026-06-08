@@ -11,7 +11,10 @@
     const userId = url.searchParams.get('user_id');
 
     if (!userId) {
-        const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user');
+        // SESUDAH
+        const userRaw = localStorage.getItem('jobseeker_user') ||
+                        localStorage.getItem('user') ||
+                        sessionStorage.getItem('user');
         if (userRaw) {
             try {
                 const user = JSON.parse(userRaw);
@@ -91,15 +94,25 @@
                 dari {{ $applications->total() }} lamaran
             </span>
         </div>
-        <div class="sort-btn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2.5">
-                <line x1="3" y1="6"  x2="21" y2="6"/>
-                <line x1="6" y1="12" x2="18" y2="12"/>
-                <line x1="10" y1="18" x2="14" y2="18"/>
-            </svg>
-            Terbaru
-        </div>
+        <form method="GET" action="{{ route('applications.lamaran-saya') }}" style="display:inline-flex; align-items:center; margin-left:2rem;">
+            @if(request('user_id'))<input type="hidden" name="user_id" value="{{ request('user_id') }}">@endif
+            @if(request('status'))<input type="hidden" name="status" value="{{ request('status') }}">@endif
+            <select name="sort" onchange="this.form.submit()" style="
+                padding: 0.4rem 1rem;
+                border-radius: 20px;
+                border: 1.5px solid #e2e6f0;
+                font-size: 0.82rem;
+                font-weight: 600;
+                color: #1a2235;
+                background: #fff;
+                cursor: pointer;
+                font-family: inherit;
+                outline: none;
+            ">
+                <option value="terbaru" {{ request('sort', 'terbaru') === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                <option value="terlama" {{ request('sort') === 'terlama' ? 'selected' : '' }}>Terlama</option>
+            </select>
+        </form>
     </div>
 
     {{-- DAFTAR LAMARAN --}}

@@ -44,7 +44,14 @@ class ApplicationController extends Controller
         $query->where('status', request('status'));
     }
 
-    $applications = $query->orderBy('created_at', 'desc')->paginate(10);
+    $sort = request('sort', 'terbaru');
+    if ($sort === 'terlama') {
+        $query->orderBy('created_at', 'asc');
+    } else {
+        $query->orderBy('created_at', 'desc');
+    }
+
+    $applications = $query->paginate(10);
 
     return view('applications.lamaran-saya', compact('applications', 'stats'));
 }

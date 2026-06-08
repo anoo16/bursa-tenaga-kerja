@@ -993,7 +993,10 @@ async function kirimLamaran() {
     const icon      = document.getElementById('btnKirimIcon');
 
     // Ambil user dari localStorage (disimpan saat login)
-    const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user');
+    // SESUDAH
+    const userRaw = localStorage.getItem('jobseeker_user') ||
+                    localStorage.getItem('user') ||
+                    sessionStorage.getItem('user');
 
     if (!userRaw) {
         alert('Sesi Anda telah berakhir. Silakan login kembali.');

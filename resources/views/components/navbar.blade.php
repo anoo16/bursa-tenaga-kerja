@@ -23,19 +23,11 @@
         </script>
     </h1>
 
-    <div class="topbar-right">
-
-        <i class='bx bx-bell'></i>
-
-        <i class='bx bx-envelope'></i>
-
-    </div>
-
     <div class="profile-wrapper">
 
         <div class="vertical-line"></div>
 
-        <div class="profile-box">
+        <div class="profile-box" id="profileDropdown">
 
             <img
                 src="{{ asset('assets/profile.png') }}"
@@ -63,6 +55,15 @@
             </script>
 
             <i class='bx bx-chevron-down'></i>
+            
+            <div class="logout-dropdown" id="logoutDropdown">
+
+                <button id="logoutBtn">
+                    <i class='bx bx-log-out'></i>
+                    Logout
+                </button>
+
+            </div>
 
         </div>
 

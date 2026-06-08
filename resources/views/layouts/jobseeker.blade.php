@@ -19,6 +19,7 @@ $user = Auth::guard('api')->user();
 
     @vite([
         'resources/js/app.js',
+        'resources/js/logout.js',
         'resources/css/dashboard.css'
     ])
     
