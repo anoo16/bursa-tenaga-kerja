@@ -149,4 +149,13 @@ public function success(Request $request)
 
     return view('applications.success', compact('job', 'company'));
 }
+public function withdraw($id)
+{
+    $application = JobApplication::findOrFail($id);
+
+    $application->delete();
+
+    return redirect()->route('applications.lamaran-saya')
+        ->with('success', 'Lamaran berhasil dibatalkan.');
+}
 }

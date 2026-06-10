@@ -9,35 +9,35 @@
     <ul class="menu-list">
 
         <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <a href="{{ route('dashboard') }}">
+            <a href="{{ route('dashboard') }}" class="sidebar-link" data-route="{{ route('dashboard') }}">
                 <i class='bx bx-grid-alt'></i>
                 Dashboard
             </a>
         </li>
 
         <li class="{{ request()->routeIs('profile') ? 'active' : '' }}">
-            <a href="{{ route('profile') }}">
+            <a href="{{ route('profile') }}" class="sidebar-link" data-route="{{ route('profile') }}">
                 <i class='bx bx-user'></i>
                 Profil Saya
             </a>
         </li>
 
         <li class="{{ request()->routeIs('jobs.index') ? 'active' : '' }}">
-            <a href="{{ route('jobs.index') }}">
+            <a href="{{ route('jobs.index') }}" class="sidebar-link" data-route="{{ route('jobs.index') }}">
                 <i class='bx bx-search'></i>
                 Cari Lowongan
             </a>
         </li>
 
         <li class="{{ request()->routeIs('applications.lamaran-saya') ? 'active' : '' }}">
-             <a href="{{ route('applications.lamaran-saya') }}">
+            <a href="{{ route('applications.lamaran-saya') }}" class="sidebar-link" data-route="{{ route('applications.lamaran-saya') }}">
                 <i class='bx bx-file'></i>
                 Lamaran Saya
             </a>
         </li>
 
         <li class="{{ request()->routeIs('jobseeker.simpan') ? 'active' : '' }}">
-            <a href="{{ route('jobseeker.simpan') }}">
+            <a href="{{ route('jobseeker.simpan') }}" class="sidebar-link" data-route="{{ route('jobseeker.simpan') }}">
                 <i class='bx bx-bookmark'></i>
                 Simpan Lowongan
             </a>
@@ -49,5 +49,19 @@
         </li>
 
     </ul>
+
+    {{-- Inject user_id ke semua link sidebar --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user?.id) return;
+
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            const url = new URL(link.href, window.location.origin);
+            url.searchParams.set('user_id', user.id);
+            link.href = url.toString();
+        });
+    });
+    </script>
 
 </aside>

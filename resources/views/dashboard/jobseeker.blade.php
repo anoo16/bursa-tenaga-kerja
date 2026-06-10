@@ -4,7 +4,7 @@
 
 @vite([
     'resources/css/dashboard.css',
-    'resources/js/dashbordjobseeker.js'
+    'resources/js/dashboardjobseeker.js'
 ])
 
 {{-- STATISTIC --}}
@@ -65,88 +65,65 @@
 
     {{-- TABLE --}}
     <div class="application-section">
-
+    
         <div class="section-header">
-
+    
             <h2>Lamaran Terbaru</h2>
-
-            <a href="#">Lihat Semua</a>
-
+    
+            <a href="{{ route('applications.lamaran-saya') }}{{ request('user_id') ? '?user_id='.request('user_id') : '' }}">Lihat Semua</a>
+    
         </div>
-
+    
         <div class="application-table">
-
+    
             <div class="table-head">
-
+    
                 <span>POSISI</span>
                 <span>PERUSAHAAN</span>
                 <span>STATUS</span>
                 <span>TANGGAL</span>
-
+    
             </div>
-
-            {{-- ROW --}}
-            <div class="table-row">
-
-                <h4>Senior UI Designer</h4>
-
-                <p>Tokopedia</p>
-
-                <span class="status review">
-                    REVIEW
-                </span>
-
-                <small>12 Mei 2026</small>
-
-            </div>
-
-            {{-- ROW --}}
-            <div class="table-row">
-
-                <h4>Product Manager</h4>
-
-                <p>Traveloka</p>
-
-                <span class="status waiting">
-                    MENUNGGU
-                </span>
-
-                <small>08 Feb 2026</small>
-
-            </div>
-
-            {{-- ROW --}}
-            <div class="table-row">
-
-                <h4>UX Researcher</h4>
-
-                <p>Gojek</p>
-
-                <span class="status accepted">
-                    DITERIMA
-                </span>
-
-                <small>12 Jan 2026</small>
-
-            </div>
-
-            {{-- ROW --}}
-            <div class="table-row">
-
-                <h4>Web Developer</h4>
-
-                <p>Shopee</p>
-
-                <span class="status rejected">
-                    DITOLAK
-                </span>
-
-                <small>22 Nov 2025</small>
-
-            </div>
-
+    
+            @forelse ($lamaranTerbaru as $lamaran)
+    
+                {{-- ROW --}}
+                <div class="table-row">
+    
+                    <h4>{{ $lamaran->job->posisi ?? '-' }}</h4>
+    
+                    <p>{{ optional($lamaran->job->company)->name ?? '-' }}</p>
+    
+                    @php
+                        $status    = strtoupper($lamaran->status ?? 'BARU');
+                        $statusMap = [
+                            'BARU'      => ['label' => 'MENUNGGU', 'class' => 'waiting'],
+                            'REVIEW'    => ['label' => 'REVIEW',   'class' => 'review'],
+                            'INTERVIEW' => ['label' => 'REVIEW',   'class' => 'review'],
+                            'DITERIMA'  => ['label' => 'DITERIMA', 'class' => 'accepted'],
+                            'DITOLAK'   => ['label' => 'DITOLAK',  'class' => 'rejected'],
+                        ];
+                        $badge = $statusMap[$status] ?? ['label' => $status, 'class' => 'waiting'];
+                    @endphp
+    
+                    <span class="status {{ $badge['class'] }}">
+                        {{ $badge['label'] }}
+                    </span>
+    
+                    <small>{{ \Carbon\Carbon::parse($lamaran->created_at)->translatedFormat('d M Y') }}</small>
+    
+                </div>
+    
+            @empty
+    
+                <div class="table-row">
+                    <h4 style="grid-column: 1 / -1; text-align: center; color: #888;">Belum ada lamaran.</h4>
+                </div>
+    
+            @endforelse
+    
         </div>
-
+    
     </div>
 
     {{-- RECOMMENDATION --}}
@@ -160,99 +137,63 @@
 
         </div>
 
-        {{-- CARD --}}
-        <div class="job-card">
+        @forelse ($rekomendasiLowongan as $job)
 
-            <div class="job-top">
+            {{-- CARD --}}
+            <div class="job-card">
 
-                <div>
+                <div class="job-top">
 
-                    <h3>
-                        Lead Experience Designer
-                    </h3>
+                    <div>
 
-                    <p>
-                        Metaverse Studio • Jakarta
-                    </p>
+                        <h3>
+                            {{ $job->posisi }}
+                        </h3>
 
-                </div>
+                        <p>
+                            {{ optional($job->company)->name ?? '-' }}
+                            @if(optional($job->company)->hq)
+                                • {{ $job->company->hq }}
+                            @endif
+                        </p>
 
-                <i class='bx bx-bookmark'></i>
+                    </div>
 
-            </div>
-
-            <div class="job-tags">
-
-                <span>Remote</span>
-
-                <span>IDR 25jt - 35jt</span>
-
-            </div>
-
-        </div>
-
-        {{-- CARD --}}
-        <div class="job-card">
-
-            <div class="job-top">
-
-                <div>
-
-                    <h3>
-                        Senior Interaction Architect
-                    </h3>
-
-                    <p>
-                        Fintech Nexus • BSD City
-                    </p>
+                    {{-- Tombol simpan --}}
+                    <form method="POST"
+                          action="{{ route('jobseeker.simpan.toggle', $job->id) }}{{ request('user_id') ? '?user_id='.request('user_id') : '' }}"
+                          style="display:inline;">
+                        @csrf
+                        <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;">
+                            <i class='bx bx-bookmark'></i>
+                        </button>
+                    </form>
 
                 </div>
 
-                <i class='bx bx-bookmark'></i>
+                <div class="job-tags">
 
-            </div>
+                    <span>{{ $job->jenis_bidang }}</span>
 
-            <div class="job-tags">
-
-                <span>Full-time</span>
-
-                <span>Hybrid</span>
-
-            </div>
-
-        </div>
-
-         {{-- CARD --}}
-        <div class="job-card">
-
-            <div class="job-top">
-
-                <div>
-
-                    <h3>
-                        Creative Design Lead
-                    </h3>
-
-                    <p>
-                        Pixel Perfect • Bandung
-                    </p>
+                    @if($job->gaji_minimum && $job->gaji_maksimum)
+                        <span>
+                            IDR {{ number_format($job->gaji_minimum / 1000000, 0) }}jt
+                            - {{ number_format($job->gaji_maksimum / 1000000, 0) }}jt
+                        </span>
+                    @endif
 
                 </div>
 
-                <i class='bx bx-bookmark'></i>
-
             </div>
 
-            <div class="job-tags">
+        @empty
 
-                <span>Permanent</span>
+            <p style="color: #888; font-size: 0.9rem; padding: 1rem 0;">
+                Tidak ada rekomendasi lowongan saat ini.
+            </p>
 
-            </div>
-
-        </div>
+        @endforelse
 
     </div>
-
-</div>
 
 @endsection
